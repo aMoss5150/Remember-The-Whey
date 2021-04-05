@@ -1,4 +1,7 @@
 extends layout
+include tasks.pug
+include lists.pug
+include summary.pug
 
 append head
   //- add page specific styles by appending to the head
@@ -9,3 +12,6 @@ append head
 block content
   h1= title
   p Welcome to your Project Skeleton
+  +tasks
+  +lists
+  +summary
