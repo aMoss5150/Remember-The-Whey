@@ -1,10 +1,17 @@
 
 mixin tasks
-    h2 Tasks
-    form(action='/tasks' method='post')
-        input(type='hidden' name='_csrf' value=csrfToken)
-        input(type='number' name='reps' required)
-        input(type='number' name='sets')
-        input(type='text' name='name' required)
-        input(type='number' name='duration')
-        button(type='submit') Add
+    section(id='tasks-section')
+        h2 Tasks
+        form(id='tasks-section__form')
+            input(type='hidden' name='_csrf' value=csrfToken)
+            label Reps
+                input(type='number' name='reps' placeholder='1' required)
+            label Sets
+                input(type='number' name='sets' placeholder='0')
+            label Exercise
+                input(type='text' name='name' placeholder='Add an exercise...' required)
+            label Duration
+                input(type='number' name='duration' placeholder='60')
+            button(type='submit') Add
+        div(id='tasks-section__tasks-container')
+    script(src='javascripts/tasks.js')

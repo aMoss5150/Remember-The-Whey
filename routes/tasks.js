@@ -8,7 +8,12 @@ const { csrfProtection, asyncHandler } = require('./utils');
 
 const router = express.Router();
 
-const taskValidators = [];
+const taskValidators = [
+    check('reps')
+        .exists({ checkFalsy: true }),
+    check('name')
+        .exists({ checkFalsy: true })
+];
 
 // GET /tasks - Gets all the tasks from the current list selection
 router.get('/', requireAuth, csrfProtection, asyncHandler(async (req, res) => {
@@ -61,6 +66,7 @@ router.post('/', requireAuth, csrfProtection, taskValidators, asyncHandler(async
 
     if (validatorErrors.isEmpty()) {
         await task.save();
+        res.redirect('/');
     }
     else {
         const errors = validatorErrors.array().map(err = err.msg);
@@ -72,9 +78,10 @@ router.put('/:id(\\d+)', requireAuth, csrfProtection, taskValidators, asyncHandl
     const taskId = parseInt(req.params.id, 10);
     const task = await db.Task.findByPk(taskId);
 
-    if (task){
+    if (task) {
         await task.update(req.body);
         res.json({ task });
+        res.redirect('/');
     }
     else
         next();
@@ -85,7 +92,7 @@ router.delete('/:id(\\d+)', requireAuth, csrfProtection, asyncHandler(async (req
     const taskId = parseInt(req.params.id, 10);
     const task = await db.Task.findByPk(taskId);
 
-    if (task){
+    if (task) {
         await task.destroy();
         res.status(204).end();
     }
