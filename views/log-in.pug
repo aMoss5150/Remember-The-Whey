@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title= title
+    body
+        #left-side-signup
+
+
+        #sign-up-form
+            button
+                a(href="/users/sign-up") Sign up
+            form(action="/users/log-in" method="post" id="form-header") Been here before? Welcome back!
+                input(type="hidden" name="_csrf" value=csrfToken)
+                br
+                input(class="signup-input" name="email" placeholder="E-mail" required)
+                br
+                input(class="signup-input" name="password" placeholder="Password" type="password" required)
+                br
+                button(type="submit" id="signup-button") Log in

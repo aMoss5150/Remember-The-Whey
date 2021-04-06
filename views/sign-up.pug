@@ -4,15 +4,20 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
+        title= title
     body
         #left-side-signup
 
 
         #sign-up-form
-            button()  Log in
-                a(href="/log-in")
-            form(action="/sign-up" method="post" id="form-header") Sign up for free.
+            button
+                a(href="/users/log-in") Log in
+
+            if errors
+                ul
+                    each error in errors
+                     li error.msg
+            form(action="/user/sign-up" method="post" id="form-header") Sign up for free.
                 input(type="hidden" name="_csrf" value=csrfToken)
                 br
                 input(class="signup-input" name="firstName" placeholder="First Name" required)
