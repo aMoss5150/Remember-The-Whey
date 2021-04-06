@@ -1,3 +1,116 @@
+body {
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    border: 1px solid black
+}
+
+.navbar__row {
+    display: flex;
+    background-color: aqua;
+    height: 40px;
+    /* justify-content: space-between; */
+}
+
+.search__navbox {
+    position: sticky;
+    left: 200px;
+    padding-right: 30px;
+    padding: 5px;
+}
+
+.right__navbox {
+    /* justify-self: flex-start; */
+    position: sticky;
+    left: 1800px;
+    padding: 5px;
+}
+
+.column__container {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    /* display: flex; */
+    grid-template-areas: "lists tasks summary";
+    /* height: auto; */
+}
+
+.list__column {
+    grid-area: lists;
+    display: flex;
+    background-color: green;
+    min-width: 200px;
+    /* max-width: 300px; */
+    /* min-height: 500px; */
+    height: 840px;
+    padding: 25px
+}
+
+.task__column {
+    grid-area: tasks;
+    display: flex;
+    background-color: blue;
+    min-width: 200px;
+    /* min-height: 100%; */
+    /* width: 870px; */
+    height: 840px;
+    /* height: 100%; */
+    padding: 25px
+}
+
+.summary__column {
+    grid-area: summary;
+    display: flex;
+    background-color: red;
+    min-width: 200px;
+    /* min-height: 500px; */
+    /* width: 850px; */
+    height: 840px;
+    padding: 25px;
+}
+
+.title__container {
+    padding: 5px;
+    position: relative;
+    left: 10px;
+}
+
+.tasks__container {
+    padding: 5px;
+    position: relative;
+    left: -40px;
+    top: 40px;
+    height: 50px;
+    border: 1px solid blue
+}
+
+.overdue__container {
+    position: relative;
+    padding: 5px;
+    left: -40px;
+    top: 40px;
+    height: 50px;
+    border: 1px solid blue
+}
+
+.completed__container {
+    position: relative;
+    padding: 5px;
+    left: -40px;
+    top: 40px;
+    height: 50px;
+    border: 1px solid blue
+}
+
+.footer {
+    position: relative;
+    top: 740px;
+    padding: 5px;
+    border: 1px solid blue;
+    height: 20px
+}
+
+@media screen and (max-width: 1000px) {}
+
 h1 {
-    color: #555555;
+    color: black;
 }

@@ -10,8 +10,24 @@ append head
   script(src="/javascripts/index.js" type="module" defer)
 
 block content
-  h1= title
-  p Welcome to your Project Skeleton
-  +lists
-  +tasks
-  +summary
+  .navbar__row NAV
+    .right__navbox
+      button logout
+    .search__navbox
+      input(placeholder="Search")
+  .column__container
+    .list__column
+      +lists
+    .task__column  
+      +tasks
+    .summary__column
+      +summary
+      .title__container All Tasks
+      .tasks__container 0
+        .title__container-title Tasks
+      .overdue__container 0
+        .overdue__container-title Overdue
+      .completed__container 0
+        .completed__container-title Completed
+      .footer footer
+
