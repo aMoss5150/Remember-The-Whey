@@ -1,3 +1,10 @@
 
 mixin tasks
-    div Tasks
+    h2 Tasks
+    form(action='/tasks' method='post')
+        input(type='hidden' name='_csrf' value=csrfToken)
+        input(type='number' name='reps' required)
+        input(type='number' name='sets')
+        input(type='text' name='name' required)
+        input(type='number' name='duration')
+        button(type='submit') Add
