@@ -86,7 +86,7 @@ router.post('/log-in', csrfProtection, loginValidators, asyncHandler(async (req,
       }
     }
 
-    errors.push('Login failed for the provided email address and password');
+    errors.push("Sorry, that wasn't a valid login. Please try again.");
 
   } else {
     errors = validationErrors.array().map(error => error.msg)
@@ -106,7 +106,11 @@ router.get('/sign-up', csrfProtection, (req, res,) => {
   });
 });
 
+
+// when the form is submitted from sign up page
+// check csrf, validate input fields
 router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+
   const {
     firstName,
     lastName,
@@ -123,22 +127,29 @@ router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async (req,
   const validationErrors = validationResult(req)
 
   if (validationErrors.isEmpty()) {
-    const hashedPW = await bcrypt.hash(password, 10);
+
+    const hashedPW = await bcrypt.hash(password, 10);  // created hashed pw to store in DB
+
     user.hashPW = hashedPW;
     await user.save()
-    loginUser(req, res, user)
-    res.redirect('/')
+
+    loginUser(req, res, user);  // logs in user after successful sign-up
+    res.redirect('/');
+
   } else {
+
     const errors = validationErrors.array().map(error => error.msg)
+
     res.render('sign-up', {
       title: "Sign-up",
       csrfToken: req.csrfToken(),
       errors
     });
-  }
+  };
+}));
 
-}))
 
+// logout deletes session through logoutUser, redirects user to log-in
 router.post('/logout', (req, res) => {
   logoutUser(req, res);
   res.redirect('/users/log-in')
