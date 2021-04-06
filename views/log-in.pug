@@ -30,6 +30,15 @@ html(lang="en")
                             input(class="signup-input" name="password" placeholder="Password" type="password" required)
                             br
                             button(type="submit" id="signup-button") Log in
-                    //- form(action="/users/logout" method="post")
-                    //-     button(type="submit") Log out
-                    //- for log out button.
+                        form(action="/users/log-in" method="post")
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            input(type="hidden" name="email" value="demo@aa.com")
+                            input(name="password" value="strongpassword" type="hidden")
+                            button(type="submit") Demo User
+
+
+
+
+                            //- form(action="/users/logout" method="post")
+                            //-     button(type="submit") Log out
+                            //- for log out button.
