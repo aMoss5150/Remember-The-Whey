@@ -79,7 +79,10 @@ router.post('/log-in', csrfProtection, loginValidators, asyncHandler(async (req,
     const user = await User.findOne({ where: { email } });
 
     if (user) {
-      const passMatch = await bcrypt.compare(password, user.hashPW.toString())
+
+      //! changed to make demo user able to log in
+      // const passMatch = await bcrypt.compare(password, user.hashPW.toString())
+      const passMatch = password === hashPW
       if (passMatch) {
         loginUser(req, res, user)  // log in user by assigning a req.session.auth object with user id
         return res.redirect('/')
@@ -121,16 +124,18 @@ router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async (req,
   const user = User.build({
     firstName,
     lastName,
-    email
+    email,
+    hashPW: password
   })
 
   const validationErrors = validationResult(req)
 
   if (validationErrors.isEmpty()) {
+    //changed it so password is not hashed
 
-    const hashedPW = await bcrypt.hash(password, 10);  // created hashed pw to store in DB
+    // const hashedPW = await bcrypt.hash(password, 10);  // created hashed pw to store in DB
 
-    user.hashPW = hashedPW;
+    // user.hashPW = hashedPW;
     await user.save()
 
     loginUser(req, res, user);  // logs in user after successful sign-up
