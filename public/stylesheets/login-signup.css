@@ -3,84 +3,118 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     box-sizing: border-box;
-    height: 100%;
-    width: 100%;
 }
 
 #main__left{
     background-color: blue;
     grid-column-start: 1;
-    height: 100%px;
-    width: 100%;
+    display: flex;
+    position: relative;
 }
 
 #main_right {
     grid-column-start: 2;
     display: grid;
     grid-template-rows: 1fr 3fr;
-
 }
 
-#btn-div {
+#transfer__btn__container {
     display: flex;
     justify-content: flex-end;
 }
 
-.btn_signup {
-    width: 75px;
-    height: 25px;
-
-}
-
-.btn_signup>a {
-    text-decoration: none;
-}
-
-#form-div {
+#main__form {
     box-sizing: border-box;
     height: 800px;
     grid-row-start: 2;
     display: flex;
     /* justify-content: center; */
     align-items: center;
-    padding-left: 50px;
+    justify-content: center;
+    flex-direction: column;
 
 }
 
-#sign-up-form {
-    align-items: center;
-}
-
-#form-header {
-    font-size: 20px;
-    height: 200px;
+#form__header {
+    font-size: 22px;
+    font-weight: 550;
+    height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-right: 75px;
 }
 
-.signup-input {
+.form__input {
     box-sizing: border-box;
-    height: 30px;
+    height: 50px;
     width: 400px;
     border-radius: 5px;
     border: 1px solid;
     border: solid 1px gray;
+    font-size: 16px;
 }
 
-.signup-input:focus {
+.form__input:focus {
     outline-offset: 0px;
     outline: none;
     /* make border change */
     box-shadow: 0px 0px 15px 0px lightblue
 }
 
-#demo__btn {
-    display: flex;
+#form__btn, .demo__btn{
+    background-color: #009dff;
+    width: 400px;
+    height: 50px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: whitesmoke;
+    font-size: 1.5em;
 }
 
-#error-msg {
+#form__btn:hover, .demo__btn:hover {
+    background-color: steelblue;
+}
+
+.transfer__btn {
+    background-color: (0, 96, 191, 0.1);
+    border: none;
+    border-radius: 5px;
+    width: 100px;
+    height: 40px;
+    font-weight: bold;
+    color:  slategrey;
+}
+
+.demo__btn__container {
+    display: flex;
+    width: 700px;
+    align-items: flex-end;
+    justify-content: center;
+    padding-right: 75px;
+}
+
+.error__msg {
     border-radius: 5px;
     border: solid 5px gray;
     background-color: lightsalmon;
+    border: none;
+    height: 26px;
+    font-size: 22px;
+}
+ #main__quotes {
+     position: absolute;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+ }
+#quote__display {
+    font-size: 40;
+    padding-left: 40px;
+}
+
+#speaker__display__container {
+
 }
