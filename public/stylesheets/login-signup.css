@@ -1,0 +1,65 @@
+body {
+    font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+/* figure out how to get both sides to reach bottom of page */
+.main_container {
+    display: grid;
+    grid-template-columns: 1fr, 1fr;
+    height: 100%;
+}
+
+#main_left {
+    background-color: aqua;
+    grid-column-start: 1;
+    max-height: 100%;
+}
+
+#main_right {
+    grid-column-start: 2;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+
+}
+
+#btn-div {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn_signup {
+    width: 75px;
+    height: 25px;
+
+}
+
+.btn_signup>a {
+    text-decoration: none;
+}
+
+#form-div {
+    grid-row-start: 2;
+    display: flex;
+    justify-content: center;
+}
+
+#sign-up-form {
+    justify-items: center;
+    align-items: center;
+}
+
+#form-header {
+    background-color: red;
+
+    font-size: 20px;
+}
+
+.signup-input {
+    height: 30px;
+    width: 200px;
+}
+
+.signup-input:focus {
+    /* make border change */
+    background-color: red;
+}
