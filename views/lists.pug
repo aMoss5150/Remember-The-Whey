@@ -1,3 +1,12 @@
 
-mixin lists
-    div Lists
+append head
+  //- add page specific styles by appending to the head
+  link(rel="stylesheet" href="/stylesheets/lists.css")
+  //- add page specific js
+  script(src="/javascripts/lists.js" type="module")
+  
+mixin lists(lists)
+    if lists
+        ul
+            each list in lists
+                li= list
