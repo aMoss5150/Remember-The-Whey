@@ -2,12 +2,12 @@ body {
     background-color: #333;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
-    border: 1px solid black
+    border: 1px solid black;
 }
 
 .navbar__row {
     display: flex;
-    background-color: aqua;
+    background-color: blue;
     height: 40px;
     /* justify-content: space-between; */
 }
@@ -17,6 +17,13 @@ body {
     left: 200px;
     padding-right: 30px;
     padding: 5px;
+    /* border: 1px solid black; */
+    background-color: blue;
+}
+
+.search__navbox:hover, .search__navbox:focus {
+    border: 1px solid #009688;
+    background-color: lightblue;
 }
 
 .right__navbox {
@@ -48,13 +55,13 @@ body {
 .task__column {
     grid-area: tasks;
     display: flex;
-    background-color: blue;
+    background-color: darkblue;
     min-width: 200px;
     /* min-height: 100%; */
     /* width: 870px; */
     height: 840px;
     /* height: 100%; */
-    padding: 25px
+    padding: 25px;
 }
 
 .summary__column {
@@ -80,7 +87,9 @@ body {
     left: -40px;
     top: 40px;
     height: 50px;
-    border: 1px solid blue
+    border: 1px solid blue;
+    border-radius: 7px;
+    margin: 2px;
 }
 
 .overdue__container {
@@ -89,7 +98,9 @@ body {
     left: -40px;
     top: 40px;
     height: 50px;
-    border: 1px solid blue
+    border: 1px solid blue;
+    border-radius: 7px;
+    margin: 2px;
 }
 
 .completed__container {
@@ -98,19 +109,40 @@ body {
     left: -40px;
     top: 40px;
     height: 50px;
-    border: 1px solid blue
+    border: 1px solid blue;
+    border-radius: 7px;
+    margin: 2px;
 }
 
 .footer {
     position: relative;
     top: 740px;
-    padding: 5px;
+    padding: 1px;
     border: 1px solid blue;
-    height: 20px
+    height: 20px;
 }
 
-@media screen and (max-width: 1000px) {}
-
-h1 {
-    color: black;
+@media screen and (max-width: 1000px) {
+    .column__container {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        grid-template-rows: 150px 100px;
+        grid-template-areas: "list summary" "list task";
+    }
+    .list__column {
+        grid-area: list;
+    }
+    .task__column {
+        grid-area: task;
+        height: 690px;
+        min-width: 200px;
+    }
+    .summary__column {
+        grid-area: summary;
+        height: 150px;
+        min-width: 200px;
+    }
+    .footer {
+        display: none;
+    }
 }
