@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs')
+const { loginUser, logoutUser } = require('./auth');
 
 const { User } = require('../db/models')
-const { asyncHandler, csrfProtection } = require('./utils')
+const { asyncHandler, csrfProtection } = require('./utils');
 
 // had to npm install csurf, express-validator, bcryptjs
 
@@ -44,6 +45,15 @@ const userValidators = [
     }),
 ];
 
+const loginValidators = [
+  check('email')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a value for Email Address'),
+  check('password')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a value for Password'),
+];
+
 
 /* GET users listing. */
 // show user html with log-in form
@@ -55,8 +65,38 @@ router.get('/log-in', csrfProtection, (req, res) => {
 });
 
 // log user in, run validation, and authenticate
-router.post('/log-in', csrfProtection, asyncHandler(async(req,res) => {
+router.post('/log-in', csrfProtection, loginValidators, asyncHandler(async (req, res) => {
+  const {
+    email,
+    password
+  } = req.body
 
+  let errors = [];
+  const validationErrors = validationResult(req)
+
+  if (validationErrors.isEmpty()) {
+
+    const user = await User.findOne({ where: { email } });
+
+    if (user) {
+      const passMatch = await bcrypt.compare(password, user.hashPW.toString())
+      if (passMatch) {
+        loginUser(req, res, user)  // log in user by assigning a req.session.auth object with user id
+        return res.redirect('/')
+      }
+    }
+
+    errors.push('Login failed for the provided email address and password');
+
+  } else {
+    errors = validationErrors.array().map(error => error.msg)
+  }
+
+  res.render('log-in', {
+    title: 'Log-in',
+    csrfToken: req.csrfToken(),
+    errors
+  });
 }))
 
 router.get('/sign-up', csrfProtection, (req, res,) => {
@@ -66,8 +106,42 @@ router.get('/sign-up', csrfProtection, (req, res,) => {
   });
 });
 
-router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async(req,res) => {
+router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    password
+  } = req.body
+
+  const user = User.build({
+    firstName,
+    lastName,
+    email
+  })
+
+  const validationErrors = validationResult(req)
+
+  if (validationErrors.isEmpty()) {
+    const hashedPW = await bcrypt.hash(password, 10);
+    user.hashPW = hashedPW;
+    await user.save()
+    loginUser(req, res, user)
+    res.redirect('/')
+  } else {
+    const errors = validationErrors.array().map(error => error.msg)
+    res.render('sign-up', {
+      title: "Sign-up",
+      csrfToken: req.csrfToken(),
+      errors
+    });
+  }
 
 }))
+
+router.post('/logout', (req, res) => {
+  logoutUser(req, res);
+  res.redirect('/users/log-in')
+})
 
 module.exports = router;

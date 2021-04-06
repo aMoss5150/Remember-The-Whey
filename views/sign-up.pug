@@ -12,12 +12,11 @@ html(lang="en")
         #sign-up-form
             button
                 a(href="/users/log-in") Log in
-
             if errors
                 ul
                     each error in errors
-                     li error.msg
-            form(action="/user/sign-up" method="post" id="form-header") Sign up for free.
+                     li(class="error-msg")= error
+            form(action="/users/sign-up" method="post" id="form-header") Sign up for free.
                 input(type="hidden" name="_csrf" value=csrfToken)
                 br
                 input(class="signup-input" name="firstName" placeholder="First Name" required)
