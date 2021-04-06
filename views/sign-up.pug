@@ -4,29 +4,33 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel='stylesheet' href='/stylesheets/login-signup.css')
         title= title
     body
-        #left-side-signup
-
-
-        #sign-up-form
-            button
-                a(href="/users/log-in") Log in
-            if errors
-                ul
-                    each error in errors
-                     li(class="error-msg")= error
-            form(action="/users/sign-up" method="post" id="form-header") Sign up for free.
-                input(type="hidden" name="_csrf" value=csrfToken)
-                br
-                input(class="signup-input" name="firstName" placeholder="First Name" required)
-                br
-                input(class="signup-input" name="lastName" placeholder="Last Name" required)
-                br
-                input(class="signup-input" name="email" placeholder="E-mail" required)
-                br
-                input(class="signup-input" name="password" placeholder="Password" type="password" required)
-                br
-                input(class="signup-input" name="confirmPassword", placeholder="Confirm Password" type="password" required)
-                br
-                button(type="submit" id="signup-button") Sign up!
+        #main__left
+        #main__right
+            #btn-div
+                button(class="btn_signup")
+                    a(href="/users/log-in") Log in
+            #form-div
+                #form-signup
+                    if errors
+                        ul
+                            each error in errors
+                                li(class="error-msg")= error
+                    br
+                    form(action="/users/sign-up" method="post" id="form-header") Sign up for free.
+                        br
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        br
+                        input(class="signup-input" name="firstName" placeholder="First Name" required)
+                        br
+                        input(class="signup-input" name="lastName" placeholder="Last Name" required)
+                        br
+                        input(class="signup-input" name="email" placeholder="E-mail" required)
+                        br
+                        input(class="signup-input" name="password" placeholder="Password" type="password" required)
+                        br
+                        input(class="signup-input" name="confirmPassword", placeholder="Confirm Password" type="password" required)
+                        br
+                        button(type="submit" id="signup-button") Sign up!

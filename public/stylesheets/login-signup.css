@@ -1,18 +1,17 @@
 body {
     font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
-}
-
-/* figure out how to get both sides to reach bottom of page */
-.main_container {
     display: grid;
-    grid-template-columns: 1fr, 1fr;
+    grid-template-columns: 1fr 1fr;
+    box-sizing: border-box;
     height: 100%;
+    width: 100%;
 }
 
-#main_left {
-    background-color: aqua;
+#main__left{
+    background-color: blue;
     grid-column-start: 1;
-    max-height: 100%;
+    height: 100%px;
+    width: 100%;
 }
 
 #main_right {
@@ -38,28 +37,50 @@ body {
 }
 
 #form-div {
+    box-sizing: border-box;
+    height: 800px;
     grid-row-start: 2;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    align-items: center;
+    padding-left: 50px;
+
 }
 
 #sign-up-form {
-    justify-items: center;
     align-items: center;
 }
 
 #form-header {
-    background-color: red;
-
     font-size: 20px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .signup-input {
+    box-sizing: border-box;
     height: 30px;
-    width: 200px;
+    width: 400px;
+    border-radius: 5px;
+    border: 1px solid;
+    border: solid 1px gray;
 }
 
 .signup-input:focus {
+    outline-offset: 0px;
+    outline: none;
     /* make border change */
-    background-color: red;
+    box-shadow: 0px 0px 15px 0px lightblue
+}
+
+#demo__btn {
+    display: flex;
+}
+
+#error-msg {
+    border-radius: 5px;
+    border: solid 5px gray;
+    background-color: lightsalmon;
 }
