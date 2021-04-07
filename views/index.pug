@@ -6,12 +6,19 @@ include summary.pug
 append head
   //- add page specific styles by appending to the head
   link(rel="stylesheet" href="/stylesheets/index.css")
+  link(rel="stylesheet" href="/stylesheets/nav.css")
   //- add page specific js
   script(src="/javascripts/index.js" type="module" defer)
 
 block content
-  h1= title
-  p Welcome to your Project Skeleton
+  .navbar__container NAV
+    .navbar__search_container
+      img(class="search-icon" src="/searchicon.png")
+      input(class="navbar__search_input" name="search" type="text" required)
+      input(type="submit" class="search__submit" value="Find")
+    .right__navbox
+      form(action="/users/logout" method="post")
+        button(type="submit" class="nav__logout_btn") Logout
   +lists
   +tasks
   +summary
