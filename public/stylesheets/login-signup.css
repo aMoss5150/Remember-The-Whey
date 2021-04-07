@@ -54,6 +54,7 @@ body {
     border: 1px solid;
     border: solid 1px gray;
     font-size: 16px;
+    margin: 2px 0px;
 }
 
 .form__input:focus {
