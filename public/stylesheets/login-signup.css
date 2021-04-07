@@ -6,10 +6,11 @@ body {
 }
 
 #main__left{
-    background-color: blue;
+    background-color: #1874CD;
     grid-column-start: 1;
     display: flex;
-    position: relative;
+    align-items: center;
+    /* position: relative; */
 }
 
 #main_right {
@@ -70,7 +71,7 @@ body {
     border-radius: 5px;
     font-weight: bold;
     color: whitesmoke;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 
 #form__btn:hover, .demo__btn:hover {
@@ -85,6 +86,12 @@ body {
     height: 40px;
     font-weight: bold;
     color:  slategrey;
+
+}
+
+#transfer__btn__container{
+    padding-top: 10px;
+    padding-right: 10px;
 }
 
 .demo__btn__container {
@@ -102,19 +109,40 @@ body {
     border: none;
     height: 26px;
     font-size: 22px;
+    margin: 25px;
 }
- #main__quotes {
+
+#main__quotes {
      position: absolute;
-     display: flex;
-     flex-direction: column;
+     display: block;
+     /* flex-direction: column; */
      justify-content: center;
      align-items: center;
+     width: 40%
  }
-#quote__display {
-    font-size: 40;
-    padding-left: 40px;
+
+.quote__display {
+    font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    padding-top: 50px;
+    padding-left: 200px;
+    max-width: 75%;
+    font-weight: 500;
+    color: cornsilk;
+    opacity: .8;
 }
 
-#speaker__display__container {
+.speaker__display {
+    font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-left: 315px;
+    font-size: 22px;
+    font-weight: 300;
+    color: cornsilk;
+    opacity: .5;
+}
 
+@media only screen and (max-width: 1112px) {
+    #main__quotes {
+        display: none;
+    }
 }

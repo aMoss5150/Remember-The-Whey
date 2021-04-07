@@ -19,7 +19,7 @@ window.addEventListener("DOMContentLoaded", async (e) => {
 
     const quoteToDisplay = quotes[random]
 
-    quoteEle.innerHTML = quoteToDisplay[0]
-    speakerEle.innerHTML = quoteToDisplay[1]
+    quoteEle.innerHTML = `"${quoteToDisplay[0]}"`
+    speakerEle.innerHTML = `- ${quoteToDisplay[1]}`
 
 })
