@@ -1,0 +1,13 @@
+
+.tasks-section__task * {
+    display:inline-block;
+    user-select: none;
+}
+
+.tasks-section__task:hover {
+    background-color: #ffc;
+}
+
+.tasks-section__task--active {
+    background-color: #ffc;
+}
