@@ -76,6 +76,7 @@ body {
 }
 
 .title__container {
+    display: block;
     padding: 5px;
     position: relative;
     left: 10px;
@@ -114,6 +115,16 @@ body {
     margin: 2px;
 }
 
+.summary__update {
+    display: flex;
+    height: 300px;
+    flex-direction: column;
+    border: 1px solid black;
+    position: relative;
+    top: 200px;
+    left: -150px
+}
+
 .footer {
     position: relative;
     top: 740px;
@@ -141,6 +152,9 @@ body {
         grid-area: summary;
         height: 150px;
         min-width: 200px;
+    }
+    .summary__update {
+        display: none;
     }
     .footer {
         display: none;
