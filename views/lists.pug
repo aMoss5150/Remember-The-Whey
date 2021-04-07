@@ -4,9 +4,21 @@ append head
   link(rel="stylesheet" href="/stylesheets/lists.css")
   //- add page specific js
   script(src="/javascripts/lists.js" type="module")
-  
+
 mixin lists(lists)
-    if lists
-        ul
-            each list in lists
-                li= list
+    div(class="block_lists") My Lists:
+        ul(id="lists")
+
+    button(id="myBtn") Create New List
+    div(id="myModal" class='modal')
+        div(class="modal-content")
+            form(class="list-form" method="POST" action="/")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                span(class="close") X
+                p(class="add-list") Add a list
+                label(class="list-label" for="list-name") Please enter a new list name:
+                br
+                input(type="text" name="name" class="list-name--input" required)
+                br
+                input(type="submit" value="Add" class="list-add")
+                input(type="button" value="Cancel" class="list-cancel")

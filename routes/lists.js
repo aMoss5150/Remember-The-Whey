@@ -8,20 +8,30 @@ const {check, validationResult} = require('express-validator');
 
 //get all lists from user
 router.get('/', asyncHandler(async(req,res) => {
+    // console.log(req.session);
 
-    let lists = await db.List.findAll();
-    lists = lists.map((el) => {
-        return el.name;
+    let lists = await db.List.findAll({
+        where: {
+            userId: req.session.auth.userId
+        }
     });
-    res.json({lists});
+    //get a list from the specific user
+    // res.json({lists, csrfToken: req.csrfToken()});
+    res.json({lists})
 }));
 
 //get a specific list
 router.get('/:listId', asyncHandler(async(req,res) => {
+    //use req.session.auth.userId to send the data to front end
 
     const list = await db.List.findByPk(req.params.listId);
+    const tasks = await db.Task.findAll({
+        where: {
+            listId: req.params.listId,
+        }
+    })
 
-    res.json({list});
+    res.json({list, tasks, csrfToken: req.csrfToken()});
 }));
 
 
@@ -36,58 +46,58 @@ const listValidators = [
 
 
 //create a new list feature
-// router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => {
-//     const {name, userId} = req.body;
+router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => {
+    const {name} = req.body;
 
-//     const list = db.List.build({
-//         name,
-//     });
+    const list = db.List.build({
+        name,
+        listId: req.session.auth.userId
+    });
+    // validate errors
+    const validatorErrors = validationResult(req);
 
-//     //validate errors
-//     const validatorErrors = validationResult(req);
-
-//     if (validatorErrors.isEmpty()) {
-//         await list.save();
-//         res.json({});
-//     }
-//     else {
-//         const errors = validatorErrors.array().map((error) => error.msg);
-//         res.json({
-//             name,
-//             errors,
-//             csrfToken: req.csrfToken(),
-//         });
-//     }
-// }));
+    if (validatorErrors.isEmpty()) {
+        await list.save();
+        res.json({name});
+    }
+    else {
+        const errors = validatorErrors.array().map((error) => error.msg);
+        res.json({
+            name,
+            errors,
+            csrfToken: req.csrfToken(),
+        });
+    }
+}));
 
 //Rename specified list
-// router.put('/:listId', csrfProtection, listValidators, asyncHandler(async(req,res) => {
-//     const listUpdate = await db.List.findByPk(req.params.listId);
+router.put('/:listId', csrfProtection, listValidators, asyncHandler(async(req,res) => {
+    const listUpdate = await db.List.findByPk(req.params.listId);
 
-//     const {name} = req.body;
+    const {name} = req.body;
 
-//     const list = {name};
+    const list = {name};
 
-//     const validatorErrors = validationResult(req);
+    const validatorErrors = validationResult(req);
 
-//     if (validatorErrors.isEmpty()) {
-//         await listUpdate.update(list);
-//         res.redirect('/');
-//     }
-//     else {
-//         const errors = validatorErrors.array().map((error) => error.msg);
-//         //render list.pug page
-//         res.render('index', {...list, id: req.params.listId, errors, csrfToken: req.csrfToken()})
-//     }
+    if (validatorErrors.isEmpty()) {
+        await listUpdate.update(list);
+        res.redirect('/');
+    }
+    else {
+        const errors = validatorErrors.array().map((error) => error.msg);
+        //render list.pug page
+        res.render('index', {...list, id: req.params.listId, errors, csrfToken: req.csrfToken()})
+    }
 
-// }))
+}))
 
 // //Delete a list
-// router.delete('/listId', csrfProtection, asyncHandler(async(req,res) => {
-//     const list = await db.List.findByPk(req.params.listId);
-//     await list.destroy();
-//     res.redirect('/');
-// }));
+router.delete('/listId', csrfProtection, asyncHandler(async(req,res) => {
+    const list = await db.List.findByPk(req.params.listId);
+    await list.destroy();
+    res.redirect('/');
+}));
 
 
 
