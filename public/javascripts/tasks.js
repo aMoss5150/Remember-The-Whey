@@ -1,3 +1,4 @@
+const tasksSelector = document.querySelector('#tasks-section__selector');
 const tasksForm = document.querySelector('#tasks-section__form');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
 
@@ -12,6 +13,25 @@ const convertSeconds = seconds => {
     if (hr < 10) hr = `0${hr}`;
 
     return [hr, min, sec];
+}
+
+// Takes a bool value
+// Set tasks to active or inactive
+const setAllTasksActive = (active) => {
+    const taskDivs = document.querySelectorAll('.tasks-section__task');
+
+    if (active) {
+        for (let taskDiv of taskDivs) {
+            taskDiv.classList.add('active');
+            taskDiv.children[1].checked = true;
+        }
+    }
+    else {
+        for (let taskDiv of taskDivs) {
+            taskDiv.classList.remove('active');
+            taskDiv.children[1].checked = false;
+        }
+    }
 }
 
 const getAllTasks = async () => {
@@ -51,6 +71,28 @@ const clearTaskFields = () => {
     for (let el of tasksForm)
         el.value = '';
 }
+
+// Event Listenters
+
+tasksSelector.addEventListener('click', async ev => {
+
+    // Handle user click of input checkbox
+    if (ev.target.type === 'checkbox') {
+        if (ev.target.checked) {
+            setAllTasksActive(true);
+        }
+        else {
+            setAllTasksActive(false);
+        }
+        return;
+    }
+
+    document.querySelector('#tasks-section__selector .dropdown-content').classList.add('active');
+});
+
+tasksSelector.addEventListener('mouseout', async ev => {
+    document.querySelector('#tasks-section__selector .dropdown-content').classList.remove('active');
+});
 
 tasksForm.addEventListener('submit', async ev => {
     ev.preventDefault();
@@ -92,28 +134,20 @@ tasksContainer.addEventListener('click', async ev => {
     const currTask = ev.target.closest('.tasks-section__task');
 
     // Handle user click of input checkbox
-    if (ev.target.type === 'checkbox'){
-        console.log('input clicked', currTask,ev.target)
-        if (ev.target.checked === true) {
-            currTask.classList.remove('tasks-section__task--active');
-            ev.target.checked = false;
+    if (ev.target.type === 'checkbox') {
+        if (ev.target.checked) {
+            currTask.classList.remove('active');
         }
         else {
-            currTask.classList.add('tasks-section__task--active');
-            ev.target.checked = true;
+            currTask.classList.add('active');
         }
         return;
     }
 
     // Handle user click of clickable task area
-    const taskDivs = document.querySelectorAll('.tasks-section__task');
+    setAllTasksActive(false);
 
-    for (let taskDiv of taskDivs) {
-        taskDiv.classList.remove('tasks-section__task--active');
-        taskDiv.children[1].checked = false;
-    }
-
-    currTask.classList.add('tasks-section__task--active');
+    currTask.classList.add('active');
     currTask.children[1].checked = true;
 })
 

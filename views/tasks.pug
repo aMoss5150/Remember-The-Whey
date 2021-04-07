@@ -2,6 +2,15 @@
 mixin tasks
     section(id='tasks-section')
         h2 Tasks
+        div(id='tasks-section__toolbar')
+            div(id='tasks-section__selector')
+                input(type='checkbox')
+                div(class='dropdown')
+                    i(class="fas fa-caret-down")
+                div(class='dropdown-content')
+                    a All
+                    a None
+
         form(id='tasks-section__form')
             input(type='hidden' name='_csrf' value=csrfToken)
             label Reps
