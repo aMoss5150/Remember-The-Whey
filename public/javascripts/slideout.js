@@ -17,14 +17,11 @@ function closeSlideout() {
 
 // slideout.addEventListener('click', () => {
 
-//     //checking id status, if so, run 
+//     //checking id status, if so, run
 // })
 
 slideoutBtn.addEventListener('click', closeSlideout)
-console.log(slideout)
+
 
 //MAKE SURE TO IMPLEMENT ID CHANGE TO BE ABLE TO TOGGLE SINCE
 //I WILL NOT BE ABLE TO USE THE ONCLICK EVENT!
-
-
-
