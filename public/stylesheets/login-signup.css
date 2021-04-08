@@ -19,7 +19,7 @@ body {
     grid-template-rows: 1fr 3fr;
 }
 
-#transfer__btn__container {
+#transfer__btn_container {
     display: flex;
     justify-content: flex-end;
 }
@@ -89,12 +89,12 @@ body {
 
 }
 
-#transfer__btn__container{
+#transfer__btn_container{
     padding-top: 10px;
     padding-right: 10px;
 }
 
-.demo__btn__container {
+.demo__btn_container {
     display: flex;
     width: 700px;
     align-items: flex-end;
@@ -155,7 +155,7 @@ footer {
 }
 
 
-.footer__links__container{
+.footer__links_container{
     display: flex;
     justify-content: space-evenly;
     margin-left: 12px;
