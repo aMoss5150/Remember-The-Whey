@@ -10,6 +10,7 @@ append head
   link(rel="stylesheet", href="/stylesheets/tasks.css")
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous")
   link(rel="stylesheet" href="/stylesheets/nav.css")
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous")
   //- add page specific js
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   script(src="/javascripts/index.js" type="module" defer)
@@ -41,16 +42,17 @@ block content
       +summary
       .title__container All Tasks
       .tasks__container 0
-        .title__container-title Tasks
-      .overdue__container 0
-        .overdue__container-title Overdue
+        .tasks__container-title Tasks
       .completed__container 0
         .completed__container-title Completed
+      //- .overdue__container 0
+      //-   .overdue__container-title Overdue
+      
     .summary__slideout
       form(class="form__flex hide")
-        a(href="#" id="closed" class="slideout__closebtn" ) &times
+        i(class="fas fa-times slideout__closebtn")
+        i(class="fas fa-print")
         span(class="info__tooltip") &#8505;
-        span(class="print__tooltip") 	&#x1f5b6;
         input(class="update__task" placeholder="taskname" type="text")
         label(id="listLabel") list
         select(class="update__list" placeholder="currentlist" type="text")
@@ -63,19 +65,8 @@ block content
         label(id="durationLabel") duration
         input(class="update__duration" placeholder="currentduration" type="text")
         label(id="notesLabel") notes
-        textarea(class="update__notes" placeholder="Add a note...")
-      //- .summary__update
+        textarea(class="update__notes" placeholder="Add a note...")   
+ 
 
-      //-   input(class="update__task" placeholder="taskname" type="text")
-      //-   label list
-      //-   select(class="update__list" placeholder="currentlist" type="text")
-      //-     option today
-      //-     option tomorrow
-      //-   label reps
-      //-   input(class="update__reps" placeholder="currentreps" type="text")
-      //-   label sets
-      //-   input(class="update__sets" placeholder="currentsets" type="text")
-      //-   label duration
-      //-   input(class="update__duration" placeholder="currentduration" type="text")
-      //-   label notes
-      //-   textarea(class="update__notes")
+   
+
