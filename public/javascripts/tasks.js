@@ -3,6 +3,7 @@ const toolbarComplete = document.querySelector('#toolbar__complete');
 const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
 const toolbarDelete = document.querySelector('#toolbar__delete');
 const tasksForm = document.querySelector('#tasks-section__form');
+const tasksFormInputs = tasksForm.querySelectorAll('input');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
 
 let selectedTaskIds = new Set();
@@ -11,8 +12,9 @@ let selectedTaskIds = new Set();
 // Helper functions
 
 const clearTaskFields = () => {
-    for (let el of tasksForm)
-        el.value = '';
+    for (let i = 1; i < tasksFormInputs.length; i++) {
+        tasksFormInputs[i].value = '';
+    }
 }
 
 const closeDropdowns = () => {
@@ -123,7 +125,7 @@ const toolbarSelectorHandler = (ev) => {
             setAllTasksActiveState(false);
     }
     else {
-        if (ev.target.id === 'selector__all'){
+        if (ev.target.id === 'selector__all') {
             setAllTasksActiveState(true);
             console.log(ev.target)
             inp.checked = true;
@@ -140,26 +142,34 @@ const toolbarSelectorHandler = (ev) => {
     }
 }
 
-const toolbarCompleteHandler = async (ev) => {
+const fetchHelper = async (method, body = {}) => {
     const formData = new FormData(tasksForm);
-    const body = {
-        _csrf: formData.get('_csrf'),
-        complete: true
-    };
+    const responses = [];
+
     for (let id of selectedTaskIds) {
         try {
-            const res = await fetch(`http://localhost:8080/tasks/${id}`, {
-                method: 'PATCH',
-                body: JSON.stringify(body),
+            const initObj = {
+                method: method.toUpperCase(),
                 headers: {
                     "Content-Type": "application/json"
                 }
-            });
+            }
+            // Only attach a body to initObj on non-GET requests
+            if (method.toUpperCase() !== 'GET') {
+                body['_csrf'] = formData.get('_csrf');
+                console.log(body)
+                initObj['body'] = JSON.stringify(body);
+            }
 
+            const res = await fetch(`http://localhost:8080/tasks/${id}`, initObj);
             if (!res.ok) {
                 console.log('RES NOT OKAY')
             }
             else {
+                if (res.status !== 204) {
+                    const obj = await res.json();
+                    responses.push(obj);
+                }
                 await getAllTasks();
             }
         }
@@ -167,21 +177,33 @@ const toolbarCompleteHandler = async (ev) => {
             console.log('Error:', err)
         }
     }
+
+    return responses;
+}
+
+const toolbarCompleteHandler = async (ev) => {
+    fetchHelper('PATCH', { complete: true });
 };
 
 const toolbarDuplicateHandler = async (ev) => {
-    //TODO
-};
-
-const toolbarDeleteHandler = async (ev) => {
     const formData = new FormData(tasksForm);
-    const body = {
-        _csrf: formData.get('_csrf')
-    };
-    for (let id of selectedTaskIds) {
+    const tasks = await fetchHelper('GET');
+
+    for (let task of tasks) {
+        const body = {
+            _csrf: formData.get('_csrf'),
+            listId: task.listId,
+            name: task.name,
+            sets: task.sets,
+            reps: task.reps,
+            duration: task.duration,
+            complete: task.complete,
+            date: task.date,
+            notes: task.notes
+        }
         try {
-            const res = await fetch(`http://localhost:8080/tasks/${id}`, {
-                method: 'DELETE',
+            const res = await fetch('http://localhost:8080/tasks', {
+                method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
                     "Content-Type": "application/json"
@@ -199,6 +221,10 @@ const toolbarDeleteHandler = async (ev) => {
             console.log('Error:', err)
         }
     }
+};
+
+const toolbarDeleteHandler = async (ev) => {
+    fetchHelper('DELETE');
 };
 
 const taskFormSubmitHandler = async (ev) => {
@@ -258,7 +284,7 @@ toolbarComplete.addEventListener('click', toolbarCompleteHandler);
 toolbarDuplicate.addEventListener('click', toolbarDuplicateHandler);
 toolbarDelete.addEventListener('click', toolbarDeleteHandler);
 tasksForm.addEventListener('submit', taskFormSubmitHandler);
-tasksContainer.addEventListener('click',taskSelectHandler);
+tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
 getAllTasks();

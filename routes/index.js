@@ -13,9 +13,4 @@ router.get('/', csrfProtection, (req, res) => {
 
 });
 
-
-
-
-
-
 module.exports = router;

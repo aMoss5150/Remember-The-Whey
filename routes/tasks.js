@@ -40,34 +40,23 @@ router.get('/:id(\\d+)', requireAuth, csrfProtection, asyncHandler(async (req, r
     const task = await db.Task.findByPk(taskId);
 
     if (task)
-        res.json({ task });
+        res.json( task );
     else
         next();
 }));
 
 // POST /tasks - Posts a new task to a specific list
 router.post('/', requireAuth, csrfProtection, taskValidators, asyncHandler(async (req, res) => {
-    const {
-        name,
-        sets,
-        reps,
-        duration
-    } = req.body;
+    req.body['listId'] = 2;
 
-    const task = db.Task.build({
-        listId: 2,
-        name,
-        sets,
-        reps,
-        duration
-    });
+    const task = db.Task.build(req.body);
 
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {
         await task.save();
-        res.redirect('/');
-        //res.send( task );
+        //res.redirect('/');
+        res.send( task );
     }
     else {
         const errors = validatorErrors.array().map(err = err.msg);
