@@ -170,7 +170,7 @@ async function createList(name) {
 
         anchor.setAttribute('id', lastList.id);
         anchor.setAttribute('href', `/lists/${lastList.id}`);
-        btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
+        btnRename.setAttribute('class', `list__btn--rename ${lastList.id}`);
 
         anchor.innerHTML = lastList.name;
         btnRename.innerHTML = 'Rename';
@@ -197,15 +197,15 @@ async function createList(name) {
 //Rename a list
 async function updateList(id, name) {
 
-    const renameForm = document.querySelector('.list-rename-form');
-    const formData = new FormData(renameForm);
+    const newListForm = document.querySelector('.list-form');
+    const formData = new FormData(newListForm);
     const body = {
         name,
         _csrf: formData.get('_csrf'),
     }
-    console.log("rename form: ", renameForm);
-    console.log("formdata: ", formData);
-    console.log("body", body);
+    // console.log("rename form: ", newListForm);
+    // console.log("id: ", id);
+    // console.log("body", body);
 
     try {
         const res = await fetch(`/lists/${id}`, {
@@ -219,9 +219,12 @@ async function updateList(id, name) {
             throw res;
         }
         const { list } = await res.json();
+        console.log(list);
         //get the targeted list name innerText property
-        let anchor = document.getElementById('1');
+        let anchor = document.getElementById(id);
+        console.log(anchor);
         anchor.innerHTML = list.name;
+        console.log(anchor);
     }
     catch (err) {
         console.log(err);
@@ -275,6 +278,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     renameBtns.forEach(btn => {
         // console.log(btn);
         btn.addEventListener('click', event => {
+            event.preventDefault();
             const id = event.target.classList[1];
             // console.dir(event.target.classList[1]);
             updateList(id, "Hector is awesome");
