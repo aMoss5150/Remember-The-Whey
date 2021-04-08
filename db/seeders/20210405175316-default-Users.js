@@ -3,7 +3,21 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('Users', [
-      {firstName:"Demo", lastName:"User", email:"demo@aa.com", hashPW:"strongpassword", createdAt: new Date(), updatedAt: new Date()}
+      {
+        firstName: "Demo",
+        lastName: "User",
+        email: "demo@aa.com",
+        hashPW: "strongpassword",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },{
+        firstName: "Demo2",
+        lastName: "User2",
+        email: "demo2@aa.com",
+        hashPW: "strongpassword",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     ]);
     /*
       Add altering commands here.
@@ -28,6 +42,3 @@ module.exports = {
     */
   }
 };
-
-
-

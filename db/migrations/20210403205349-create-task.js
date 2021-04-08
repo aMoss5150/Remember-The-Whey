@@ -19,7 +19,12 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
+      },
+      repeats: {
+        defaultValue: false,
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       notes: {
         type: Sequelize.TEXT
