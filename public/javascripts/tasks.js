@@ -1,6 +1,27 @@
-const tasksSelector = document.querySelector('#tasks-section__selector');
+const toolbarSelector = document.querySelector('#toolbar__selector');
+const toolbarComplete = document.querySelector('#toolbar__complete');
+const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
+const toolbarDelete = document.querySelector('#toolbar__delete');
 const tasksForm = document.querySelector('#tasks-section__form');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
+
+let selectedTaskIds = new Set();
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// Helper functions
+
+const clearTaskFields = () => {
+    for (let el of tasksForm)
+        el.value = '';
+}
+
+const closeDropdowns = () => {
+    const dropdownMenus = document.querySelectorAll('.dropdown-content');
+
+    for (let dropdown of dropdownMenus) {
+        dropdown.classList.remove('open');
+    }
+}
 
 const convertSeconds = seconds => {
     seconds = parseInt(seconds, 10);
@@ -15,23 +36,39 @@ const convertSeconds = seconds => {
     return [hr, min, sec];
 }
 
-// Takes a bool value
-// Set tasks to active or inactive
-const setAllTasksActive = (active) => {
-    const taskDivs = document.querySelectorAll('.tasks-section__task');
-
-    if (active) {
-        for (let taskDiv of taskDivs) {
-            taskDiv.classList.add('active');
-            taskDiv.children[1].checked = true;
-        }
+// Add or remove active state based on val
+// @param {bool} val
+const setTaskActiveState = (task, val) => {
+    if (val) {
+        task.classList.add('active');
+        task.children[1].checked = true;
+        selectedTaskIds.add(task.id.split('-')[1]);
+    }
+    else if (val === false) {
+        task.classList.remove('active');
+        task.children[1].checked = false;
+        selectedTaskIds.delete(task.id.split('-')[1]);
     }
     else {
-        for (let taskDiv of taskDivs) {
-            taskDiv.classList.remove('active');
-            taskDiv.children[1].checked = false;
+        // Flip active state
+        if (task.classList.contains('active')) {
+            task.classList.remove('active');
+            task.children[1].checked = false;
+            selectedTaskIds.delete(task.id.split('-')[1]);
+        }
+        else {
+            task.classList.add('active');
+            task.children[1].checked = true;
+            selectedTaskIds.add(task.id.split('-')[1]);
         }
     }
+}
+
+const setAllTasksActiveState = (val) => {
+    const taskDivs = document.querySelectorAll('.tasks-section__task');
+
+    for (let task of taskDivs)
+        setTaskActiveState(task, val);
 }
 
 const getAllTasks = async () => {
@@ -43,7 +80,9 @@ const getAllTasks = async () => {
     });
     const { tasks } = await res.json();
 
-    let id = 0;
+    // Reset selectedTaskIds
+    selectedTaskIds = new Set();
+
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
         if (task.sets)
@@ -56,45 +95,113 @@ const getAllTasks = async () => {
             taskStr += ` for ${dur[0]}:${dur[1]}:${dur[2]}`
         }
 
-        return `<div id=task-${id++} class="tasks-section__task">
+        return `<div id=task-${task.id} class="tasks-section__task">
                     <div class="handle">
                         <i class="fas fa-ellipsis-v"></i>
                     </div>
                     <input type="checkbox">
                     <div class="card-text">${taskStr}</div>
                 </div>`;
-    })
+    });
     tasksContainer.innerHTML = tasksHtml.join('');
 };
 
-const clearTaskFields = () => {
-    for (let el of tasksForm)
-        el.value = '';
-}
+///////////////////////////////////////////////////////////////////////////////////////////
+// Event Handlers
 
-// Event Listenters
+const toolbarSelectorHandler = (ev) => {
+    const inp = document.querySelector('#toolbar__selector input');
+    ev.stopPropagation();
 
-tasksSelector.addEventListener('click', async ev => {
+    closeDropdowns();
 
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
-        if (ev.target.checked) {
-            setAllTasksActive(true);
+        if (ev.target.checked)
+            setAllTasksActiveState(true);
+        else
+            setAllTasksActiveState(false);
+    }
+    else {
+        if (ev.target.id === 'selector__all'){
+            setAllTasksActiveState(true);
+            console.log(ev.target)
+            inp.checked = true;
+            closeDropdowns();
+        }
+        else if (ev.target.id === 'selector__none') {
+            setAllTasksActiveState(false);
+            inp.checked = false;
+            closeDropdowns();
         }
         else {
-            setAllTasksActive(false);
+            document.querySelector('#toolbar__selector .dropdown-content').classList.add('open');
         }
-        return;
     }
+}
 
-    document.querySelector('#tasks-section__selector .dropdown-content').classList.add('active');
-});
+const toolbarCompleteHandler = async (ev) => {
+    const formData = new FormData(tasksForm);
+    const body = {
+        _csrf: formData.get('_csrf'),
+        complete: true
+    };
+    for (let id of selectedTaskIds) {
+        try {
+            const res = await fetch(`http://localhost:8080/tasks/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify(body),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
 
-tasksSelector.addEventListener('mouseout', async ev => {
-    document.querySelector('#tasks-section__selector .dropdown-content').classList.remove('active');
-});
+            if (!res.ok) {
+                console.log('RES NOT OKAY')
+            }
+            else {
+                await getAllTasks();
+            }
+        }
+        catch (err) {
+            console.log('Error:', err)
+        }
+    }
+};
 
-tasksForm.addEventListener('submit', async ev => {
+const toolbarDuplicateHandler = async (ev) => {
+    //TODO
+};
+
+const toolbarDeleteHandler = async (ev) => {
+    const formData = new FormData(tasksForm);
+    const body = {
+        _csrf: formData.get('_csrf')
+    };
+    for (let id of selectedTaskIds) {
+        try {
+            const res = await fetch(`http://localhost:8080/tasks/${id}`, {
+                method: 'DELETE',
+                body: JSON.stringify(body),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                console.log('RES NOT OKAY')
+            }
+            else {
+                await getAllTasks();
+            }
+        }
+        catch (err) {
+            console.log('Error:', err)
+        }
+    }
+};
+
+const taskFormSubmitHandler = async (ev) => {
     ev.preventDefault();
 
     const formData = new FormData(tasksForm);
@@ -111,7 +218,6 @@ tasksForm.addEventListener('submit', async ev => {
         const res = await fetch('http://localhost:8080/tasks', {
             method: 'POST',
             body: JSON.stringify(body),
-            credentials: 'include',
             headers: {
                 "Content-Type": "application/json"
             }
@@ -128,28 +234,32 @@ tasksForm.addEventListener('submit', async ev => {
     catch (err) {
         console.log('Error:', err)
     }
-});
+}
 
-tasksContainer.addEventListener('click', async ev => {
+const taskSelectHandler = (ev) => {
     const currTask = ev.target.closest('.tasks-section__task');
 
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
-        if (ev.target.checked) {
-            currTask.classList.remove('active');
-        }
-        else {
-            currTask.classList.add('active');
-        }
-        return;
+        setTaskActiveState(currTask);
     }
-
     // Handle user click of clickable task area
-    setAllTasksActive(false);
+    else {
+        setAllTasksActiveState(false);
+        setTaskActiveState(currTask, true);
+    }
+}
 
-    currTask.classList.add('active');
-    currTask.children[1].checked = true;
-})
+///////////////////////////////////////////////////////////////////////////////////////////
+// Event Listeners
+
+toolbarSelector.addEventListener('click', toolbarSelectorHandler);
+toolbarComplete.addEventListener('click', toolbarCompleteHandler);
+toolbarDuplicate.addEventListener('click', toolbarDuplicateHandler);
+toolbarDelete.addEventListener('click', toolbarDeleteHandler);
+tasksForm.addEventListener('submit', taskFormSubmitHandler);
+tasksContainer.addEventListener('click',taskSelectHandler);
+window.addEventListener('click', closeDropdowns);
 
 getAllTasks();
 

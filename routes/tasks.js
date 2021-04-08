@@ -67,6 +67,7 @@ router.post('/', requireAuth, csrfProtection, taskValidators, asyncHandler(async
     if (validatorErrors.isEmpty()) {
         await task.save();
         res.redirect('/');
+        //res.send( task );
     }
     else {
         const errors = validatorErrors.array().map(err = err.msg);
@@ -80,8 +81,20 @@ router.put('/:id(\\d+)', requireAuth, csrfProtection, taskValidators, asyncHandl
 
     if (task) {
         await task.update(req.body);
-        res.json({ task });
-        res.redirect('/');
+        res.json(task);
+    }
+    else
+        next();
+}));
+
+// PATCH /tasks/:id - Update a property of a task from a list
+router.patch('/:id(\\d+)', requireAuth, csrfProtection, taskValidators, asyncHandler(async (req, res, next) => {
+    const taskId = parseInt(req.params.id, 10);
+    const task = await db.Task.findByPk(taskId);
+
+    if (task) {
+        await task.update(req.body);
+        res.json(task);
     }
     else
         next();
