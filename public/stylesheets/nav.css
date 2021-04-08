@@ -1,7 +1,7 @@
 .navbar__container {
     display: flex;
     background-color: #1874CD;
-    height: 60px;
+    height: 40px;
     align-items: center;
     position: sticky;
     justify-content: space-between;
@@ -63,9 +63,8 @@
     font-weight: bold;
     color: slateblue;
     opacity: .9;
-    height: 23px;
+    height: 30px;
 }
-
 .search-icon {
     height: 20px;
     position:absolute;
@@ -75,11 +74,10 @@
     margin-left: 4px;
 }
 
-/* .hamburger__icon {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-} */
+.hamburger__icon {
+    padding-left: 5px;
+}
+
 /* .hamburger {
     width: 30px;
     height: 30px;
