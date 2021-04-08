@@ -8,7 +8,9 @@ window.addEventListener("DOMContentedLoaded", (e) => {
         e.preventDefault()
 
         //grab input from search input to use as the regex
-        const searchInpt = document.querySelector(".navbar__search_input").value
+        const searchInc = document.querySelector(".navbar__search_input").value
+        //doest include code:
+        // const searchNotInc = document.querySelector('classnameforNOTinpt').value
 
         // need to grab html element where i can display all tasks
         // with make variable let taskDisplay === html display element
@@ -20,7 +22,9 @@ window.addEventListener("DOMContentedLoaded", (e) => {
             if(!res.ok) throw res;
 
             const results = json.tasks.filter(task => {
-                return searchInpt.test(task.name)
+                return task.name.includes(searchInc)
+                //doest include code:
+                // return (task.name.includes(searchInc) && !(task.name.includes(searchNotInc)) )
             })
 
             // display results on task section display area
