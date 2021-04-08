@@ -154,16 +154,13 @@ const toolbarSelectorHandler = (ev) => {
                 console.log("TODO - today, tomorrow, overdue handlers")
 
                 if (ev.target.id === 'selector_today') {
-                    setAllTasksActiveState(false);
-                    inp.checked = false;
+
                 }
                 else if (ev.target.id === 'selector_tomorrow') {
-                    setAllTasksActiveState(false);
-                    inp.checked = false;
+
                 }
                 else if (ev.target.id === 'selector_overdue') {
-                    setAllTasksActiveState(false);
-                    inp.checked = false;
+
                 }
             }
 
