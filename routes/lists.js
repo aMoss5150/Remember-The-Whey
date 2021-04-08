@@ -7,7 +7,7 @@ const {csrfProtection,asyncHandler,} = require('./utils');
 const {check, validationResult} = require('express-validator');
 
 //get all lists from user
-router.get('/', asyncHandler(async(req,res) => {
+router.get('/', csrfProtection, asyncHandler(async(req,res) => {
     // console.log(req.session);
 
     let lists = await db.List.findAll({
@@ -16,12 +16,12 @@ router.get('/', asyncHandler(async(req,res) => {
         }
     });
     //get a list from the specific user
-    // res.json({lists, csrfToken: req.csrfToken()});
-    res.json({lists})
+    res.json({lists, csrfToken: req.csrfToken()});
+    // res.json({lists})
 }));
 
 //get a specific list
-router.get('/:listId', asyncHandler(async(req,res) => {
+router.get('/:listId', csrfProtection, asyncHandler(async(req,res) => {
     //use req.session.auth.userId to send the data to front end
 
     const list = await db.List.findByPk(req.params.listId);
@@ -51,7 +51,7 @@ router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => 
 
     const list = db.List.build({
         name,
-        listId: req.session.auth.userId
+        // listId: req.session.auth.userId
     });
     // validate errors
     const validatorErrors = validationResult(req);

@@ -33,7 +33,8 @@ async function fetchLists () {
     try {
         const res = await fetch('/lists');
         if (!res.ok) {
-            throw lists;
+            // res.json()
+            throw res;
         }
         const {lists} = await res.json();
         // console.log(lists);
@@ -42,7 +43,12 @@ async function fetchLists () {
             const li = document.createElement('li');
             const btnRename = document.createElement('button');
             const btnDelete = document.createElement('button');
+
+            //when its clicked // add event
+            ///lists/:id'sid
+
             li.innerHTML = list.name;
+            // li.attributes('id', "list.id")
             btnRename.innerHTML = 'Rename';
             btnDelete.innerHTML = "Delete";
             ulLists.appendChild(li);
@@ -51,10 +57,14 @@ async function fetchLists () {
         })
     }
     catch (error) {
-        let err = await error.json();
-        // console.log(err);
+        console.log(error);
+        // let err = await error.json();
     }
 }
+
+// await fetch(/list/id)
+// list.update({name})
+// res.json{all user lists}
 
 async function fetchOneList (id) {
     //when a user clicks on a list, display tasks on tasks section
@@ -81,24 +91,26 @@ async function fetchOneList (id) {
     }
 }
 
+// name = document.get . value
 async function createList (name) {
-
+    const csurf = document.getElementById('csurf').value
     try {
         const res = await fetch('/lists', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name})
+            body: JSON.stringify({name, csurf})
         });
         if (!res.ok) {
-            throw new Error();
+            throw res
         }
         const list = await res.json();
         console.log(list);
     }
     catch (err) {
-        const error = err.json();
+        console.log(err)
+        // const error = err.json();
     }
 }
 
@@ -141,7 +153,7 @@ async function deleteList (id, name) {
 
 window.addEventListener('DOMContentLoaded', event => {
     const lists = document.querySelectorAll('#lists');
-    const submitNewList = document.querySelector('.list-form');
+    const submitNewList = document.querySelector('.list-add');
     const inputNewList = document.querySelector('.list-name--input');
 
     //grab all the user's lists when DOM is loaded
@@ -157,8 +169,9 @@ window.addEventListener('DOMContentLoaded', event => {
     })
 
     //listen for the button to create a new list
-    submitNewList.addEventListener('submit', event => {
+    submitNewList.addEventListener('click', event => {
         event.preventDefault();
+        console.log(inputNewList.value)
         createList(inputNewList.value);
     });
 
