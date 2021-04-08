@@ -1,39 +1,11 @@
 body {
-    background-color: rgb(181, 225, 240);
+    background-color: #d7e7f5;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     border: 1px solid black;
 }
 
 /*!NAV*/
-
-.navbar__row {
-    display: flex;
-    background-color: blue;
-    height: 40px;
-    /* justify-content: space-between; */
-}
-
-.search__navbox {
-    position: sticky;
-    left: 200px;
-    padding-right: 30px;
-    padding: 5px;
-    /* border: 1px solid black; */
-    background-color: rgb(22, 22, 224);
-}
-
-.search__navbox:hover, .search__navbox:focus {
-    border: 1px solid #009688;
-    background-color: lightblue;
-}
-
-.right__navbox {
-    /* justify-self: flex-start; */
-    position: sticky;
-    left: 1800px;
-    padding: 5px;
-}
 
 /*!COLUMNS and MAIN CONTAINER*/
 
@@ -48,7 +20,7 @@ body {
 .list__column {
     grid-area: lists;
     display: flex;
-    background-color: rgb(181, 225, 240);
+    background-color: #d7e7f5;
     min-width: 200px;
     /* max-width: 300px; */
     /* min-height: 500px; */
@@ -78,7 +50,7 @@ body {
     margin-top: 5px;
     grid-area: summary;
     display: flex;
-    background-color: red;
+    background-color: #e4eef8;
     min-width: 200px;
     /* min-height: 500px; */
     /* width: 850px; */
@@ -93,26 +65,74 @@ body {
     margin-top: 5px;
     grid-area: summary;
     display: flex;
-    /* position: relative; */
-    /* top: -600px; */
-    /* left: 1175px; */
     background-color: white;
-    /* width: 100%; */
     z-index: 100;
-    /* height: 100%; */
+    left: 0px;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
-    transition: 1s;
+    transition-property: left;
+    transition-duration: 2s;
+}
+
+/*!TRANSITIONED STATE*/
+
+.hidden__slide {
+    margin-top: 5px;
+    display: flex;
+    position: relative;
+    left: 1200px;
+    background-color: white;
+    z-index: 100;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left;
+    transition-duration: 2s;
 }
 
 /*!TOOLTIPS*/
 
+/* .close {
+    align-self: flex-end;
+    position: relative;
+    right: 15px;
+    bottom: 6px;
+    font-size: 14px;
+} */
+
 .info__tooltip {
     align-self: flex-end;
+    border-bottom: none;
+    position: relative;
+    right: 10px;
+    bottom: 15px;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 21px;
+}
+
+.fa-print {
+    align-self: flex-end;
+    position: relative;
+    /* bottom: 10px; */
+    top: 5px;
+    left: 6px;
+    font-size: 13px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.6)
 }
 
 .print__tooltip {}
+
+.fa-times {
+    align-self: flex-end;
+    position: relative;
+    bottom: 10px;
+    left: 10px;
+    font-size: 11px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.6)
+}
 
 /*!summary-slideout--FORM container*/
 
@@ -128,10 +148,6 @@ body {
 }
 
 /*!FORM FIELDS / ELEMENTS*/
-
-.slideout__closebtn {
-    align-self: flex-end;
-}
 
 .update__task {
     font-size: 20px;
@@ -235,39 +251,65 @@ body {
     padding: 5px;
     position: relative;
     left: 10px;
+    font-size: 18px;
 }
 
 .tasks__container {
     padding: 5px;
     position: relative;
-    left: -40px;
+    left: -64px;
     top: 40px;
     height: 50px;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     border-radius: 7px;
     margin: 2px;
+    background-color: #d7e7f5;
+    color: #1874CD;
+    font-weight: bolder;
+    font-size: 19px;
+    margin-left: 2px;
 }
 
-.overdue__container {
-    position: relative;
-    padding: 5px;
-    left: -40px;
-    top: 40px;
-    height: 50px;
-    border: 1px solid blue;
-    border-radius: 7px;
+.tasks__container-title {
+    font-size: 12px;
     margin: 2px;
+    color: black;
 }
 
 .completed__container {
+    /* display: none; */
+    position: relative;
+    padding: 5px;
+    left: -64px;
+    top: 40px;
+    height: 50px;
+    /* border: 1px solid blue; */
+    border-radius: 7px;
+    margin: 2px;
+    background-color: #d7e7f5;
+    font-size: 19px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.4)
+}
+
+.completed__container-title {
+    font-size: 12px;
+    margin: 2px;
+}
+
+/*!HIDDEN OVERDUE*/
+
+.overdue__container {
+    display: none;
     position: relative;
     padding: 5px;
     left: -40px;
     top: 40px;
     height: 50px;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     border-radius: 7px;
     margin: 2px;
+    background-color: #d7e7f5;
 }
 
 /* .hide {
