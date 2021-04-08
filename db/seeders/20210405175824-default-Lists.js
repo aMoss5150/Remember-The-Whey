@@ -25,6 +25,22 @@ module.exports = {
       userId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
+    },{
+      name: '_hidden',
+      userId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      name: 'Push',
+      userId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },{
+      name: 'Pull',
+      userId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
     /*
       Add altering commands here.

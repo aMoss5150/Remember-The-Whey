@@ -63,9 +63,8 @@
     font-weight: bold;
     color: slateblue;
     opacity: .9;
-    height: 23px;
+    height: 30px;
 }
-
 .search-icon {
     height: 20px;
     position:absolute;
@@ -74,3 +73,44 @@
     margin-top: 4px;
     margin-left: 4px;
 }
+
+.hamburger__icon {
+    padding-left: 5px;
+}
+
+.hide{
+    /* transition the height */
+
+    height: 0px
+}
+
+
+/* .summary__slideout {
+    margin-top: 5px;
+    grid-area: summary;
+    display: flex;
+    background-color: white;
+    z-index: 100;
+    left: 0px;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left;
+    transition-duration: 2s;
+} */
+
+/*!TRANSITIONED STATE*/
+
+/* .hidden__slide {
+    margin-top: 5px;
+    display: flex;
+    position: relative;
+    left: 1200px;
+    background-color: white;
+    z-index: 100;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left;
+    transition-duration: 2s;
+} */

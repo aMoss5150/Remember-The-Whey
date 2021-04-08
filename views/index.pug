@@ -7,17 +7,24 @@ append head
   //- add page specific styles by appending to the head
   link(rel="stylesheet" href="/stylesheets/reset.css")
   link(rel="stylesheet" href="/stylesheets/index.css")
+  link(rel="stylesheet", href="/stylesheets/tasks.css")
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous")
   link(rel="stylesheet" href="/stylesheets/nav.css")
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous")
   //- add page specific js
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   script(src="/javascripts/index.js" type="module" defer)
   script(src="/javascripts/slideout.js" type="module" defer)
+  script(src="/javascripts/navbar.js" type="module" async defer)
 
 block content
-  .navbar__container NAV
-    span(class="hamburger")
-      a(href="")
-        svg(class="hamburger__icon") 
+  .navbar__container
+    span(class="navbar__open--slide")
+      a(href="" class="")
+        svg(class="hamburger__icon" viewbox="0 0 100 60" width="40" height="40")
+          rect(width="80" height="12" stroke="#fff")
+          rect(y="30" width="80" height="12" stroke="#fff")
+          rect(y="60" width="80" height="12" stroke="#fff")
     .navbar__search_container
       img(class="search-icon" src="/searchicon.png")
       input(class="navbar__search_input" name="search" type="text" required)
@@ -27,9 +34,9 @@ block content
         button(type="submit" class="nav__logout_btn") Logout
 
   .column__container
-    .list__column
+    div(class="list__column show")
       +lists
-    .task__column  
+    .task__column
       +tasks
     .summary__column
       +summary

@@ -14,14 +14,14 @@ html(lang="en")
                 p(class="quote__display")
                 p(class="speaker__display")
         #main__right
-            #transfer__btn__container
+            #transfer__btn_container
                 a(href="/users/sign-up")
                     button(class="transfer__btn") Sign up
             #main__form
                 if errors
                     ul
                         each error in errors
-                            div(class="error__msg")= error
+                            li(class="error__msg")= error
                 form(action="/users/log-in" method="post" id="form__header") Been here before? Welcome back!
                     br
                     input(type="hidden" name="_csrf" value=csrfToken)
@@ -32,14 +32,14 @@ html(lang="en")
 
                     button(type="submit" id="form__btn") Log in
                     br
-                .demo__btn__container
+                .demo__btn_container
                     form(action="/users/log-in" method="post")
                         input(type="hidden" name="_csrf" value=csrfToken)
                         input(type="hidden" name="email" value="demo@aa.com")
                         input(type="hidden" name="password" value="strongpassword" )
                         button(type="submit" class="demo__btn") Demo User
             footer
-                .footer__links__container
+                .footer__links_container
                     a(class="footer__link" href="https://github.com/mkellydevv") Michael Kelly
                     a(class="footer__link" href="https://github.com/crespohector") Hector Crespo
                     a(class="footer__link" href="https://github.com/aMoss5150") Andrew Moss
