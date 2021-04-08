@@ -33,38 +33,37 @@ block content
         .overdue__container-title Overdue
       .completed__container 0
         .completed__container-title Completed
-      .summary__update
-
+    .summary__slideout
+      form(class="form__flex hide")
+        a(href="#" id="closed" class="slideout__closebtn" ) &times
         input(class="update__task" placeholder="taskname" type="text")
-        label list
+        label(id="listLabel") list
         select(class="update__list" placeholder="currentlist" type="text")
           option today
           option tomorrow
-        label reps
+        label(id="repsLabel") reps
         input(class="update__reps" placeholder="currentreps" type="text")
-        label sets
+        label(id="setsLabel") sets
         input(class="update__sets" placeholder="currentsets" type="text")
-        label duration
+        label(id="durationLabel") duration
         input(class="update__duration" placeholder="currentduration" type="text")
-        label notes
-        textarea(class="update__notes")
+        label(id="notesLabel") notes
+        textarea(class="update__notes" placeholder="Add a note...")   
+      //- .summary__update
 
-    .summary__slideout
-      a(href="#" id="closed" class="slideout__close" onclick="closeSlideout()") &times
-      input(class="update__task" placeholder="taskname" type="text")
-      label list
-      select(class="update__list" placeholder="currentlist" type="text")
-        option today
-        option tomorrow
-      label reps
-      input(class="update__reps" placeholder="currentreps" type="text")
-      label sets
-      input(class="update__sets" placeholder="currentsets" type="text")
-      label duration
-      input(class="update__duration" placeholder="currentduration" type="text")
-      label notes
-      textarea(class="update__notes")
-        
-          
-      .footer &copy footer
+      //-   input(class="update__task" placeholder="taskname" type="text")
+      //-   label list
+      //-   select(class="update__list" placeholder="currentlist" type="text")
+      //-     option today
+      //-     option tomorrow
+      //-   label reps
+      //-   input(class="update__reps" placeholder="currentreps" type="text")
+      //-   label sets
+      //-   input(class="update__sets" placeholder="currentsets" type="text")
+      //-   label duration
+      //-   input(class="update__duration" placeholder="currentduration" type="text")
+      //-   label notes
+      //-   textarea(class="update__notes")
+
+   
 
