@@ -16,10 +16,17 @@ append head
   script(src="/javascripts/slideout.js" type="module" defer)
 
 block content
-  .navbar__container NAV
-    span(class="hamburger")
+  .navbar__container
+    span(class="navbar__open--slide")
       a(href="")
-        svg(class="hamburger__icon")
+        svg(class="hamburger__icon" width="40" height="60")
+          rect(y="0" width="100" height="15")
+          rect(y="30" width="100" height="15")
+          rect(y="60" width="100" height="15")
+  //-         //<svg viewBox="0 0 100 80" width="40" height="40">
+  //- <rect width="100" height="20"></rect>
+  //- <rect y="30" width="100" height="20"></rect>
+  //- <rect y="60" width="100" height="20"></rect>
 
     .navbar__search_container
       img(class="search-icon" src="/searchicon.png")
