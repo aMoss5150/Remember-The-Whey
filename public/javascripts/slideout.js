@@ -25,6 +25,3 @@ const testButton = document.querySelector('#button__test')
 testButton.addEventListener("click", () => {
     closeSlideout()
 })
-
-
-
