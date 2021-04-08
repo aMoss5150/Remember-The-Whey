@@ -5,10 +5,12 @@ include summary.pug
 
 append head
   //- add page specific styles by appending to the head
+  link(rel="stylesheet" href="/stylesheets/reset.css")
   link(rel="stylesheet" href="/stylesheets/index.css")
   link(rel="stylesheet" href="/stylesheets/nav.css")
   //- add page specific js
   script(src="/javascripts/index.js" type="module" defer)
+  script(src="/javascripts/slideout.js" type="module" defer)
 
 block content
   .navbar__container NAV
@@ -23,6 +25,54 @@ block content
     .right__navbox
       form(action="/users/logout" method="post")
         button(type="submit" class="nav__logout_btn") Logout
-  +lists
-  +tasks
-  +summary
+
+  .column__container
+    .list__column
+      +lists
+    .task__column  
+      +tasks
+    .summary__column
+      +summary
+      .title__container All Tasks
+      .tasks__container 0
+        .title__container-title Tasks
+      .overdue__container 0
+        .overdue__container-title Overdue
+      .completed__container 0
+        .completed__container-title Completed
+    .summary__slideout
+      form(class="form__flex hide")
+        a(href="#" id="closed" class="slideout__closebtn" ) &times
+        span(class="info__tooltip") &#8505;
+        span(class="print__tooltip") 	&#x1f5b6;
+        input(class="update__task" placeholder="taskname" type="text")
+        label(id="listLabel") list
+        select(class="update__list" placeholder="currentlist" type="text")
+          option today
+          option tomorrow
+        label(id="repsLabel") reps
+        input(class="update__reps" placeholder="currentreps" type="text")
+        label(id="setsLabel") sets
+        input(class="update__sets" placeholder="currentsets" type="text")
+        label(id="durationLabel") duration
+        input(class="update__duration" placeholder="currentduration" type="text")
+        label(id="notesLabel") notes
+        textarea(class="update__notes" placeholder="Add a note...")   
+      //- .summary__update
+
+      //-   input(class="update__task" placeholder="taskname" type="text")
+      //-   label list
+      //-   select(class="update__list" placeholder="currentlist" type="text")
+      //-     option today
+      //-     option tomorrow
+      //-   label reps
+      //-   input(class="update__reps" placeholder="currentreps" type="text")
+      //-   label sets
+      //-   input(class="update__sets" placeholder="currentsets" type="text")
+      //-   label duration
+      //-   input(class="update__duration" placeholder="currentduration" type="text")
+      //-   label notes
+      //-   textarea(class="update__notes")
+
+   
+
