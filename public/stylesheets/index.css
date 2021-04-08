@@ -42,7 +42,7 @@ body {
     grid-template-columns: 200px 1fr 1fr;
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
-    /* height: auto; */
+    height: 100%;
 }
 
 .list__column {
@@ -105,6 +105,14 @@ body {
     border-radius: 6px;
     transition: 1s;
 }
+
+/*!TOOLTIPS*/
+
+.info__tooltip {
+    align-self: flex-end;
+}
+
+.print__tooltip {}
 
 /*!summary-slideout--FORM container*/
 
