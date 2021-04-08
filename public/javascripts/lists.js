@@ -42,7 +42,12 @@ async function fetchLists () {
             const li = document.createElement('li');
             const btnRename = document.createElement('button');
             const btnDelete = document.createElement('button');
+
+            //when its clicked // add event
+            ///lists/:id'sid 
+
             li.innerHTML = list.name;
+            // li.attributes('id', "list.id")
             btnRename.innerHTML = 'Rename';
             btnDelete.innerHTML = "Delete";
             ulLists.appendChild(li);
@@ -152,7 +157,7 @@ window.addEventListener('DOMContentLoaded', event => {
         list.addEventListener('click', event => {
             console.log("this is event.target", event.target)
             //how to find the id of the list ?
-            // fetchOneList(2);
+            fetchOneList(2);
         })
     })
 
