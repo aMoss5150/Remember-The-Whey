@@ -1,3 +1,52 @@
 
 mixin tasks
-    div Tasks
+    section(id='tasks-section')
+        h2 Tasks
+        div(id='tasks-section__toolbar')
+            div(class='button-group')
+                div(id='toolbar__selector')
+                    input(type='checkbox')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                    div(class='dropdown-content')
+                        a(id='selector__all') All
+                        a(id='selector__none') None
+            div(class='button-group')
+                div(id='toolbar__complete' class='tooltip')
+                    i(class='fas fa-check')
+                    div(class='tooltip-text') Complete
+                div(id='toolbar__duplicate' class='tooltip')
+                    i(class='fas fa-clone')
+                    div(class='tooltip-text') Duplicate
+                div(id='toolbar__delete' class='tooltip')
+                    i(class='fas fa-trash')
+                    div(class='tooltip-text') Delete
+            div(class='button-group')
+                div(id='toolbar__date')
+                    i(class='fas fa-calendar-alt')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                div(id='toolbar__list')
+                    i(class='fas fa-list')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                    div(class='dropdown-content')
+                        a(id='b') B
+                        a(id='bb') BB
+                div(id='toolbar__tag')
+                    i(class='fas fa-tag')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+        form(id='tasks-section__form')
+            input(type='hidden' name='_csrf' value=csrfToken)
+            label Reps
+                input(type='number' name='reps' placeholder='1' required)
+            label Sets
+                input(type='number' name='sets' placeholder='0')
+            label Exercise
+                input(type='text' name='name' placeholder='Add an exercise...' required)
+            label Duration
+                input(type='number' name='duration' placeholder='60')
+            button(type='submit') Add
+        div(id='tasks-section__tasks-container')
+    script(src='javascripts/tasks.js')
