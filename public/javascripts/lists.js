@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', event => {
         list.addEventListener('click', event => {
             console.log("this is event.target", event.target)
             //how to find the id of the list ?
-            // fetchOneList(2);
+            fetchOneList(2);
         })
     })
 
