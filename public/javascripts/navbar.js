@@ -75,8 +75,16 @@ hamburger.addEventListener('click', e => {
     e.preventDefault()
 
     const listSection = document.querySelector('.list__column')
-    console.log(listSection)
 
+    if(listSection.classList.contains("show")) {
+        listSection.classList.remove("show")
+        listSection.classList.add("hide")
+    } else {
+        listSection.classList.remove("hide")
+        listSection.classList.add("show")
+    }
+
+    console.log(listSection)
     // const listSection
     //grab hectors list element
     //add class to hectors element opened
