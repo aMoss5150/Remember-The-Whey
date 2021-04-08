@@ -18,7 +18,7 @@ const logoutUser = (req, res) => {
 // checks res.locals.authenticated to be true or redirect to login
 const requireAuth = (req, res, next) => {
     if (!res.locals.authenticated) {
-      return res.redirect('/users/log-in');
+        return res.redirect('/users/log-in');
     }
     return next();
 };
@@ -26,11 +26,10 @@ const requireAuth = (req, res, next) => {
 
 
 
-const restoreUser = async(req, res, next) => {
-    console.log(req.session)
+const restoreUser = async (req, res, next) => {
 
     //checks if a req.session.auth property exists (would have been made upon login())
-    if(req.session.auth) {
+    if (req.session.auth) {
         // if available extract userId ( user.id )
         const { userId } = req.session.auth;
 
@@ -38,7 +37,7 @@ const restoreUser = async(req, res, next) => {
             // looks for user based off extracted userID
             const user = await User.findByPk(userId)
 
-            if(user) {
+            if (user) {
                 // if user found, set res.locals values for authenticated, user
                 // makes res.locals objects sent to as response have those values
                 res.locals.authenticated = true;

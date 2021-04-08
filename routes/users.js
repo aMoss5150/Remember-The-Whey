@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 const { loginUser, logoutUser } = require('./auth');
 
-const { User } = require('../db/models')
+const { User } = require('../db/models');
 const { asyncHandler, csrfProtection } = require('./utils');
 
 // had to npm install csurf, express-validator, bcryptjs
@@ -129,6 +129,7 @@ router.post('/sign-up', csrfProtection, userValidators, asyncHandler(async (req,
   const validationErrors = validationResult(req)
 
   if (validationErrors.isEmpty()) {
+    //changed it so password is not hashed
 
     //const hashedPW = await bcrypt.hash(password, 10);  // created hashed pw to store in DB
 
