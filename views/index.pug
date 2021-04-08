@@ -12,7 +12,7 @@ append head
 block content
   h1= title
   p Welcome to your Project Skeleton
-  +lists(lists)
+  +lists(lists, csrfToken)
   div(id="block_tasks") My Tasks:
     ul(id="tasks")
   +tasks

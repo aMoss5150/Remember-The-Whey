@@ -1,85 +1,128 @@
+//--------------------Create a New List Modal------------------------------
 // Get the modal
 let modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
-let btn = document.getElementById("myBtn");
+let btn = document.getElementById("btn-create-list");
 
 // Get the <span> element that closes the modal
 let span = document.getElementsByClassName("close")[0];
 
+// Get the <input> element that closes the modal
+let btnCancel = document.getElementsByClassName("list-cancel")[0];
+
 // When the user clicks on the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
+btn.onclick = function () {
+    modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+// When the user clicks on <input> "cancel", close the modal
+btnCancel.onclick = function () {
+    modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+//-------------------Rename Button Modal------------------------------
+
+// Get the modal
+let modal_rename = document.getElementById("myModal-rename");
+
+// Get the button that opens the modal
+let btn_rename = document.getElementById("btn-rename-list");
+
+// Get the <span> element that closes the modal
+let span_rename = document.getElementsByClassName("close-rename")[0];
+
+// Get the <input> element that closes the modal
+let btnCancel_rename = document.getElementsByClassName("list-cancel-rename")[0];
+
+// When the user clicks on the button, open the modal
+btn_rename.onclick = function () {
+    modal_rename.style.display = "block";
 }
 
-//----------------------------------------------------------------
-async function fetchLists () {
+// When the user clicks on <span> (x), close the modal
+span_rename.onclick = function () {
+    modal_rename.style.display = "none";
+}
+
+// When the user clicks on <input> "cancel", close the modal
+btnCancel_rename.onclick = function () {
+    modal_rename.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal_rename) {
+        modal_rename.style.display = "none";
+    }
+}
+
+
+//-----------------------DOM Content----------------------------------------
+
+//fetch all lists from the server
+async function fetchLists() {
+    //when you reload the DOM, the ul already has child nodes.
     const ulLists = document.querySelector('#lists');
-    // console.log(ulLists);
-    //fetch all lists from the server
     // console.dir(document.createElement('li'));
     try {
         const res = await fetch('/lists');
         if (!res.ok) {
-            // res.json()
             throw res;
         }
-        const {lists} = await res.json();
-        // console.log(lists);
+        const { lists, csrfToken } = await res.json();
         //create a list item and append to the ul parent
         lists.forEach(list => {
+
             const li = document.createElement('li');
             const btnRename = document.createElement('button');
             const btnDelete = document.createElement('button');
+            const anchor = document.createElement('anchor');
 
-            //when its clicked // add event
-            ///lists/:id'sid
+            anchor.setAttribute('id', list.id);
+            anchor.setAttribute('href', `/lists/${list.id}`);
+            btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
 
-            li.innerHTML = list.name;
-            // li.attributes('id', "list.id")
+            anchor.innerHTML = list.name;
             btnRename.innerHTML = 'Rename';
             btnDelete.innerHTML = "Delete";
+
             ulLists.appendChild(li);
+            li.appendChild(anchor);
             li.appendChild(btnRename);
             li.appendChild(btnDelete);
         })
+        const inputCsurf = document.querySelector('#csurf')
+        inputCsurf.setAttribute('value', csrfToken);
     }
     catch (error) {
         console.log(error);
-        // let err = await error.json();
     }
 }
 
-// await fetch(/list/id)
-// list.update({name})
-// res.json{all user lists}
+//Display all the tasks from the targeted list
+//Display all the summary of the targeted list
+async function fetchOneList(id) {
 
-async function fetchOneList (id) {
-    //when a user clicks on a list, display tasks on tasks section
-    //display list summary on summary section
     const ulTasks = document.querySelector('#tasks');
-    //store the id on the dom element
 
     try {
         const res = await fetch(`/lists/${id}`);
         if (!res.ok) {
-            throw list;
+            throw res;
         }
-        const {list, tasks} = await res.json();
-        console.log(tasks);
-        console.log(list);
+        const { list, tasks } = await res.json();
         tasks.forEach(task => {
             const li = document.createElement('li');
             li.innerHTML = task.name;
@@ -87,61 +130,113 @@ async function fetchOneList (id) {
         });
     }
     catch (err) {
-        let error = await err.json();
+        console.log(err);
     }
 }
 
-// name = document.get . value
-async function createList (name) {
-    const csurf = document.getElementById('csurf').value
+//Create a new list
+async function createList(name) {
+    const ulLists = document.querySelector('#lists');
+
+    const newListForm = document.querySelector('.list-form');
+
+    const formData = new FormData(newListForm);
+
+    const body = {
+        name,
+        _csrf: formData.get('_csrf'),
+    }
+    // console.log("This is the csurf token: ", body._csrf);
+
     try {
         const res = await fetch('/lists', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name, csurf})
+            body: JSON.stringify(body)
         });
         if (!res.ok) {
             throw res
         }
-        const list = await res.json();
-        console.log(list);
+        const { lastList } = await res.json();
+
+        //get the single last row(list) and append it to ul
+
+        const li = document.createElement('li');
+        const btnRename = document.createElement('button');
+        const btnDelete = document.createElement('button');
+        const anchor = document.createElement('anchor');
+
+        anchor.setAttribute('id', lastList.id);
+        anchor.setAttribute('href', `/lists/${lastList.id}`);
+        btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
+
+        anchor.innerHTML = lastList.name;
+        btnRename.innerHTML = 'Rename';
+        btnDelete.innerHTML = "Delete";
+
+        ulLists.appendChild(li);
+        li.appendChild(anchor);
+        li.appendChild(btnRename);
+        li.appendChild(btnDelete);
+
+        // const inputCsurf = document.querySelector('#csurf')
+        // inputCsurf.setAttribute('value', csrfToken);
+
     }
     catch (err) {
         console.log(err)
-        // const error = err.json();
     }
 }
 
-async function updateList (id, name) {
+// await fetch(/list/id)
+// list.update({name})
+// res.json{all user lists}
+
+//Rename a list
+async function updateList(id, name) {
+
+    const renameForm = document.querySelector('.list-rename-form');
+    const formData = new FormData(renameForm);
+    const body = {
+        name,
+        _csrf: formData.get('_csrf'),
+    }
+    console.log("rename form: ", renameForm);
+    console.log("formdata: ", formData);
+    console.log("body", body);
+
     try {
         const res = await fetch(`/lists/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name})
+            body: JSON.stringify(body)
         });
         if (!res.ok) {
-            throw new Error();
+            throw res;
         }
-        const json = await res.json();
-        console.log(json);
+        const { list } = await res.json();
+        //get the targeted list name innerText property
+        let anchor = document.getElementById('1');
+        anchor.innerHTML = list.name;
     }
     catch (err) {
-        const error = err.json();
+        console.log(err);
     }
 }
 
-async function deleteList (id, name) {
+//Delete a list
+async function deleteList(id, name) {
     try {
         const res = await fetch(`/lists/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name})
+            body: JSON.stringify({ name })
         })
         const json = res.json();
     }
@@ -151,29 +246,40 @@ async function deleteList (id, name) {
 }
 
 
-window.addEventListener('DOMContentLoaded', event => {
-    const lists = document.querySelectorAll('#lists');
-    const submitNewList = document.querySelector('.list-add');
-    const inputNewList = document.querySelector('.list-name--input');
-
+window.addEventListener('DOMContentLoaded', async (event) => {
     //grab all the user's lists when DOM is loaded
-    fetchLists();
+    await fetchLists();
 
-    //Listen for a click on a targeted list
-    lists.forEach(list => {
+    const ulLists = document.querySelectorAll('#lists');
+    const inputSubmitNewList = document.querySelector('.list-add');
+    const inputNewList = document.querySelector('.list-name--input');
+    const renameBtns = document.querySelectorAll('.list__btn--rename');
+
+    //Listen for a click on a targeted list to display tasks
+    ulLists.forEach(list => {
         list.addEventListener('click', event => {
-            console.log("this is event.target", event.target)
-            //how to find the id of the list ?
-            fetchOneList(2);
+            // console.log("this is event.target:", event.target.id)
+            fetchOneList(event.target.id);
         })
     })
 
     //listen for the button to create a new list
-    submitNewList.addEventListener('click', event => {
+    inputSubmitNewList.addEventListener('click', event => {
         event.preventDefault();
-        console.log(inputNewList.value)
+
         createList(inputNewList.value);
+        modal.style.display = "none";
     });
+
+    //listen for a button click to rename the list name
+    renameBtns.forEach(btn => {
+        // console.log(btn);
+        btn.addEventListener('click', event => {
+            const id = event.target.classList[1];
+            // console.dir(event.target.classList[1]);
+            updateList(id, "Hector is awesome");
+        });
+    })
 
 
 });

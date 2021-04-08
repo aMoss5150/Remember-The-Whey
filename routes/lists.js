@@ -3,8 +3,11 @@ const router = express.Router();
 
 const db = require('../db/models');
 
-const {csrfProtection,asyncHandler,} = require('./utils');
+const csrf = require('csurf');
+const {asyncHandler,} = require('./utils');
 const {check, validationResult} = require('express-validator');
+const csrfProtection = csrf({cookie: true})
+
 
 //get all lists from user
 router.get('/', csrfProtection, asyncHandler(async(req,res) => {
@@ -17,7 +20,6 @@ router.get('/', csrfProtection, asyncHandler(async(req,res) => {
     });
     //get a list from the specific user
     res.json({lists, csrfToken: req.csrfToken()});
-    // res.json({lists})
 }));
 
 //get a specific list
@@ -51,14 +53,16 @@ router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => 
 
     const list = db.List.build({
         name,
-        // listId: req.session.auth.userId
+        userId: req.session.auth.userId,
     });
     // validate errors
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {
         await list.save();
-        res.json({name});
+        const lists = await db.List.findAll();
+        const lastList = lists[lists.length - 1];
+        res.json({lastList});
     }
     else {
         const errors = validatorErrors.array().map((error) => error.msg);
@@ -72,17 +76,16 @@ router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => 
 
 //Rename specified list
 router.put('/:listId', csrfProtection, listValidators, asyncHandler(async(req,res) => {
-    const listUpdate = await db.List.findByPk(req.params.listId);
+    const list = await db.List.findByPk(req.params.listId);
 
     const {name} = req.body;
 
-    const list = {name};
 
     const validatorErrors = validationResult(req);
 
     if (validatorErrors.isEmpty()) {
-        await listUpdate.update(list);
-        res.redirect('/');
+        await list.update({name});
+        res.json({list});
     }
     else {
         const errors = validatorErrors.array().map((error) => error.msg);
