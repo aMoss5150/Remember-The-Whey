@@ -2,6 +2,7 @@ const toolbarSelector = document.querySelector('#toolbar__selector');
 const toolbarComplete = document.querySelector('#toolbar__complete');
 const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
 const toolbarDelete = document.querySelector('#toolbar__delete');
+const toolbarList = document.querySelector('#toolbar__list');
 const tasksForm = document.querySelector('#tasks-section__form');
 const tasksFormInputs = tasksForm.querySelectorAll('input');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
@@ -113,8 +114,8 @@ const getAllTasks = async () => {
 
 const toolbarSelectorHandler = (ev) => {
     const inp = document.querySelector('#toolbar__selector input');
-    ev.stopPropagation();
 
+    ev.stopPropagation();
     closeDropdowns();
 
     // Handle user click of input checkbox
@@ -127,7 +128,6 @@ const toolbarSelectorHandler = (ev) => {
     else {
         if (ev.target.id === 'selector__all') {
             setAllTasksActiveState(true);
-            console.log(ev.target)
             inp.checked = true;
             closeDropdowns();
         }
@@ -227,6 +227,25 @@ const toolbarDeleteHandler = async (ev) => {
     fetchHelper('DELETE');
 };
 
+const toolbarListHandler = async (ev) => {
+
+    ev.stopPropagation();
+    closeDropdowns();
+
+    // TODO - Need list api routes to continue working here
+
+    if (ev.target.id === 'a') {
+
+    }
+    else if (ev.target.id === 'aa') {
+
+    }
+    else {
+        console.log(document.querySelector('#toolbar__list .dropdown-content'))
+        document.querySelector('#toolbar__list .dropdown-content').classList.add('open');
+    }
+};
+
 const taskFormSubmitHandler = async (ev) => {
     ev.preventDefault();
 
@@ -283,6 +302,7 @@ toolbarSelector.addEventListener('click', toolbarSelectorHandler);
 toolbarComplete.addEventListener('click', toolbarCompleteHandler);
 toolbarDuplicate.addEventListener('click', toolbarDuplicateHandler);
 toolbarDelete.addEventListener('click', toolbarDeleteHandler);
+toolbarList.addEventListener('click', toolbarListHandler);
 tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
