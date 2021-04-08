@@ -5,7 +5,6 @@
     align-items: center;
     position: sticky;
     justify-content: space-between;
-    /* justify-content: space-between; */
 }
 /* .searchContainer {
     display: inline-flex;
@@ -20,6 +19,7 @@
     display: inline-flex;
     /* flex: 1 1 300px; */
     position: relative;
+    margin-right: 700px;
 }
 .navbar__search_input {
     left: 200px;
