@@ -21,7 +21,7 @@ html(lang="en")
                 if errors
                     ul
                         each error in errors
-                            li(class="error__msg")= error
+                            div(class="error__msg")= error
                 br
                 form(action="/users/sign-up" method="post" id="form__header") Sign up for free.
                     br

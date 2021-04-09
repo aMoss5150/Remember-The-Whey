@@ -15,6 +15,7 @@ body {
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
     height: 100%;
+    
 }
 
 .list__column {

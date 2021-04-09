@@ -103,13 +103,17 @@ body {
 }
 
 .error__msg {
+    display: flex;
+    align-items: center;
     border-radius: 5px;
     border: solid 5px gray;
     background-color: lightsalmon;
     border: none;
     height: 26px;
     font-size: 22px;
+    padding: 5px 10px;
     margin: 25px;
+    
 }
 
 #main__quotes {
