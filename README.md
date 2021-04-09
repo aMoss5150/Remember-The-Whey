@@ -1,5 +1,5 @@
 # Remeber the Whey
-  Remember the Whey is a fitness organizational tool.  It enables a user to categorize and keep track of workouts by creating       customizable lists.  The user is also given the ability to customize each excercise or task on that custom list, while also       having easy access to a summary of the list or task info. 
+  Remember the Whey is a fitness organizational tool.  It enables a user to categorize and keep track of workouts by creating       customizable lists.  The user is also given the ability to customize each excercise or task on their custom list, while also       having easy access to a summary of the list or task info. 
   
   
 ## MVP
