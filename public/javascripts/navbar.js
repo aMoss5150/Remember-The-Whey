@@ -16,7 +16,6 @@ searchBtn.addEventListener('click', async (e) => {
     const searchIncTerm = searchInp.value;
     const searchExcTerm = '';
     const fieldToSearch = 'name';
-
     // need to grab html element where i can display all tasks
     // with make variable let tasksContainer === html display element
 
@@ -27,10 +26,6 @@ searchBtn.addEventListener('click', async (e) => {
         tasks = await filterTasks(tasks, {
             include: {
                 term: searchIncTerm,
-                from: fieldToSearch
-            },
-            exclude: {
-                term: searchExcTerm,
                 from: fieldToSearch
             }
         });
