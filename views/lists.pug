@@ -7,7 +7,7 @@ append head
 
 mixin lists()
     div(class="block_lists") My Lists:
-        ul(id="lists")
+        div(id="lists" class="list-section")
 
     button(id="btn-create-list") Create New List
     div(id="myModal" class='modal')
@@ -24,4 +24,3 @@ mixin lists()
                 input(type="button" value="Cancel" class="list-cancel")
 
     br
-
