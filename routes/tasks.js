@@ -17,11 +17,17 @@ const taskValidators = [
 
 // GET /tasks - Gets all the tasks from the current list selection
 router.get('/', requireAuth, csrfProtection, asyncHandler(async (req, res) => {
-    const lists = await db.List.findAll({
-        where: {
-            userId: req.session.auth.userId
-        }
-    }).map(el => el.id);
+    let lists;
+
+    // Select
+    if (req.query.listIds) {
+        lists = req.query.listIds.split(',');
+    }
+    else {
+        lists = await db.List.findAll({
+            where: { userId: req.session.auth.userId }
+        }).map(el => el.id);
+    }
 
     const tasks = await db.Task.findAll({
         where: {
@@ -40,7 +46,7 @@ router.get('/:id(\\d+)', requireAuth, csrfProtection, asyncHandler(async (req, r
     const task = await db.Task.findByPk(taskId);
 
     if (task)
-        res.json( task );
+        res.json(task);
     else
         next();
 }));
@@ -56,7 +62,7 @@ router.post('/', requireAuth, csrfProtection, taskValidators, asyncHandler(async
     if (validatorErrors.isEmpty()) {
         await task.save();
         //res.redirect('/');
-        res.send( task );
+        res.send(task);
     }
     else {
         const errors = validatorErrors.array().map(err = err.msg);

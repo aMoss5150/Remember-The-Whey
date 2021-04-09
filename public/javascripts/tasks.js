@@ -8,10 +8,12 @@ const tasksForm = document.querySelector('#tasks-section__form');
 const tasksFormInputs = tasksForm.querySelectorAll('input');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
 
-let selectedTaskIds = new Set();
 const toolbarDateIds = ['date_today', 'date_tomorrow', 'date_plus-2', 'date_plus-3', 'date_plus-4', 'date_one-week'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+let selectedListIds = new Set();
+let selectedTaskIds = new Set();
+let viewComplete = false;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Helper functions
@@ -78,24 +80,53 @@ const setAllTasksActiveState = (val) => {
         setTaskActiveState(task, val);
 }
 
-const getAllTasks = async () => {
-    const res = await fetch('http://localhost:8080/tasks', {
+const getTasks = async (listIds = []) => {
+    const res = await fetch(`/tasks?listIds=${[...listIds]}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
         }
     });
+    if (!res.ok)
+        throw res;
     const { tasks } = await res.json();
+    return tasks;
+}
+
+const filterTasks = async (tasks, query) => {
+    return tasks.filter(task => {
+        for (let prop in query) {
+            // Include must store an object with props: term and from
+            if (prop === 'include') {
+                const { term, from } = query[prop];
+                if (!task[from].toLowerCase().includes(term.toLowerCase()))
+                    return false;
+            }
+            // Exclude must store an object with props: term and from
+            else if (prop === 'exclude') {
+                const { term, from } = query[prop];
+                if (task[from].toLowerCase().includes(term.toLowerCase()))
+                    return false;
+            }
+            // Check if a query prop/value matches a task prop/value
+            else if (task[prop] !== query[prop])
+                return false;
+        }
+        return true;
+    });
+}
+
+const displayTasks = async (tasks) => {
+    if (!tasks) tasks = await getTasks();
 
     // Reset selectedTaskIds
     selectedTaskIds = new Set();
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
-        if (task.sets)
-            taskStr += `${task.sets} `;
-        if (task.reps)
-            taskStr += `x ${task.reps} `;
+
+        if (task.sets) taskStr += `${task.sets} `;
+        if (task.reps) taskStr += `x ${task.reps} `;
         taskStr += task.name;
         if (task.duration) {
             const dur = convertSeconds(task.duration);
@@ -110,8 +141,16 @@ const getAllTasks = async () => {
                     <div class="card-text">${taskStr}</div>
                 </div>`;
     });
+
     tasksContainer.innerHTML = tasksHtml.join('');
 };
+
+const updateTasksSection = async (listIds, queries = []) => {
+    let tasks = await getTasks(listIds);
+    for (let query of queries)
+        tasks = await filterTasks(tasks, query);
+    await displayTasks(tasks);
+}
 
 const getDateInfo = () => {
     const date = new Date();
@@ -190,7 +229,7 @@ const fetchHelper = async (method, body = {}) => {
                 initObj['body'] = JSON.stringify(body);
             }
 
-            const res = await fetch(`http://localhost:8080/tasks/${id}`, initObj);
+            const res = await fetch(`/tasks/${id}`, initObj);
             if (!res.ok) {
                 console.log('RES NOT OKAY')
             }
@@ -199,13 +238,16 @@ const fetchHelper = async (method, body = {}) => {
                     const obj = await res.json();
                     responses.push(obj);
                 }
-                await getAllTasks();
+
             }
         }
         catch (err) {
             console.log('Error:', err)
         }
     }
+
+    // Re-display the tasks
+    updateTasksSection();
 
     return responses;
 }
@@ -231,7 +273,7 @@ const toolbarDuplicateHandler = async (ev) => {
             notes: task.notes
         }
         try {
-            const res = await fetch('http://localhost:8080/tasks', {
+            const res = await fetch('/tasks', {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
@@ -243,7 +285,7 @@ const toolbarDuplicateHandler = async (ev) => {
                 console.log('RES NOT OKAY')
             }
             else {
-                await getAllTasks();
+                updateTasksSection();
             }
         }
         catch (err) {
@@ -255,8 +297,6 @@ const toolbarDuplicateHandler = async (ev) => {
 const toolbarDeleteHandler = async (ev) => {
     fetchHelper('DELETE');
 };
-
-
 
 const toolbarDateHandler = async (ev) => {
     ev.stopPropagation();
@@ -273,8 +313,12 @@ const toolbarDateHandler = async (ev) => {
         else if (currTarget.id === 'date_calendar') {
             console.log('TODO');
         }
-        else
-            res = await fetchHelper('PATCH', { date: dates[currTarget.id][0].join('-') });
+        else {
+            const date = dates[currTarget.id][0];
+            res = await fetchHelper('PATCH', {
+                date: `${date[0]}-${date[1] + 1}-${date[2]}`
+            });
+        }
 
         closeDropdowns();
     }
@@ -307,6 +351,7 @@ const toolbarDateHandler = async (ev) => {
                                 <div> Calendar Picker </div>
                                 <i class="fas fa-caret-right"></i>
                             </a>`;
+
 
         dropdownContent.innerHTML = dateOptionsHTML;
         dropdownContent.classList.add('open');
@@ -345,7 +390,7 @@ const taskFormSubmitHandler = async (ev) => {
     };
 
     try {
-        const res = await fetch('http://localhost:8080/tasks', {
+        const res = await fetch('/tasks', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -358,7 +403,7 @@ const taskFormSubmitHandler = async (ev) => {
         }
         else {
             clearTaskFields();
-            await getAllTasks();
+            updateTasksSection();
         }
     }
     catch (err) {
@@ -393,7 +438,8 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
-getAllTasks();
+updateTasksSection(undefined, []);
+// updateTasksSection(undefined, [{exclude: {term: 'e', from: 'name'}}]);
 
 new Sortable(tasksContainer, {
     handle: '.handle',
