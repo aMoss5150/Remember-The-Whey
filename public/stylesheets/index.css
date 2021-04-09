@@ -15,6 +15,7 @@ body {
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
     height: 100%;
+
 }
 
 .list__column {
@@ -28,6 +29,7 @@ body {
     padding: 25px;
     border-radius: 3px;
     margin-top: 5px;
+
 }
 
 .task__column {
@@ -44,6 +46,8 @@ body {
     padding: 25px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+
+
 }
 
 .summary__column {
@@ -91,15 +95,6 @@ body {
     transition-duration: 2s;
 }
 
-/*!TOOLTIPS*/
-
-/* .close {
-    align-self: flex-end;
-    position: relative;
-    right: 15px;
-    bottom: 6px;
-    font-size: 14px;
-} */
 
 .info__tooltip {
     align-self: flex-end;

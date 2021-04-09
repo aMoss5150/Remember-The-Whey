@@ -13,10 +13,10 @@ body {
     box-sizing: border-box;
 }
 
-#main_right {
+#main__right {
     grid-column-start: 2;
     display: grid;
-    grid-template-rows: 1fr 3fr;
+    grid-template-rows: 1fr 5fr;
 }
 
 #transfer__btn_container {
@@ -103,13 +103,17 @@ body {
 }
 
 .error__msg {
+    display: flex;
+    align-items: center;
     border-radius: 5px;
     border: solid 5px gray;
     background-color: lightsalmon;
     border: none;
     height: 26px;
     font-size: 22px;
+    padding: 5px 10px;
     margin: 25px;
+
 }
 
 #main__quotes {
@@ -161,7 +165,7 @@ footer {
     margin-left: 12px;
     font-size: 14px;
     font-weight: 700;
-    height: 82px;
+    height: 80px;
     align-items: flex-end;
 }
 

@@ -33,12 +33,13 @@ block content
       form(action="/users/logout" method="post")
         button(type="submit" class="nav__logout_btn") Logout
 
-  .column__container
+  div(class="column__container column__container--regular")
     div(class="list__column show")
       +lists(lists, csrfToken)
       div(id="block_tasks") My Tasks:
         ul(id="tasks")
-    .task__column
+    //- .task__column
+    div(class="task__column task__column--small")
       +tasks
     .summary__column
       +summary
@@ -47,8 +48,15 @@ block content
         .tasks__container-title Tasks
       .completed__container 0
         .completed__container-title Completed
-      //- .overdue__container 0
-      //-   .overdue__container-title Overdue
+      .overdue__container 0
+        .overdue__container-title Overdue
+      footer
+        .footer__links_container
+          a(class="footer__link" href="https://github.com/mkellydevv") Michael Kelly
+          a(class="footer__link" href="https://github.com/crespohector") Hector Crespo
+          a(class="footer__link" href="https://github.com/aMoss5150") Andrew Moss
+          a(class="footer__link" href="https://github.com/earlwoo") Earl Woo
+          a(class="footer__link" href="https://github.com/aMoss5150/Remember-The-Whey") Project Github
 
     .summary__slideout
       form(class="form__flex hide")

@@ -129,8 +129,7 @@ async function fetchLists() {
 
         const inputCsurf = document.querySelector('#csurf')
         inputCsurf.setAttribute('value', csrfToken);
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
     }
 }
