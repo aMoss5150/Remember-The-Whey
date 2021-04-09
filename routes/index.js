@@ -2,25 +2,17 @@ const express = require('express');
 const {List} = require('../db/models');
 const {asyncHandler} = require('./utils');
 const router = express.Router();
-
+const { csrfProtection } = require('./utils');
 
 
 /* GET home page. */
-router.get('/', asyncHandler(async(req, res) => {
+router.get('/', csrfProtection, (req, res) => {
   if(!res.locals.authenticated) {
     res.redirect('/users/log-in')
   } else {
-    //get all lists from the user
-    // let lists = await List.findAll();
-    // lists = lists.map(el => el.name);
-    res.render('index', { title: 'a/A Express Skeleton Home' });
+    res.render('index', { title: 'a/A Express Skeleton Home', csrfToken: req.csrfToken() });
   }
 
-}));
-
-
-
-
-
+});
 
 module.exports = router;

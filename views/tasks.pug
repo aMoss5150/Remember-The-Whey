@@ -1,3 +1,66 @@
 
 mixin tasks
-    div Tasks
+    section(id='tasks-section')
+        h2 Tasks
+        div(id='tasks-section__toolbar')
+            div(class='button-group')
+                div(id='toolbar__selector')
+                    input(type='checkbox')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                    div(class='dropdown-content')
+                        a(id='selector_all' class='selector_opt') All
+                        a(id='selector_none' class='selector_opt') None
+                        hr
+                        a(id='selector_today' class='selector_opt') Today
+                        a(id='selector_tomorrow' class='selector_opt') Tomorrow
+                        a(id='selector_overdue' class='selector_opt') Overdue
+            div(class='button-group')
+                div(id='toolbar__complete' class='tooltip')
+                    i(class='fas fa-check')
+                    div(class='tooltip-text') Complete
+                div(id='toolbar__duplicate' class='tooltip')
+                    i(class='fas fa-clone')
+                    div(class='tooltip-text') Duplicate
+                div(id='toolbar__delete' class='tooltip')
+                    i(class='fas fa-trash')
+                    div(class='tooltip-text') Delete
+            div(class='button-group')
+                div(id='toolbar__date')
+                    i(class='fas fa-calendar-alt')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                    div(class='dropdown-content')
+                        a(id='date_today' class='date_opt') Today
+                        a(id='date_tomorrow' class='date_opt') Tomorrow
+                        a(id='date_plus-2' class='date_opt') Plus 2
+                        a(id='date_plus-3' class='date_opt') Plus 3
+                        a(id='date_plus-4' class='date_opt') Plus 4
+                        a(id='date_one-week' class='date_opt') One Week
+                        a(id='date_no-date' class='date_opt') No Date
+                        hr
+                        a(id='date_calendar') Calendar
+                div(id='toolbar__list')
+                    i(class='fas fa-list')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+                    div(class='dropdown-content')
+                        a(id='c') C
+                        a(id='cc') CC
+                div(id='toolbar__tag')
+                    i(class='fas fa-tag')
+                    div(class='dropdown')
+                        i(class="fas fa-caret-down")
+        form(id='tasks-section__form')
+            input(type='hidden' name='_csrf' value=csrfToken)
+            label Reps
+                input(type='number' name='reps' placeholder='1' required)
+            label Sets
+                input(type='number' name='sets' placeholder='0')
+            label Exercise
+                input(type='text' name='name' placeholder='Add an exercise...' required)
+            label Duration
+                input(type='number' name='duration' placeholder='60')
+            button(type='submit') Add
+        div(id='tasks-section__tasks-container')
+    script(src='javascripts/tasks.js')
