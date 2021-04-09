@@ -35,7 +35,9 @@ block content
 
   .column__container
     div(class="list__column show")
-      +lists
+      +lists(lists, csrfToken)
+      div(id="block_tasks") My Tasks:
+        ul(id="tasks")
     .task__column
       +tasks
     .summary__column
@@ -47,7 +49,7 @@ block content
         .completed__container-title Completed
       //- .overdue__container 0
       //-   .overdue__container-title Overdue
-      
+
     .summary__slideout
       form(class="form__flex hide")
         i(class="fas fa-times slideout__closebtn")
@@ -65,8 +67,4 @@ block content
         label(id="durationLabel") duration
         input(class="update__duration" placeholder="currentduration" type="text")
         label(id="notesLabel") notes
-        textarea(class="update__notes" placeholder="Add a note...")   
- 
-
-   
-
+        textarea(class="update__notes" placeholder="Add a note...")
