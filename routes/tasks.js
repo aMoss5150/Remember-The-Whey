@@ -22,13 +22,6 @@ router.get('/', requireAuth, csrfProtection, asyncHandler(async (req, res) => {
     // Select
     if (req.query.listIds) {
         lists = req.query.listIds.split(',');
-        console.log(lists)
-        // lists = await db.List.findAll({
-        //     where: {
-        //         userId: req.session.auth.userId,
-        //         id: { [Op.in]: req.query.listIds.split(',') }
-        //     }
-        // }).map(el => el.id);
     }
     else {
         lists = await db.List.findAll({

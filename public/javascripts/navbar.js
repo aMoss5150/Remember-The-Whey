@@ -11,15 +11,15 @@ searchBtn.addEventListener('click', async (e) => {
     //prevent refresh of page
     e.preventDefault()
 
-    const taskDisplay = document.querySelector("#tasks-section__tasks-container");
+    //const tasksContainer = document.querySelector("#tasks-section__tasks-container");
     //grab input from search input to use as the regex
-    console.log(taskDisplay)
+    console.log(tasksContainer)
     const searchInc = document.querySelector(".navbar__search_input").value
     // does not include code:
     // const searchNotInc = document.querySelector('classnameforNOTinpt').value
 
     // need to grab html element where i can display all tasks
-    // with make variable let taskDisplay === html display element
+    // with make variable let tasksContainer === html display element
 
     try {
         const res = await fetch('/tasks');
@@ -60,7 +60,7 @@ searchBtn.addEventListener('click', async (e) => {
                             </div>`;
         });
 
-        taskDisplay.innerHTML = taskSearch.join('')
+        tasksContainer.innerHTML = taskSearch.join('')
 
     } catch (err) {
         //display error somewhere in html
