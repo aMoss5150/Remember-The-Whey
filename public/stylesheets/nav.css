@@ -135,3 +135,31 @@
     transition-property: left;
     transition-duration: 2s;
 } */
+
+
+
+/* footer section, transfer later */
+footer {
+    max-height: 20px;
+}
+
+.footer__links_container{
+    margin-top: 775px;
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    height: 20px;
+    align-items: flex-end;
+    position: absolute;
+}
+
+.footer__link {
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    border-right: 2px solid rgb(0, 0, 0, .1);
+    padding-right: 10px;
+    margin: 0px 5px;
+}
