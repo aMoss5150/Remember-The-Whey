@@ -87,6 +87,8 @@ const getTasks = async (listIds = []) => {
             "Content-Type": "application/json"
         }
     });
+    if (!res.ok)
+        throw res;
     const { tasks } = await res.json();
     return tasks;
 }
