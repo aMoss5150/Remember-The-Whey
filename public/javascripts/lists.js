@@ -76,7 +76,7 @@ window.onclick = function (event) {
 //fetch all lists from the server
 async function fetchLists() {
     //when you reload the DOM, the ul already has child nodes.
-    const ulLists = document.querySelector('#lists');
+    const divLists = document.querySelector('#lists');
     try {
         const res = await fetch('/lists');
         if (!res.ok) {
@@ -86,23 +86,19 @@ async function fetchLists() {
         //create a list item and append to the ul parent
         lists.forEach(list => {
 
-            const li = document.createElement('li');
+            const anchor = document.createElement('anchor');
             const btnRename = document.createElement('button');
             const btnDelete = document.createElement('button');
-            const anchor = document.createElement('anchor');
 
-            li.setAttribute('class', `list-li ${list.id}`);
             anchor.setAttribute('id', list.id);
             anchor.setAttribute('href', `http://localhost:8080/lists/${list.id}`);
-            //make sure to give each btn a unique id Ex.) id="btn-rename-list"
-            // btnRename.setAttribute('class', `btn-rename-list ${list.id}`);
             btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
 
             anchor.innerText = list.name;
             // btnRename.innerHTML = 'Rename';
             btnDelete.innerHTML = "Delete";
             //Creating the modal for the rename btn
-            btnRename.innerHTML = `Rename <div id="myModal-rename" class="modal-rename">
+            btnRename.innerHTML = `Rename <div id="myModal-rename-${list.id}" class="modal-rename ${list.id}">
                                         <div class="modal-content-rename">
                                             <form class="list-rename-form">
                                                 <span class="close-rename">X</span>
@@ -111,21 +107,15 @@ async function fetchLists() {
                                                 <br>
                                                 <input type="text" name="name" class="list-name-rename--input" required>
                                                 <br>
-                                                <input type="submit" value="Save" class="list-rename">
-                                                <input type="button" value="Cancel" class="list-cancel-rename">
+                                                <input type="submit" value="Save" id="${list.id}" class="list-rename">
+                                                <input type="button" value="Cancel" id="cancel-${list.id}" class="list-cancel-rename">
                                         </div>
                                     </div>`;
 
-            ulLists.appendChild(li);
-            li.appendChild(anchor);
-            li.appendChild(btnRename);
-            li.appendChild(btnDelete);
+            divLists.appendChild(anchor);
+            divLists.appendChild(btnRename);
+            divLists.appendChild(btnDelete);
         });
-
-        //make sure this content goes inside the for each loop above
-        //create the modal btn for the rename btn
-        // console.log(document.getElementById("btn-rename-list"))
-
 
         const inputCsurf = document.querySelector('#csurf')
         inputCsurf.setAttribute('value', csrfToken);
@@ -160,7 +150,9 @@ async function fetchOneList(id) {
 
 //Create a new list
 async function createList(name) {
-    const ulLists = document.querySelector('#lists');
+    //clear the innerHTML of the ul element to empty
+    //invoke fetchLists() again
+    const divLists = document.querySelector('#lists');
 
     const newListForm = document.querySelector('.list-form');
 
@@ -171,7 +163,6 @@ async function createList(name) {
         _csrf: formData.get('_csrf'),
     }
     // console.log("This is the csurf token: ", body._csrf);
-
     try {
         const res = await fetch('/lists', {
             method: 'POST',
@@ -183,27 +174,29 @@ async function createList(name) {
         if (!res.ok) {
             throw res
         }
-        const { lastList } = await res.json();
+        const emptyObj = await res.json();
 
+        divLists.innerHTML = "";
+        await fetchLists();
         //get the single last row(list) and append it to ul
 
-        const li = document.createElement('li');
-        const btnRename = document.createElement('button');
-        const btnDelete = document.createElement('button');
-        const anchor = document.createElement('anchor');
+        // const li = document.createElement('li');
+        // const btnRename = document.createElement('button');
+        // const btnDelete = document.createElement('button');
+        // const anchor = document.createElement('anchor');
 
-        anchor.setAttribute('id', lastList.id);
-        anchor.setAttribute('href', `/lists/${lastList.id}`);
-        btnRename.setAttribute('class', `list__btn--rename ${lastList.id}`);
+        // anchor.setAttribute('id', lastList.id);
+        // anchor.setAttribute('href', `/lists/${lastList.id}`);
+        // btnRename.setAttribute('class', `list__btn--rename ${lastList.id}`);
 
-        anchor.innerHTML = lastList.name;
-        btnRename.innerHTML = 'Rename';
-        btnDelete.innerHTML = "Delete";
+        // anchor.innerHTML = lastList.name;
+        // btnRename.innerHTML = 'Rename';
+        // btnDelete.innerHTML = "Delete";
 
-        ulLists.appendChild(li);
-        li.appendChild(anchor);
-        li.appendChild(btnRename);
-        li.appendChild(btnDelete);
+        // ulLists.appendChild(li);
+        // li.appendChild(anchor);
+        // li.appendChild(btnRename);
+        // li.appendChild(btnDelete);
 
         // const inputCsurf = document.querySelector('#csurf')
         // inputCsurf.setAttribute('value', csrfToken);
@@ -263,7 +256,7 @@ async function deleteList(id) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({id})
+            body: JSON.stringify({ id })
         })
         const json = res.json();
     }
@@ -278,84 +271,134 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     await fetchLists();
 
 
-//Use a helper function to wrap this.
-// Get the modal
-let modal_rename = document.getElementById("myModal-rename");
+    //Use a helper function to wrap this.
+    // Get the modal
+    // let modal_rename = document.querySelector("#myModal-rename"); //return a node list
 
-// Get the button that opens the modal
-let btn_rename = document.querySelector(".list__btn--rename");
+    // Get the button that opens the modal
+    let btn_rename = document.querySelectorAll(".list__btn--rename"); //return a node list
 
-// Get the <span> element that closes the modal
-let span_rename = document.getElementsByClassName("close-rename")[0];
+    // Get the <span> element that closes the modal
+    let span_rename = document.getElementsByClassName("close-rename")[0];
 
-// Get the <input> element that closes the modal
-let btnCancel_rename = document.getElementsByClassName("list-cancel-rename")[0];
+    // Get the <input> element that closes the modal
+    let btnCancel_rename = document.getElementsByClassName("list-cancel-rename")[0];
 
-// When the user clicks on the button, open the modal
-btn_rename.onclick = function () {
-    modal_rename.style.display = "block";
-}
 
-// When the user clicks on <span> (x), close the modal
-span_rename.onclick = function () {
-    modal_rename.style.display = "none";
-}
+    //Add event listener to each modal element
+    // When the user clicks on the button, open the modal
+    btn_rename.forEach(btn => {
+        btn.addEventListener('click', event => {
+            event.stopPropagation();
 
-// When the user clicks on <input> "cancel", close the modal
-btnCancel_rename.onclick = function () {
-    modal_rename.style.display = "none";
-}
+            const id = event.target.classList[1];
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target !== modal_rename) {
+            let modal_rename = document.querySelector(`#myModal-rename-${id}`); //return a node list
+
+            modal_rename.style.display = "block";
+        })
+    })
+
+
+    // When the user clicks on <span> (x), close the modal
+    span_rename.addEventListener('click', event => {
+
+        event.stopPropagation();
+
+        const id = event.target.classList[1];
+
+        let modal_rename = document.querySelector(`#myModal-rename-${id}`); //return a node list
+
         modal_rename.style.display = "none";
-    }
-}
+    })
+
+    // When the user clicks on <input> "cancel", close the modal
+    btnCancel_rename.addEventListener('click', event => {
+        event.stopPropagation();
+
+        const id = event.target.id;
+
+        const idValue = id.split('-');
+
+        let modal_rename = document.querySelector(`#myModal-rename-${idValue[1]}`); //return a node list
+
+        modal_rename.style.display = "none";
+    })
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener('click', event => {
+        event.stopPropagation();
+
+        const modal_rename = document.querySelectorAll(".modal-rename");
+
+        modal_rename.forEach( modal => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+    });
+
 
 
 
     const Lists = document.querySelectorAll('.list-li'); //node array
     const inputSubmitNewList = document.querySelector('.list-add');
     const inputNewList = document.querySelector('.list-name--input');
-    const renameBtns = document.querySelectorAll('.list__btn--rename');
+    // const renameBtns = document.querySelectorAll('.list__btn--rename');
+    const saveBtn = document.querySelectorAll('.list-rename')
+    const inputRenameList = document.querySelector('.list-name-rename--input');
 
     // console.log(Lists);
     //Listen for a click on a targeted list to display tasks
     Lists.forEach(list => {
-        console.log(list);
-        list.addEventListener('click', event => {
+        // console.log(list);
+        list.addEventListener('click', async (event) => {
 
             event.preventDefault();
-            // const id = event.target.classList[1];
-            console.log("event.target.classList: ", event.target.classList);
-            // console.log(event.target);
-            console.log("Event.target.id: ", event.target.id);
-            // console.dir(event.target);
-            // console.log("this is event.target:", event.target.id)
-            fetchOneList(event.target.id);
+            const id = event.target.classList[1];
 
+            // console.log("event.target.classList: ", event.target.classList);
+            // console.log("Event.target.id: ", event.target.id);
+            // console.log("this is event.target:", event.target.id)
+
+            await fetchOneList(event.target.id);
+            modal.style.display = "none";
         })
     })
 
     //listen for a click to create a new list
-    inputSubmitNewList.addEventListener('click', event => {
+    inputSubmitNewList.addEventListener('click', async (event) => {
         event.preventDefault();
         // event.stopPropagation();
 
-        createList(inputNewList.value);
+        await createList(inputNewList.value);
         modal.style.display = "none";
     });
 
-    //listen for a button click to rename the list name
-    renameBtns.forEach(btn => {
-        // console.log(btn);
-        btn.addEventListener('click', event => {
-            event.stopPropagation();
+    //listen for a click on the save btn to rename the list name
+    saveBtn.forEach(btn => {
+        btn.addEventListener('click', async (event) => {
             event.preventDefault();
-            const id = event.target.classList[1];
-            // console.dir(event.target.classList[1]);
-            // updateList(id, "Hector is awesome");
+            // console.log("value: ", inputRenameList.value);
+            console.log("Id: ", event.target.id);
+            await updateList(event.target.id, inputRenameList.value);
         });
-    })
+    });
+
+
+
+    // renameBtns.forEach(btn => {
+    // console.log(btn);
+    // btn.addEventListener('click', event => {
+    // event.stopPropagation();
+    // event.preventDefault();
+    // const id = event.target.classList[1];
+    // console.log(event.target.classList);
+    // console.log(id);
+    // updateList(id, "Hector is awesome");
+    // });
+    // })
+
+
 });
