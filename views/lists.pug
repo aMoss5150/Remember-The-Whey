@@ -13,7 +13,7 @@ mixin lists()
     div(id="myModal" class='modal')
         div(class="modal-content")
             form(class="list-form")
-                input(id="csurf" type="hidden" name="_csrf" value=csrfToken)
+                input(id="csurf" type="hidden" name="_csrf")
                 span(class="close") X
                 p(class="add-list") Add a list
                 label(class="list-label" for="list-name") Please enter a new list name:
@@ -25,16 +25,3 @@ mixin lists()
 
     br
 
-    button(id="btn-rename-list") Rename a List
-    div(id="myModal-rename" class='modal-rename')
-        div(class="modal-content-rename")
-            form(class="list-rename-form")
-                input(id="csurf-rename" type="hidden" name="_csrf" value=csrfToken)
-                span(class="close-rename") X
-                p(class="add-list-rename") Rename list
-                label(for="list-name-rename" class="list-label-rename") List name
-                br
-                input(type="text" name="name" class="list-name-rename--input" required)
-                br
-                input(type="submit" value="Save" class="list-rename")
-                input(type="button" value="Cancel" class="list-cancel-rename")
