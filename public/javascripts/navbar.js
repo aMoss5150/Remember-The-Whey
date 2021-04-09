@@ -73,17 +73,28 @@ searchBtn.addEventListener('click', async (e) => {
 const hamburger = document.querySelector('.navbar__open--slide')
 hamburger.addEventListener('click', e => {
     e.preventDefault()
-
+    const colContainer = document.querySelector('.column__container')
+    const taskContainer = document.querySelector('.task__column')
     const listSection = document.querySelector('.list__column')
 
     if(listSection.classList.contains("show")) {
         listSection.classList.remove("show")
         listSection.classList.add("hide")
+        colContainer.classList.remove("column__container--regular")
+        colContainer.classList.add("column__container--expand")
+        taskContainer.classList.remove("task__column--small")
+        taskContainer.classList.add("task__column--big")
+
     } else {
         listSection.classList.remove("hide")
         listSection.classList.add("show")
+        colContainer.classList.remove('column__container--expand')
+        colContainer.classList.add('column__container--regular')
+        taskContainer.classList.remove("task__column--big")
+        taskContainer.classList.add("task__column--small")
     }
-
+    console.log(colContainer)
+    console.log(taskContainer)
     console.log(listSection)
     // const listSection
     //grab hectors list element

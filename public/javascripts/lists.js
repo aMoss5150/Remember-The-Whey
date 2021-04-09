@@ -102,11 +102,17 @@ async function fetchLists() {
             li.appendChild(anchor);
             li.appendChild(btnRename);
             li.appendChild(btnDelete);
+            // btnRename.innerHTML = [<div></div>
+            // ].join('')  })
+
+            // for each
+            // .push<li>variable></li>
+            //     join array as one big stringify
+            //     innerhtml = longhtmlstring
         })
         const inputCsurf = document.querySelector('#csurf')
         inputCsurf.setAttribute('value', csrfToken);
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
     }
 }

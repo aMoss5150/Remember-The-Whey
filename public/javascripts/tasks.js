@@ -101,7 +101,7 @@ const getAllTasks = async () => {
             const dur = convertSeconds(task.duration);
             taskStr += ` for ${dur[0]}:${dur[1]}:${dur[2]}`
         }
-
+       
         return `<div id=task-${task.id} class="tasks-section__task">
                     <div class="handle">
                         <i class="fas fa-ellipsis-v"></i>
