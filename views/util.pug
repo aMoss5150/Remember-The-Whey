@@ -1,0 +1,47 @@
+
+mixin modelRename()
+    button(id="btn-rename-list") Rename a List
+        div(id="myModal-rename" class='modal-rename')
+            div(class="modal-content-rename")
+                form(class="list-rename-form")
+                    input(id="csurf-rename" type="hidden" name="_csrf" value=csrfToken)
+                    span(class="close-rename") X
+                    p(class="add-list-rename") Rename list
+                    label(for="list-name-rename" class="list-label-rename") List name
+                    br
+                    input(type="text" name="name" class="list-name-rename--input" required)
+                    br
+                    input(type="submit" value="Save" class="list-rename")
+                    input(type="button" value="Cancel" class="list-cancel-rename")
+
+
+mixin blank()
+      button(id="btn-rename-list") Rename a List
+        div(id="myModal-rename" class='modal-rename')
+        div(class="modal-content-rename")
+            form(class="list-rename-form")
+                span(class="close-rename") X
+                p(class="add-list-rename") Rename list
+                label(for="list-name-rename" class="list-label-rename") List name
+                br
+                input(type="text" name="name" class="list-name-rename--input" required)
+                br
+                input(type="submit" value="Save" class="list-rename")
+                input(type="button" value="Cancel" class="list-cancel-rename")
+
+
+
+mixin modelDelete()
+    button(id="btn-delete-list") Rename a List
+        div(id="myModal-rename" class='modal-rename')
+            div(class="modal-content-rename")
+                form(class="list-rename-form")
+                    input(id="csurf-rename" type="hidden" name="_csrf" value=csrfToken)
+                    span(class="close-rename") X
+                    p(class="add-list-rename") Rename list
+                    label(for="list-name-rename" class="list-label-rename") List name
+                    br
+                    input(type="text" name="name" class="list-name-rename--input" required)
+                    br
+                    input(type="submit" value="Save" class="list-rename")
+                    input(type="button" value="Cancel" class="list-cancel-rename")
