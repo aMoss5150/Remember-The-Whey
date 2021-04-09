@@ -15,7 +15,7 @@ body {
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
     height: 100%;
-    
+
 }
 
 .list__column {
@@ -31,7 +31,6 @@ body {
     margin-top: 5px;
 
 }
-/* ///////////////////////earl//////////////// */
 
 .task__column {
     overflow-y: hidden;
@@ -96,15 +95,6 @@ body {
     transition-duration: 2s;
 }
 
-/*!TOOLTIPS*/
-
-/* .close {
-    align-self: flex-end;
-    position: relative;
-    right: 15px;
-    bottom: 6px;
-    font-size: 14px;
-} */
 
 .info__tooltip {
     align-self: flex-end;
