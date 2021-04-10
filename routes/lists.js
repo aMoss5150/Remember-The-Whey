@@ -95,11 +95,26 @@ router.put('/:listId', csrfProtection, listValidators, asyncHandler(async(req,re
 
 }))
 
-// //Delete a list
-router.delete('/listId', csrfProtection, asyncHandler(async(req,res) => {
+// listValidators
+//Delete a list
+router.delete('/:listId', csrfProtection, asyncHandler(async(req,res) => {
     const list = await db.List.findByPk(req.params.listId);
+
+    await db.Task.destroy( {
+        where: {
+            listId: req.params.listId,
+        }
+    })
+
+    // const validatorErrors = validationResult(req);
+
     await list.destroy();
-    res.redirect('/');
+    res.json({});
+
+    // if (validatorErrors.isEmpty()) {
+    //     await list.destroy();
+    //     res.json({});
+    // }
 }));
 
 

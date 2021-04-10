@@ -56,7 +56,7 @@ async function fetchLists() {
             anchor.setAttribute('class', "list-anchors")
             anchor.setAttribute('href', `http://localhost:8080/lists/${list.id}`);
             btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
-            btnDelete.setAttribute('class', `list__btn--delete' ${list.id}`);
+            btnDelete.setAttribute('class', `list__btn--delete ${list.id}`);
 
             anchor.innerText = list.name;
             btnDelete.innerText = "Delete";
@@ -88,28 +88,117 @@ async function fetchLists() {
     }
 }
 
-//Display all the tasks from the targeted list
-//Display all the summary of the targeted list
-async function fetchOneList(id) {
+//-------------------------------------------------------------------------------
 
-    const ulTasks = document.querySelector('#tasks');
+const tasksContainer = document.querySelector('#tasks-section__tasks-container');
+let selectedTaskIds = new Set();
+//Display all tasks from the targeted list
+//Display all summary of the targeted list
+// async function fetchOneList(id) {
 
-    try {
-        const res = await fetch(`/lists/${id}`);
-        if (!res.ok) {
-            throw res;
+//     // const ulTasks = document.querySelector('#tasks');
+//     try {
+//         // const res = await fetch(`/lists/${id}`);
+//         // if (!res.ok) {
+//         //     throw res;
+//         // }
+//         // const { list, tasks } = await res.json();
+//         const res = await fetch(`/tasks?listIds=${[id]}`);
+//         if (!res.ok) {
+//             throw res;
+//         }
+//         const json = await res.json();
+//         console.log(json);
+//         // tasks.forEach(task => {
+//         //     const li = document.createElement('li');
+//         //     li.innerHTML = task.name;
+//         //     ulTasks.appendChild(li);
+//         // });
+//     }
+//     catch (err) {
+//         console.log(err);
+//     }
+// }
+
+
+const getTasks = async (listIds = []) => {
+    const res = await fetch(`/tasks?listIds=${[...listIds]}`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
         }
-        const { list, tasks } = await res.json();
-        tasks.forEach(task => {
-            const li = document.createElement('li');
-            li.innerHTML = task.name;
-            ulTasks.appendChild(li);
-        });
-    }
-    catch (err) {
-        console.log(err);
-    }
+    });
+    if (!res.ok)
+        throw res;
+    const { tasks } = await res.json();
+    return tasks;
 }
+
+const filterTasks = async (tasks, query) => {
+    return tasks.filter(task => {
+        for (let prop in query) {
+            // Include must store an object with props: term and from
+            if (prop === 'include') {
+                const { term, from } = query[prop];
+                if (!task[from].toLowerCase().includes(term.toLowerCase()))
+                    return false;
+            }
+            // Exclude must store an object with props: term and from
+            else if (prop === 'exclude') {
+                const { term, from } = query[prop];
+                if (task[from].toLowerCase().includes(term.toLowerCase()))
+                    return false;
+            }
+            // Check if a query prop/value matches a task prop/value
+            else if (task[prop] !== query[prop])
+                return false;
+        }
+        return true;
+    });
+}
+
+const displayTasks = async (tasks) => {
+    if (!tasks) tasks = await getTasks();
+
+    // Reset selectedTaskIds
+    selectedTaskIds = new Set();
+
+    const tasksHtml = tasks.map(task => {
+        let taskStr = '';
+
+        if (task.sets) taskStr += `${task.sets} `;
+        if (task.reps) taskStr += `x ${task.reps} `;
+        taskStr += task.name;
+        if (task.duration) {
+            const dur = convertSeconds(task.duration);
+            taskStr += ` for ${dur[0]}:${dur[1]}:${dur[2]}`
+        }
+
+        return `<div id=task-${task.id} class="tasks-section__task">
+                    <div class="handle">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                    <input type="checkbox">
+                    <div class="card-text">${taskStr}</div>
+                </div>`;
+    });
+
+    tasksContainer.innerHTML = tasksHtml.join('');
+};
+
+const updateTasksSection = async (listIds, queries = []) => {
+    let tasks = await getTasks(listIds);
+    for (let query of queries)
+        tasks = await filterTasks(tasks, query);
+    await displayTasks(tasks);
+}
+
+
+
+
+
+
+//---------------------------------------------------------------------
 
 //Create a new list
 async function createList(name) {
@@ -148,8 +237,6 @@ async function createList(name) {
 
 //Rename a list
 async function updateList(id, name) {
-    // console.log("id: ", id);
-    // console.log("name: ", name);
 
     const newListForm = document.querySelector('.list-form');
     const formData = new FormData(newListForm);
@@ -172,7 +259,6 @@ async function updateList(id, name) {
         const { list } = await res.json();
 
         let anchor = document.getElementById(id);
-        // console.log("anchor html element: ", anchor);
 
         anchor.innerText = list.name;
     }
@@ -183,15 +269,31 @@ async function updateList(id, name) {
 
 //Delete a list
 async function deleteList(id) {
+
+    const divLists = document.querySelector('#lists');
+
+    const form = document.querySelector('.list-form');
+    const formData = new FormData(form);
+    const body = {
+        _csrf: formData.get('_csrf'),
+    }
+
     try {
         const res = await fetch(`/lists/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id })
-        })
-        const json = res.json();
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) {
+            throw res;
+        }
+
+        //clear the innerHTML of the div(parent) element
+        divLists.innerHTML = "";
+        //Fetch all the lists again with the updated version
+        await fetchLists();
     }
     catch (err) {
         console.log(err);
@@ -252,13 +354,6 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         }
     });
 
-    //-----For some reason, window object does not work----------
-    // window.addEventListener('click', event => {
-    //     event.stopPropagation();
-    //     if (event.target === modal_rename) {
-    //         modal_rename.style.display = "none";
-    //     }
-    // });
     //---------------------------------------------------------------------------------------
 
     const listAnchors = document.querySelectorAll('.list-anchors');
@@ -268,13 +363,15 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     const inputRenameSingle = document.querySelector('.list-rename');
     const inputRenameValue = document.querySelector('.list-name-rename--input');
 
+    const deleteBtns = document.querySelectorAll('.list__btn--delete');
 
     //Listen for a click on each anchor element to display tasks
     listAnchors.forEach(list => {
         list.addEventListener('click', async (event) => {
             event.preventDefault();
             event.stopPropagation();
-            await fetchOneList(event.target.id);
+            await updateTasksSection(event.target.id);
+            // await fetchOneList(event.target.id);
         })
     })
 
@@ -287,10 +384,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     });
 
     // listen for a click on the save btn to rename the list
-
     /*There is a bug where the modal will not pop up anymore when the
     rename btn is clicked only after creating a new list. */
-
     inputRenameSingle.addEventListener('click', async (event) => {
         event.stopPropagation();
         event.preventDefault();
@@ -301,6 +396,11 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     });
 
     //Listen for a click on the delete btn
-
+    deleteBtns.forEach( btn => {
+        btn.addEventListener('click', async (event) => {
+            const deleteId = event.target.classList[1];
+            await deleteList(deleteId);
+        })
+    });
 
 });
