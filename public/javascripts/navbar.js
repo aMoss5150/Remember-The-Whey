@@ -6,16 +6,17 @@
 
 ////////////////////////////////         CODE FOR SEARCH                ///////////////////            REFACTOR WITH MICHAEL             //////////////////////////////
 const searchBtn = document.querySelector(".search__submit");
-const searchInp = document.querySelector(".navbar__search_input");
+const searchIncInp = document.querySelector(".navbar__search_input");
+const searchExcInp = null;
 
 searchBtn.addEventListener('click', async (e) => {
     //prevent refresh of page
     e.preventDefault()
 
     // grab input from search input to use as the regex
-    const searchIncTerm = searchInp.value;
-    const searchExcTerm = '';
-    const fieldToSearch = 'name';
+    const searchIncTerm = searchIncInp.value || null;
+    const searchExcTerm = null || null;
+    const includeNotes = false;
     // need to grab html element where i can display all tasks
     // with make variable let tasksContainer === html display element
 
@@ -26,7 +27,11 @@ searchBtn.addEventListener('click', async (e) => {
         tasks = await filterTasks(tasks, {
             include: {
                 term: searchIncTerm,
-                from: fieldToSearch
+                includeNotes: includeNotes
+            },
+            exclude: {
+                term: searchExcTerm,
+                includeNotes: includeNotes
             }
         });
 
