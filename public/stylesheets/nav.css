@@ -5,6 +5,7 @@
     align-items: center;
     position: sticky;
     justify-content: space-between;
+    z-index: 2;
 }
 /* .searchContainer {
     display: inline-flex;
@@ -30,11 +31,12 @@
     border-radius: 3px;
     padding-left: 25px;
     font-weight: 450;
-    font-size: 16px
+    font-size: 16px;
+    min-width: 260px
 }
 
-.search__submit {
-    background-color: (0, 96, 191, 0.1);
+.search__button--extend {
+    background-color: transparent;
     border: none;
     border-radius: 3px;
     height: 30px;
@@ -43,7 +45,10 @@
     position: absolute;
     margin-left: 213px;
     width: 48px;
+    outline-offset: 0px;
+    outline: none;
 }
+
 
 .navbar__search_input:hover, .navbar__search_input:focus {
     border: 0 solid rgb(0, 0, 0, 0);
@@ -129,4 +134,93 @@ footer {
     border-right: 2px solid rgb(0, 0, 0, .1);
     padding-right: 10px;
     margin: 0px 5px;
+}
+
+.search-arrow {
+    padding-top: 5px;
+    width: 12px;
+}
+
+.search_bar-extend--show{
+    box-sizing: border-box;
+    margin-top: 32px;
+    border: none;
+    border-radius: 8px;
+    position: absolute;
+    height: 250px;
+    width: 400px;
+    display: block;
+    background-color: white;
+    display: flex;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+    z-index: 5;
+}
+
+.search_bar-extend--hide{
+    display: none;
+}
+
+.extended-search_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-left: 10px;
+}
+
+.search-icon-extended{
+    height: 25px;
+    width: 25px;
+
+}
+
+.extended_search-btn{
+    height: 35px;
+    width: 80px;
+    background-color: #1874CD;
+    border: none;
+    border-radius: 4px;
+    margin-left: 3px;
+}
+
+.extended-search-exit {
+    height: 20px;
+    width: 400px;
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.extended-text{
+    box-sizing: border-box;
+    padding-top: 16px;
+}
+
+.extSearch__form--searchExcTerm, .extSearch__form--searchIncTerm {
+    width: 365px;
+    height: 32px;
+    border: 2px solid lightsteelblue;
+    border-radius: 5px;
+}
+
+.extSearch__form--searchExcTerm:focus, .extSearch__form--searchIncTerm:focus {
+    background-color: transparent;
+    border: 2px solid cornflowerblue;
+    outline-offset: 0px;
+    outline: none;
+}
+
+
+
+.x-icon {
+    font-size: 15px;
+    border-radius: 5px;
+    font-weight: bolder;
+    color: lightslategray;
+    padding-right: 5px;
+    border: none;
+    background-color: white;
+    outline-offset: 0px;
+    outline: none;
+    height: 20px;
+    width: 25px;
 }

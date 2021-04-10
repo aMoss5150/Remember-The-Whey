@@ -1,59 +1,35 @@
-//implement a ajax call to fetch all task which meet a regex search criteria
-// window.addEventListener("DOMContentedLoaded", (e) => {
-// when a search is entered
+///// Menu open/exit/hide/show //////////////
 
 
+const searchExpandBtn = document.querySelector(".search__button--extend");
+const searchInp = document.querySelector(".navbar__search_input");
+const xIconExtended = document.querySelector(".x-icon")
+const extendSearchDiv = document.querySelector('#search_bar-extend')
 
-////////////////////////////////         CODE FOR SEARCH                ///////////////////            REFACTOR WITH MICHAEL             //////////////////////////////
-const searchBtn = document.querySelector(".search__submit");
-const searchIncInp = document.querySelector(".navbar__search_input");
-const searchExcInp = null;
-
-searchBtn.addEventListener('click', async (e) => {
+searchExpandBtn.addEventListener('click', async (e) => {
     //prevent refresh of page
     e.preventDefault()
+    if(extendSearchDiv.classList.contains("search_bar-extend--hide")) {
+        extendSearchDiv.classList.remove("search_bar-extend--hide")
+        extendSearchDiv.classList.add("search_bar-extend--show")
 
-    // grab input from search input to use as the regex
-    const searchIncTerm = searchIncInp.value || null;
-    const searchExcTerm = null || null;
-    const includeNotes = false;
-    // need to grab html element where i can display all tasks
-    // with make variable let tasksContainer === html display element
-
-    try {
-        // json should have ALL Tasks belonging to user (authenticated and authorized in backend)
-        let tasks = await getTasks();
-
-        tasks = await filterTasks(tasks, {
-            include: {
-                term: searchIncTerm,
-                includeNotes: includeNotes
-            },
-            exclude: {
-                term: searchExcTerm,
-                includeNotes: includeNotes
-            }
-        });
-
-        if (tasks.length === 0) {
-            alert("No tasks matched your search");
-        }
-        else {
-            // display results on task section display area
-            await displayTasks(tasks);
-        }
+    } else {
+        extendSearchDiv.classList.remove(`search_bar-extend--show`)
+        extendSearchDiv.classList.add(`search_bar-extend--hide`)
     }
-    catch (err) {
-        // display error somewhere in html
-        console.log(err)
-    }
+
 })
+
+xIconExtended.addEventListener('click', e => {
+    extendSearchDiv.classList.remove(`search_bar-extend--show`)
+    extendSearchDiv.classList.add(`search_bar-extend--hide`)
+})
+
 
 const hamburger = document.querySelector('.navbar__open--slide')
 hamburger.addEventListener('click', e => {
     e.preventDefault()
     const colContainer = document.querySelector('.column__container')
-    const taskContainer = document.querySelector('.task__column')
     const listSection = document.querySelector('.list__column')
 
     if(listSection.classList.contains("show")) {
@@ -61,27 +37,82 @@ hamburger.addEventListener('click', e => {
         listSection.classList.add("hide")
         colContainer.classList.remove("column__container--regular")
         colContainer.classList.add("column__container--expand")
-        taskContainer.classList.remove("task__column--small")
-        taskContainer.classList.add("task__column--big")
 
     } else {
         listSection.classList.remove("hide")
         listSection.classList.add("show")
         colContainer.classList.remove('column__container--expand')
         colContainer.classList.add('column__container--regular')
-        taskContainer.classList.remove("task__column--big")
-        taskContainer.classList.add("task__column--small")
-    }
-    console.log(colContainer)
-    console.log(taskContainer)
-    console.log(listSection)
-    // const listSection
-    //grab hectors list element
-    //add class to hectors element opened
-    //if
-    //css styling for hiding hectors list section hidden
-    // css to bring michaels task section to end of page
 
+    }
 
 })
-// })
+
+
+///////   Search and Extended Search /////////
+const btnExtSubmit = document.querySelector('.extended_search-btn')
+const navSearch = document.querySelector('.navbar__search_input')
+
+searchInp.addEventListener('keypress', async(e) => {
+    if (e.key === 'Enter') {
+        const searchIncTerm = navSearch.value || null;
+        console.log(searchIncTerm)
+
+        try {
+            let tasks = await getTasks();
+
+            tasks = await filterTasks(tasks, {
+                include: {
+                    term: searchIncTerm,
+                    includeNotes: false
+                }
+            });
+
+            if (tasks.length === 0) {
+                alert("No tasks matched your search");
+            } else {
+                await displayTasks(tasks);
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+})
+
+
+const searchIncInp = document.querySelector('.extSearch__form--searchIncTerm')
+const searchExcInp = document.querySelector('.extSearch__form--searchExcTerm')
+const searchNotesInp = document.querySelector('.extSearch__form--notes')
+
+btnExtSubmit.addEventListener('click', async(e) => {
+    e.preventDefault()
+    const searchIncTerm = searchIncInp.value || null;
+    console.log(searchIncTerm)
+    const searchExcTerm = searchExcInp.value || null;
+    console.log(searchExcTerm)
+    const includeNotes = searchNotesInp.checked;
+    console.log(includeNotes)
+    try {
+        let tasks = await getTasks();
+
+        tasks = await filterTasks(tasks, {
+            include: {
+                term: searchIncTerm,
+                includeNotes
+            },
+            exclude: {
+                term: searchExcTerm,
+                includeNotes
+            }
+        });
+
+        if (tasks.length === 0) {
+            alert("No tasks matched your search");
+        } else {
+            await displayTasks(tasks);
+        }
+    } catch (err) {
+        console.log(err)
+    }
+
+})
