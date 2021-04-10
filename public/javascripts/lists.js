@@ -51,6 +51,9 @@ async function fetchLists() {
             const anchor = document.createElement('anchor');
             const btnRename = document.createElement('button');
             const btnDelete = document.createElement('button');
+            const divContainer = document.createElement('div');
+
+            divContainer.setAttribute('id', `div-container-${list.id}`);
 
             anchor.setAttribute('id', list.id);
             anchor.setAttribute('class', "list-anchors")
@@ -76,9 +79,10 @@ async function fetchLists() {
                                         </div>
                                     </div>`;
 
-            divLists.appendChild(anchor);
-            divLists.appendChild(btnRename);
-            divLists.appendChild(btnDelete);
+            divLists.appendChild(divContainer);
+            divContainer.appendChild(anchor);
+            divContainer.appendChild(btnRename);
+            divContainer.appendChild(btnDelete);
         });
 
         const inputCsurf = document.querySelector('#csurf')
