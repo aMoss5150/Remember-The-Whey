@@ -1,4 +1,4 @@
-//--------------------Create a New List Button Modal------------------------------
+//-----------------------------------Modal for the Add New List Button-----------------------------------
 // Get the modal
 let modal = document.getElementById("myModal");
 
@@ -33,11 +33,11 @@ window.onclick = function (event) {
     }
 }
 
-//-----------------------DOM Content----------------------------------------
+//----------------------------------Helper Functions To Fetch Calls To The Backend----------------------------------------
 
-//fetch all lists from the server
+//fetch all the lists from the server
 async function fetchLists() {
-    //when you reload the DOM, the ul already has child nodes.
+
     const divLists = document.querySelector('#lists');
     try {
         const res = await fetch('/lists');
@@ -45,7 +45,7 @@ async function fetchLists() {
             throw res;
         }
         const { lists, csrfToken } = await res.json();
-        //create a list item and append to the ul parent
+        //create an anchor, rename btn, and delete btn to each list item
         lists.forEach(list => {
 
             const anchor = document.createElement('anchor');
@@ -56,11 +56,12 @@ async function fetchLists() {
             anchor.setAttribute('class', "list-anchors")
             anchor.setAttribute('href', `http://localhost:8080/lists/${list.id}`);
             btnRename.setAttribute('class', `list__btn--rename ${list.id}`);
+            btnDelete.setAttribute('class', `list__btn--delete' ${list.id}`);
 
             anchor.innerText = list.name;
-            // btnRename.innerHTML = 'Rename';
-            btnDelete.innerHTML = "Delete";
-            //Creating the modal for the rename btn
+            btnDelete.innerText = "Delete";
+
+            //Create the modal for the rename btn
             btnRename.innerHTML = `Rename <div id="myModal-rename-${list.id}" class="modal-rename ${list.id}">
                                         <div class="modal-content-rename">
                                             <form class="list-rename-form">
@@ -70,7 +71,7 @@ async function fetchLists() {
                                                 <br>
                                                 <input type="text" name="name" class="list-name-rename--input" required>
                                                 <br>
-                                                <input type="submit" value="Save" id="${list.id}" class="list-rename">
+                                                <input type="submit" value="Save" class="list-rename">
                                                 <input type="button" value="Cancel" id="cancel-${list.id}" class="list-cancel-rename">
                                         </div>
                                     </div>`;
@@ -112,7 +113,6 @@ async function fetchOneList(id) {
 
 //Create a new list
 async function createList(name) {
-    //clear the innerHTML of the ul element to empty
 
     const divLists = document.querySelector('#lists');
 
@@ -135,9 +135,10 @@ async function createList(name) {
         if (!res.ok) {
             throw res
         }
-        const emptyObj = await res.json();
 
+        //clear the innerHTML of the div(parent) element
         divLists.innerHTML = "";
+        //Fetch all the lists again with the updated version
         await fetchLists();
     }
     catch (err) {
@@ -147,6 +148,8 @@ async function createList(name) {
 
 //Rename a list
 async function updateList(id, name) {
+    // console.log("id: ", id);
+    // console.log("name: ", name);
 
     const newListForm = document.querySelector('.list-form');
     const formData = new FormData(newListForm);
@@ -169,8 +172,9 @@ async function updateList(id, name) {
         const { list } = await res.json();
 
         let anchor = document.getElementById(id);
+        // console.log("anchor html element: ", anchor);
 
-        anchor.innerHTML = list.name;
+        anchor.innerText = list.name;
     }
     catch (err) {
         console.log(err);
@@ -194,8 +198,7 @@ async function deleteList(id) {
     }
 }
 
-
-
+//-----------------------------------------------------DOM CONTENT--------------------------------------------------------
 
 window.addEventListener('DOMContentLoaded', async (event) => {
 
@@ -204,9 +207,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     //------------------Rename Button Modal----------------------------------------------
     // Get the modal
-    // let modal_renames = document.querySelectorAll(`.modal-rename`); //return a node list
     let modal_rename = document.querySelector(`.modal-rename`); //return a node list
-    // let modal_rename = document.querySelector("#myModal-rename"); //return a node list
 
     // Get the button that opens the modal
     let btn_rename = document.querySelectorAll(".list__btn--rename"); //return a node list
@@ -217,15 +218,14 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     // Get the <input> element that closes the modal
     let btnCancel_rename = document.getElementsByClassName("list-cancel-rename")[0];
 
-    console.log("modal_rename: ", modal_rename);
-    // console.log("btn_rename: ", btn_rename);
-    // console.log("span: ", span_rename);
-    // console.log("btnCancel: ", btnCancel_rename);
-
+    //define the rename btn unique id
+    let renameBtnId;
 
     // When the user clicks on the button, open the modal
     btn_rename.forEach(btn => {
         btn.addEventListener('click', event => {
+            // console.log(event.target);
+            renameBtnId = event.target.classList[1];
             event.stopPropagation();
             modal_rename.style.display = "block";
         })
@@ -250,29 +250,24 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         if (event.target === modal_rename) {
             modal_rename.style.display = "none";
         }
-    })
+    });
 
     //-----For some reason, window object does not work----------
     // window.addEventListener('click', event => {
-        // event.stopPropagation();
-        // if (event.target === modal_rename) {
-            // modal_rename.style.display = "none";
-        // }
+    //     event.stopPropagation();
+    //     if (event.target === modal_rename) {
+    //         modal_rename.style.display = "none";
+    //     }
     // });
     //---------------------------------------------------------------------------------------
-
-
 
     const listAnchors = document.querySelectorAll('.list-anchors');
     const inputAddListBtn = document.querySelector('.list-add');
     const inputListValue = document.querySelector('.list-name--input');
 
     const inputRenameSingle = document.querySelector('.list-rename');
-    const inputRenameBtn = document.querySelectorAll('.list-rename');
     const inputRenameValue = document.querySelector('.list-name-rename--input');
 
-    let modal_renames = document.querySelectorAll(`.modal-rename`); //return a node list
-    console.log(modal_renames);
 
     //Listen for a click on each anchor element to display tasks
     listAnchors.forEach(list => {
@@ -292,33 +287,20 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     });
 
     // listen for a click on the save btn to rename the list
-    inputRenameBtn.forEach(btn => {
-        // console.log(btn);
-        btn.addEventListener('click', async (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            console.log(btn);
-            // console.log(inputRenameValue.value);
 
-            // await updateList(event.target.id, inputRenameList.value);
-            modal_rename.style.display = "none";
-            inputRenameValue.value = "";
-        });
+    /*There is a bug where the modal will not pop up anymore when the
+    rename btn is clicked only after creating a new list. */
+
+    inputRenameSingle.addEventListener('click', async (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+
+        await updateList(renameBtnId, inputRenameValue.value);
+        modal_rename.style.display = "none";
+        inputRenameValue.value = "";
     });
 
-    // inputRenameSingle.addEventListener('click', async (event) => {
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     console.log(inputRenameSingle);
+    //Listen for a click on the delete btn
 
-    //     modal_rename.style.display = "none";
-    //     inputRenameValue.value = "";
-    // })
-
-
-
-
-    //think of of way to implement a unique modal to each rename button
-    //so I can grab the unique id in order to pass it in the update function
 
 });
