@@ -119,9 +119,7 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (!task['name'].toLowerCase().includes(term))
-                        return false;
-                    if (includeNotes && !task['notes'].toLowerCase().includes(term))
+                    if (!task['name'].toLowerCase().includes(term) && (includeNotes && !task['notes'].toLowerCase().includes(term)))
                         return false;
                 }
             }
@@ -131,9 +129,7 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (task['name'].toLowerCase().includes(term))
-                        return false;
-                    if (includeNotes && task['notes'].toLowerCase().includes(term))
+                    if (task['name'].toLowerCase().includes(term) && (includeNotes && task['notes'].toLowerCase().includes(term)))
                         return false;
                 }
             }
