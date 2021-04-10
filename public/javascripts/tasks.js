@@ -1,4 +1,5 @@
 const toolbarSelector = document.querySelector('#toolbar__selector');
+const selectorInp = document.querySelector('#toolbar__selector input');
 const toolbarComplete = document.querySelector('#toolbar__complete');
 const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
 const toolbarDelete = document.querySelector('#toolbar__delete');
@@ -11,9 +12,11 @@ const tasksContainer = document.querySelector('#tasks-section__tasks-container')
 const toolbarDateIds = ['date_today', 'date_tomorrow', 'date_plus-2', 'date_plus-3', 'date_plus-4', 'date_one-week'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-let selectedListIds = new Set();
-let selectedTaskIds = new Set();
-let viewComplete = false;
+
+let selectedListIds = new Set();    // Holds the Ids for the currently selected lists in lists container
+let selectedTaskIds = new Set();    // Holds the Ids for the currently selected tasks in tasks container
+let taskCount = 0;                  // # of tasks in tasks container
+let viewComplete = false;           // Display complete/incomplete tabs
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Helper functions
@@ -83,6 +86,15 @@ const setTasksActiveState = (state, taskIds = []) => {
             }
         }
     }
+
+    // Alter input checkbox on toolbar_selector based on how many tasks are selected
+    const selectedTaskCount = document.querySelectorAll('.tasks-section__task.active').length;
+    selectorInp.checked = false;
+    selectorInp.indeterminate = false;
+    if (taskCount === selectedTaskCount)
+        selectorInp.checked = true;
+    else if (selectedTaskCount > 0)
+        selectorInp.indeterminate = true;
 }
 
 const getTasks = async (listIds = []) => {
@@ -99,7 +111,7 @@ const getTasks = async (listIds = []) => {
 }
 
 const filterTasks = async (tasks, query) => {
-    return tasks.filter(task => {
+    const filteredTasks = tasks.filter(task => {
         for (let prop in query) {
             // Filter by include search term
             // Options Obj = { term, includeNotes }
@@ -145,10 +157,15 @@ const filterTasks = async (tasks, query) => {
         }
         return true;
     });
+
+    return filteredTasks;
 }
 
 const displayTasks = async (tasks) => {
     if (!tasks) tasks = await getTasks();
+
+    // Update taskCount now bc they will not be filtered further before display
+    taskCount = tasks.length;
 
     // Reset selectedTaskIds
     selectedTaskIds = new Set();
@@ -206,8 +223,6 @@ const getDateString = (dateArr) => {
 // Event Handlers
 
 const toolbarSelectorHandler = async (ev) => {
-    const inp = document.querySelector('#toolbar__selector input');
-
     ev.stopPropagation();
     closeDropdowns();
 
@@ -224,11 +239,9 @@ const toolbarSelectorHandler = async (ev) => {
         if (ev.target.classList.contains('selector_opt')) {
             if (ev.target.id === 'selector_all') {
                 setTasksActiveState(true);
-                inp.checked = true;
             }
             else {
                 setTasksActiveState(false);
-                inp.checked = false;
 
                 if (ev.target.id === 'selector_today') {
                     let date = dates['date_today'][0];
