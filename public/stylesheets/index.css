@@ -65,6 +65,7 @@ body {
     margin-top: 5px;
     grid-area: summary;
     display: flex;
+    flex-direction: column;
     background-color: white;
     z-index: 100;
     left: 0px;
@@ -144,7 +145,7 @@ body {
     height: auto;
     width: 100%;
     /* justify-content: center; */
-    align-items: flex-start;
+    /* align-items: flex-start; */
 }
 
 /*!FORM FIELDS / ELEMENTS*/
@@ -153,6 +154,7 @@ body {
     font-size: 20px;
     border: hidden;
     width: 100%;
+    margin: 20px;
 }
 
 .update__task:hover {
@@ -160,27 +162,31 @@ body {
 }
 
 .update__list {
-    position: relative;
-    left: 120px;
-    border: hidden;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
+    /* border: hidden; */
 }
 
 .update__reps {
-    position: relative;
-    left: 120px;
-    border: hidden;
-    width: auto;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
+    /* border: hidden; */
+    /* width: auto; */
 }
 
 .update__reps:hover {
-    outline: 1px solid rgba(0, 0, 0, 0.3)
+    outline: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid red;
 }
 
 .update__sets {
-    position: relative;
-    left: 120px;
-    border: hidden;
-    width: auto 0;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
+    /* border: hidden; */
+    /* width: auto 0; */
 }
 
 .update__sets:hover {
@@ -188,10 +194,11 @@ body {
 }
 
 .update__duration {
-    position: relative;
-    left: 120px;
-    border: hidden;
-    width: auto;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
+    /* border: hidden; */
+    /* width: auto; */
 }
 
 .update__duration:hover {
@@ -199,9 +206,10 @@ body {
 }
 
 .update__notes {
-    position: relative;
-    top: 17px;
-    width: 100%;
+    margin: 20px;
+    /* position: relative; */
+    /* top: 17px; */
+    /* width: 100%; */
 }
 
 /*!FORM LABELS*/

@@ -20,8 +20,8 @@ slideoutBtn.addEventListener('click', closeSlideout)
 //I WILL NOT BE ABLE TO USE THE ONCLICK EVENT!
 //!TEST SLIDEOUT
 
-const testButton = document.querySelector('#button__test')
+// const testButton = document.querySelector('#button__test')
 
-testButton.addEventListener("click", () => {
-    closeSlideout()
-})
+// testButton.addEventListener("click", () => {
+//     closeSlideout()
+// })
