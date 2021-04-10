@@ -28,7 +28,21 @@ block content
     .navbar__search_container
       img(class="search-icon" src="/searchicon.png")
       input(class="navbar__search_input" name="search" type="text" required)
-      input(type="submit" class="search__submit" value="Find")
+      button(type="button" class="search__button--extend")
+        img(class="search-arrow" src="/searcharrow.png" width="25" height="25")
+      div(id="search_bar-extend" class="search_bar-extend--hide")
+        div(class="extended-search-exit")
+          input(class="x-icon" type="button" value="X")
+        form(class="extended-search_form" action="" method="post")
+          span(class="extended-text") Has the Words
+          input(class="extSearch__form--searchIncTerm" name="searchIncInp" required)
+          span(class="extended-text") Doesn't have
+          input(class="extSearch__form--searchExcTerm" name="searchExcInp" required)
+          div(class="checkbox")
+            input(class="extSearch__form--notes" type="checkbox" name="notesInp")
+            span Search notes
+          button(type="submit" class="extended_search-btn")
+            img(class="search-icon-extended" src="/searchicon.png")
     .right__navbox
       form(action="/users/logout" method="post")
         button(type="submit" class="nav__logout_btn") Logout
