@@ -1,7 +1,7 @@
 /* .tasks-section__task  */
 
 .tasks-section__task * {
-    display:inline-block;
+    display: inline-block;
     user-select: none;
 }
 
@@ -13,6 +13,21 @@
     background-color: #ffc;
 }
 
+.tasks-section__task .handle:hover {
+    cursor: grab;
+}
+
+.tasks-section__task .handle:active {
+    cursor: grabbing;
+}
+
+.tasks-section__task .handle {
+    visibility: hidden;
+}
+
+.tasks-section__task:hover .handle {
+    visibility: visible;
+}
 
 /* #tasks-section__toolbar  */
 

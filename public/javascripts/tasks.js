@@ -119,9 +119,7 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (!task['name'].toLowerCase().includes(term))
-                        return false;
-                    if (includeNotes && !task['notes'].toLowerCase().includes(term))
+                    if (!task['name'].toLowerCase().includes(term) && (includeNotes && !task['notes'].toLowerCase().includes(term)))
                         return false;
                 }
             }
@@ -131,9 +129,7 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (task['name'].toLowerCase().includes(term))
-                        return false;
-                    if (includeNotes && task['notes'].toLowerCase().includes(term))
+                    if (task['name'].toLowerCase().includes(term) && (includeNotes && task['notes'].toLowerCase().includes(term)))
                         return false;
                 }
             }
@@ -161,14 +157,15 @@ const filterTasks = async (tasks, query) => {
     return filteredTasks;
 }
 
-const displayTasks = async (tasks) => {
+const displayTasks = async (tasks, keepSelected = false) => {
     if (!tasks) tasks = await getTasks();
 
     // Update taskCount now bc they will not be filtered further before display
     taskCount = tasks.length;
 
     // Reset selectedTaskIds
-    selectedTaskIds = new Set();
+    if (!keepSelected)
+        selectedTaskIds = new Set();
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
@@ -191,13 +188,15 @@ const displayTasks = async (tasks) => {
     });
 
     tasksContainer.innerHTML = tasksHtml.join('');
+
+    setTasksActiveState(true, selectedTaskIds);
 };
 
-const updateTasksSection = async (listIds, queries = []) => {
+const updateTasksSection = async (listIds = [], queries = [], keepSelected = false) => {
     let tasks = await getTasks(listIds);
     for (let query of queries)
         tasks = await filterTasks(tasks, query);
-    await displayTasks(tasks);
+    await displayTasks(tasks, keepSelected);
 }
 
 const getDateInfo = () => {
@@ -525,7 +524,7 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
-updateTasksSection(undefined, []);
+updateTasksSection([], [], true);
 // updateTasksSection(undefined, [{exclude: {term: 'e', from: 'name'}}]);
 
 new Sortable(tasksContainer, {
