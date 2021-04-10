@@ -57,12 +57,14 @@ searchInp.addEventListener('keypress', async(e) => {
     if (e.key === 'Enter') {
         const searchIncTerm = navSearch.value || null;
         console.log(searchIncTerm)
+
         try {
             let tasks = await getTasks();
 
             tasks = await filterTasks(tasks, {
                 include: {
                     term: searchIncTerm,
+                    includeNotes: false
                 }
             });
 
