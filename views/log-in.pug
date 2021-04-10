@@ -21,7 +21,7 @@ html(lang="en")
                 if errors
                     ul
                         each error in errors
-                            li(class="error__msg")= error
+                            div(class="error__msg")= error
                 form(action="/users/log-in" method="post" id="form__header") Been here before? Welcome back!
                     br
                     input(type="hidden" name="_csrf" value=csrfToken)

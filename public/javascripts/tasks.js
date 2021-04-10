@@ -1,4 +1,5 @@
 const toolbarSelector = document.querySelector('#toolbar__selector');
+const selectorInp = document.querySelector('#toolbar__selector input');
 const toolbarComplete = document.querySelector('#toolbar__complete');
 const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
 const toolbarDelete = document.querySelector('#toolbar__delete');
@@ -8,10 +9,14 @@ const tasksForm = document.querySelector('#tasks-section__form');
 const tasksFormInputs = tasksForm.querySelectorAll('input');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
 
-let selectedTaskIds = new Set(); // VERY USEFUL FOR ME --andrew
 const toolbarDateIds = ['date_today', 'date_tomorrow', 'date_plus-2', 'date_plus-3', 'date_plus-4', 'date_one-week'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+let selectedListIds = new Set();    // Holds the Ids for the currently selected lists in lists container
+let selectedTaskIds = new Set();    // Holds the Ids for the currently selected tasks in tasks container
+let taskCount = 0;                  // # of tasks in tasks container
+let viewComplete = false;           // Display complete/incomplete tabs
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Helper functions
@@ -45,57 +50,131 @@ const convertSeconds = seconds => {
 
 // Add or remove active state based on val
 // @param {bool} val
-const setTaskActiveState = (task, val) => {
-    if (val) {
-        task.classList.add('active');
-        task.children[1].checked = true;
-        selectedTaskIds.add(task.id.split('-')[1]);
-    }
-    else if (val === false) {
-        task.classList.remove('active');
-        task.children[1].checked = false;
-        selectedTaskIds.delete(task.id.split('-')[1]);
-    }
+const setTasksActiveState = (state, taskIds = []) => {
+    let tasks = [];
+
+    // Populate tasks with task elements
+    if (taskIds.length === 0)
+        tasks = document.querySelectorAll('.tasks-section__task')
     else {
-        // Flip active state
-        if (task.classList.contains('active')) {
+        for (let taskId of taskIds)
+            tasks.push(document.querySelector(`#task-${taskId}`));
+    }
+
+    for (let task of tasks) {
+        if (state === true) {
+            task.classList.add('active');
+            task.children[1].checked = true;
+            selectedTaskIds.add(task.id.split('-')[1]);
+        }
+        else if (state === false) {
             task.classList.remove('active');
             task.children[1].checked = false;
             selectedTaskIds.delete(task.id.split('-')[1]);
         }
         else {
-            task.classList.add('active');
-            task.children[1].checked = true;
-            selectedTaskIds.add(task.id.split('-')[1]);
+            // Flip active state
+            if (task.classList.contains('active')) {
+                task.classList.remove('active');
+                task.children[1].checked = false;
+                selectedTaskIds.delete(task.id.split('-')[1]);
+            }
+            else {
+                task.classList.add('active');
+                task.children[1].checked = true;
+                selectedTaskIds.add(task.id.split('-')[1]);
+            }
         }
     }
+
+    // Alter input checkbox on toolbar_selector based on how many tasks are selected
+    const selectedTaskCount = document.querySelectorAll('.tasks-section__task.active').length;
+    selectorInp.checked = false;
+    selectorInp.indeterminate = false;
+    if (taskCount === selectedTaskCount)
+        selectorInp.checked = true;
+    else if (selectedTaskCount > 0)
+        selectorInp.indeterminate = true;
 }
 
-const setAllTasksActiveState = (val) => {
-    const taskDivs = document.querySelectorAll('.tasks-section__task');
-
-    for (let task of taskDivs)
-        setTaskActiveState(task, val);
-}
-
-const getAllTasks = async () => {                           ///MAY BE RE WRITTEN -per--michael
-    const res = await fetch('http://localhost:8080/tasks', {
+const getTasks = async (listIds = []) => {
+    const res = await fetch(`/tasks?listIds=${[...listIds]}`, {
         method: 'GET',
         headers: {
             "Content-Type": "application/json"
         }
     });
+    if (!res.ok)
+        throw res;
     const { tasks } = await res.json();
+    return tasks;
+}
+
+const filterTasks = async (tasks, query) => {
+    const filteredTasks = tasks.filter(task => {
+        for (let prop in query) {
+            // Filter by include search term
+            // Options Obj = { term, includeNotes }
+            if (prop === 'include') {
+                let { term, includeNotes } = query[prop];
+                if (term !== null) {
+                    term = term.toLowerCase();
+                    if (!task['name'].toLowerCase().includes(term))
+                        return false;
+                    if (includeNotes && !task['notes'].toLowerCase().includes(term))
+                        return false;
+                }
+            }
+            // Filter by exclude search term
+            // Options Obj = { term, includeNotes }
+            else if (prop === 'exclude') {
+                let { term, includeNotes } = query[prop];
+                if (term !== null) {
+                    term = term.toLowerCase();
+                    if (task['name'].toLowerCase().includes(term))
+                        return false;
+                    if (includeNotes && task['notes'].toLowerCase().includes(term))
+                        return false;
+                }
+            }
+            // Filter by date property with options
+            // Options Obj = { value, comparison }
+            else if (prop === 'date' && typeof query[prop] === 'object') {
+                let { value, comparison } = query[prop];
+                if (value !== null) {
+                    let taskDate = Date.parse(task['date']);
+                    let propDate = Date.parse(value);
+
+                    if (comparison === 'isAfter') {
+                        if (taskDate >= propDate)
+                            return false;
+                    }
+                }
+            }
+            // Check if a query prop/value matches a task prop/value
+            else if (task[prop] !== query[prop])
+                return false;
+        }
+        return true;
+    });
+
+    return filteredTasks;
+}
+
+const displayTasks = async (tasks) => {
+    if (!tasks) tasks = await getTasks();
+
+    // Update taskCount now bc they will not be filtered further before display
+    taskCount = tasks.length;
 
     // Reset selectedTaskIds
     selectedTaskIds = new Set();
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
-        if (task.sets)
-            taskStr += `${task.sets} `;
-        if (task.reps)
-            taskStr += `x ${task.reps} `;
+
+        if (task.sets) taskStr += `${task.sets} `;
+        if (task.reps) taskStr += `x ${task.reps} `;
         taskStr += task.name;
         if (task.duration) {
             const dur = convertSeconds(task.duration);
@@ -110,8 +189,16 @@ const getAllTasks = async () => {                           ///MAY BE RE WRITTEN
                     <div class="card-text">${taskStr}</div>
                 </div>`;
     });
+
     tasksContainer.innerHTML = tasksHtml.join('');
 };
+
+const updateTasksSection = async (listIds, queries = []) => {
+    let tasks = await getTasks(listIds);
+    for (let query of queries)
+        tasks = await filterTasks(tasks, query);
+    await displayTasks(tasks);
+}
 
 const getDateInfo = () => {
     const date = new Date();
@@ -125,42 +212,80 @@ const getDateInfo = () => {
     return dates;
 }
 
+const getDateString = (dateArr) => {
+    dateArr[1]++;
+    if (dateArr[1] < 10) dateArr[1] = `0${dateArr[1]}`;
+    if (dateArr[2] < 10) dateArr[2] = `0${dateArr[2]}`;
+    return dateArr.join('-');
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Event Handlers
 
-const toolbarSelectorHandler = (ev) => {
-    const inp = document.querySelector('#toolbar__selector input');
-
+const toolbarSelectorHandler = async (ev) => {
     ev.stopPropagation();
     closeDropdowns();
+
+    const dates = getDateInfo();
 
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
         if (ev.target.checked)
-            setAllTasksActiveState(true);
+            setTasksActiveState(true);
         else
-            setAllTasksActiveState(false);
+            setTasksActiveState(false);
     }
     else {
         if (ev.target.classList.contains('selector_opt')) {
             if (ev.target.id === 'selector_all') {
-                setAllTasksActiveState(true);
-                inp.checked = true;
+                setTasksActiveState(true);
             }
             else {
-                setAllTasksActiveState(false);
-                inp.checked = false;
-
-                console.log("TODO - today, tomorrow, overdue handlers")
+                setTasksActiveState(false);
 
                 if (ev.target.id === 'selector_today') {
+                    let date = dates['date_today'][0];
+                    date = getDateString(date);
 
+                    let tasks = await getTasks(selectedListIds);
+                    tasks = await filterTasks(tasks, { date: date });
+
+                    const taskIds = tasks.map(task => task.id);
+
+                    setTasksActiveState(false);
+                    if (taskIds.length)
+                        setTasksActiveState(true, taskIds);
                 }
                 else if (ev.target.id === 'selector_tomorrow') {
+                    let date = dates['date_tomorrow'][0];
+                    date = getDateString(date);
 
+                    let tasks = await getTasks(selectedListIds);
+                    tasks = await filterTasks(tasks, { date: date });
+
+                    const taskIds = tasks.map(task => task.id);
+
+                    setTasksActiveState(false);
+                    if (taskIds.length)
+                        setTasksActiveState(true, taskIds);
                 }
                 else if (ev.target.id === 'selector_overdue') {
+                    let dateToday = dates['date_today'][0];
+                    dateToday = getDateString(dateToday);
 
+                    let tasks = await getTasks(selectedListIds);
+                    tasks = await filterTasks(tasks, {
+                        date: {
+                            value: dateToday,
+                            comparison: 'isAfter'
+                        }
+                    });
+
+                    const taskIds = tasks.map(task => task.id);
+
+                    setTasksActiveState(false);
+                    if (taskIds.length)
+                        setTasksActiveState(true, taskIds);
                 }
             }
 
@@ -190,7 +315,7 @@ const fetchHelper = async (method, body = {}) => {
                 initObj['body'] = JSON.stringify(body);
             }
 
-            const res = await fetch(`http://localhost:8080/tasks/${id}`, initObj);
+            const res = await fetch(`/tasks/${id}`, initObj);
             if (!res.ok) {
                 console.log('RES NOT OKAY')
             }
@@ -199,13 +324,16 @@ const fetchHelper = async (method, body = {}) => {
                     const obj = await res.json();
                     responses.push(obj);
                 }
-                await getAllTasks();
+
             }
         }
         catch (err) {
             console.log('Error:', err)
         }
     }
+
+    // Re-display the tasks
+    updateTasksSection();
 
     return responses;
 }
@@ -231,7 +359,7 @@ const toolbarDuplicateHandler = async (ev) => {
             notes: task.notes
         }
         try {
-            const res = await fetch('http://localhost:8080/tasks', {
+            const res = await fetch('/tasks', {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: {
@@ -243,7 +371,7 @@ const toolbarDuplicateHandler = async (ev) => {
                 console.log('RES NOT OKAY')
             }
             else {
-                await getAllTasks();
+                updateTasksSection();
             }
         }
         catch (err) {
@@ -255,8 +383,6 @@ const toolbarDuplicateHandler = async (ev) => {
 const toolbarDeleteHandler = async (ev) => {
     fetchHelper('DELETE');
 };
-
-
 
 const toolbarDateHandler = async (ev) => {
     ev.stopPropagation();
@@ -273,8 +399,12 @@ const toolbarDateHandler = async (ev) => {
         else if (currTarget.id === 'date_calendar') {
             console.log('TODO');
         }
-        else
-            res = await fetchHelper('PATCH', { date: dates[currTarget.id][0].join('-') });
+        else {
+            const date = dates[currTarget.id][0];
+            res = await fetchHelper('PATCH', {
+                date: getDateString(date)
+            });
+        }
 
         closeDropdowns();
     }
@@ -307,6 +437,7 @@ const toolbarDateHandler = async (ev) => {
                                 <div> Calendar Picker </div>
                                 <i class="fas fa-caret-right"></i>
                             </a>`;
+
 
         dropdownContent.innerHTML = dateOptionsHTML;
         dropdownContent.classList.add('open');
@@ -345,7 +476,7 @@ const taskFormSubmitHandler = async (ev) => {
     };
 
     try {
-        const res = await fetch('http://localhost:8080/tasks', {
+        const res = await fetch('/tasks', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -358,7 +489,7 @@ const taskFormSubmitHandler = async (ev) => {
         }
         else {
             clearTaskFields();
-            await getAllTasks();
+            updateTasksSection();
         }
     }
     catch (err) {
@@ -368,15 +499,16 @@ const taskFormSubmitHandler = async (ev) => {
 
 const taskSelectHandler = (ev) => {
     const currTask = ev.target.closest('.tasks-section__task');
+    const taskId = currTask.id.split('-')[1];
 
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
-        setTaskActiveState(currTask);
+        setTasksActiveState(null, [taskId]);
     }
     // Handle user click of clickable task area
     else {
-        setAllTasksActiveState(false);
-        setTaskActiveState(currTask, true);
+        setTasksActiveState(false);
+        setTasksActiveState(true, [taskId]);
     }
 }
 
@@ -505,7 +637,8 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
-getAllTasks();
+updateTasksSection(undefined, []);
+// updateTasksSection(undefined, [{exclude: {term: 'e', from: 'name'}}]);
 
 new Sortable(tasksContainer, {
     handle: '.handle',

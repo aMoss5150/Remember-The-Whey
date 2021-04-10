@@ -60,9 +60,9 @@ router.post('/', csrfProtection, listValidators, asyncHandler(async(req,res) => 
 
     if (validatorErrors.isEmpty()) {
         await list.save();
-        const lists = await db.List.findAll();
-        const lastList = lists[lists.length - 1];
-        res.json({lastList});
+        // const lists = await db.List.findAll();
+        // const lastList = lists[lists.length - 1];
+        res.json({});
     }
     else {
         const errors = validatorErrors.array().map((error) => error.msg);
