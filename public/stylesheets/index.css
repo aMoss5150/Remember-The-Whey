@@ -34,6 +34,7 @@ body {
     height: 100%;
     padding: 25px;
     border-radius: 3px;
+    z-index: 3;
 
 }
 
