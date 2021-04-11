@@ -3,12 +3,23 @@
 }
 
 .list__btn--rename {
-  background-color: #c8dcf1;
+  /* background-color: #c8dcf1; */
   /* color: whitesmoke; */
-  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  /* font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif; */
 
 }
 
+#logo-container__text {
+  /* font-family: "Segoe UI",Arial,"clean",sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important; */
+  /* z-index: 2; */
+  /* position: absolute; */
+  /* left: 10px; */
+  /* top: 0; */
+  /* cursor: pointer; */
+  /* color: #1874CD; */
+  /* font-weight: 700; */
+  /* font-size: 18px; */
+}
 
 
 
