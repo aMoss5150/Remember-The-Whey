@@ -1,7 +1,13 @@
 
 mixin tasks
     section(id='tasks-section')
-        h2 Tasks
+        div(id='tasks-section__utils')
+            div(id='utils__incomplete' class='tab') Incomplete
+            div(id='utils__complete' class='tab') Completed
+            div(id='utils__sort')
+                i(class='fas fa-cog')
+                div(class='dropdown')
+                    i(class="fas fa-caret-down")
         div(id='tasks-section__toolbar')
             div(class='button-group')
                 div(id='toolbar__selector')

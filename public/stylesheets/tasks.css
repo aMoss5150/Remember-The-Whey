@@ -1,8 +1,42 @@
+body {
+    font-family: "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important;
+}
+
+#tasks-section > *:not(:first-child) {
+    border-top: 1px dotted #e5e5e5;
+}
+
+/* .tasks-section__utils  */
+
+#tasks-section__utils {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#tasks-section__utils .tab {
+    border: 1px dotted #e5e5e5;
+    border-bottom: 1px solid #d7e7f5;
+    z-index: 2;
+    position:relative;
+    top: 1px;
+}
+
+#tasks-section__utils  > .tab:not(:last-child) {
+    border-right: none;
+}
+
 /* .tasks-section__task  */
 
-.tasks-section__task * {
-    display: inline-block;
-    user-select: none;
+.tasks-section__task {
+    height: 33px;
+    border-bottom: 1px dotted #e5e5e5;
+    border-top: 1px solid #fff;
+    padding: 2px 0;
+
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .tasks-section__task:hover {
@@ -11,6 +45,10 @@
 
 .tasks-section__task.active {
     background-color: #ffc;
+}
+
+.tasks-section__task * {
+    user-select: none;
 }
 
 .tasks-section__task .handle:hover {
@@ -23,10 +61,18 @@
 
 .tasks-section__task .handle {
     visibility: hidden;
+    width: 17px;
 }
 
 .tasks-section__task:hover .handle {
     visibility: visible;
+}
+
+.tasks-section__task .divider {
+    background-color: #ccc;
+    width: 3px;
+    border-radius: 1px;
+    height: 27px;
 }
 
 /* #tasks-section__toolbar  */
@@ -87,7 +133,7 @@
 }
 
 .button-group > div:not(:last-child) {
-    border-right: none; /* Prevent double borders */
+    border-right: none;
 }
 
 /* Clear floats (clearfix hack) */
