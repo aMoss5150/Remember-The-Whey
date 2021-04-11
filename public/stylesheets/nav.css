@@ -70,6 +70,9 @@
     opacity: .9;
     height: 30px;
 }
+.nav__logout_btn:hover {
+    cursor: pointer;
+}
 .search-icon {
     height: 20px;
     position:absolute;
@@ -84,17 +87,13 @@
 }
 
 
-/* .hide, .block_lists{
-    margin-top: 0px;
-    height: 0px;
-    transition-property: all;
-    transition-duration: 2s;
-} */
+.hide{
+    z-index: 0;
+}
 
 .column__container--expand {
     grid-template-columns: 0px 1fr 1fr;
     transition-property: grid-template-columns;
-
     transition-duration: 2s;
 
 }
@@ -145,6 +144,9 @@ footer {
 .search-arrow {
     padding-top: 5px;
     width: 12px;
+}
+.search-arrow:hover {
+    cursor: pointer;
 }
 
 .search_bar-extend--show{

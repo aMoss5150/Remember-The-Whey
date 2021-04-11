@@ -2,19 +2,125 @@
   /* display: none; */
 }
 
-.list__btn--rename {
-  background-color: #c8dcf1;
-  /* color: whitesmoke; */
-  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+.list__div-container{
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid rgb(113, 156, 235, .4);
+  padding: 5px 5px;
+  width: 105%;
 
 }
+.list__btn--rename {
+  background-color: transparent;
+  /* color: whitesmoke; */
+  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  /* border: 1px solid rgb(113, 156, 235, .2); */
+  border: none;
+  margin-left: auto;
 
+}
+.list-anchors{
+  margin-right: auto;
+}
+.list__div-container:hover {
+  background-color: rgb(113, 156, 235, .3);
+  cursor: pointer;
+}
 
+.list__btn--delete {
+  background-color: transparent;
+  font-weight: 500;
+  /* border: 1px solid rgb(113, 156, 235, .2); */
+  border: none;
+}
 
+.list__btn--delete:hover, .list__btn--rename:hover {
+  cursor: pointer;
+}
 
-
+#logo-container__text {
+  font-family: "Segoe UI",Arial,"clean",sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important;
+  /* z-index: 2; */
+  /* position: absolute; */
+  /* left: 10px; */
+  /* top: 0; */
+  cursor: pointer;
+  color: #1874CD;
+  font-weight: 700;
+  font-size: 18px;
+}
 /* color for button: */
 
 /* background = #009dff */
 /* font-color = whitesmoke */
 /* font-family = "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif */
+
+/* .main-listcontainer{} */
+
+
+#btn-create-list {
+  background-color: cornflowerblue;
+  border-radius: 4px;
+  margin-left: auto;
+  height: 25px;
+  width: 25px;
+  font-size: 20px;
+  font-weight: bolder;
+  color: antiquewhite;
+}
+
+#btn-create-list:hover {
+  cursor: pointer;
+}
+
+.list-anchors:hover {
+  cursor: pointer;
+
+}
+.block_lists {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+
+#logo {
+  /* margin-top: px; */
+  width: 100%;
+  display: flex;
+  align-self: flex-start;
+  justify-content: center;
+
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.topText {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  /* margin-right: 15px; */
+  color: #1874CD;
+  opacity: .7;
+}
+.bottomText {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  /* margin-left: px; */
+  color: #1874CD;
+  opacity: .7;
+}
+
+.whey_logo{
+  height: 80px;
+  width: 70px;
+}

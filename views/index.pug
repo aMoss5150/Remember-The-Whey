@@ -18,7 +18,8 @@ append head
   script(src="/javascripts/tasks.js" defer)
   script(src="/javascripts/slideout.js" type="module" defer)
   script(src="/javascripts/navbar.js" type="module" defer)
-  script(src="/javascripts/lists-backup.js" type="module" defer)
+  script(src="/javascripts/lists.js" type="module" defer)
+  //script(src="/javascripts/lists-backup.js" type="module" defer)
 
 block content
   .navbar__container
@@ -54,6 +55,12 @@ block content
 
   div(class="column__container column__container--regular")
     div(class="list__column show")
+      #logo
+        div(class="logoText")
+          span(class="topText") Remember
+          span(class="bottomText") the
+        div(class="logoImg")
+          img(src="/whey.png" class="whey_logo")
       +lists(lists, csrfToken)
     //- .task__column
     .task__column
