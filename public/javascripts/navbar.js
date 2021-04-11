@@ -56,7 +56,7 @@ const navSearch = document.querySelector('.navbar__search_input')
 searchInp.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
         const searchIncTerm = navSearch.value || null;
-        if (!searchIncTerm){
+        if (!searchIncTerm) {
             return;
         }
         console.log(searchIncTerm)
@@ -94,7 +94,6 @@ const searchNotesInp = document.querySelector('.extSearch__form--notes')
 
 btnExtSubmit.addEventListener('click', async (e) => {
     e.preventDefault()
-    console.log("hi")
     const searchIncTerm = searchIncInp.value || null;
     const searchExcTerm = searchExcInp.value || null;
     const includeNotes = searchNotesInp.checked;
@@ -102,7 +101,7 @@ btnExtSubmit.addEventListener('click', async (e) => {
     try {
         let tasks = await getTasks();
 
-        tasks = await filterTasks(tasks, {
+        const tmpQuery = {
             include: {
                 term: searchIncTerm,
                 includeNotes
@@ -111,15 +110,19 @@ btnExtSubmit.addEventListener('click', async (e) => {
                 term: searchExcTerm,
                 includeNotes
             }
-        });
+        }
+        tasks = await filterTasks(tasks, tmpQuery);
 
         if (tasks.length === 0) {
             alert("No tasks matched your search");
         } else {
-            await displayTasks(tasks);
+            tmpQuery['complete'] = selectedQuery['complete'];
+            selectedQuery = tmpQuery;
+            selectedListId = _hiddenId;
+
+            await displayTasks(tasks, true);
         }
     } catch (err) {
         console.log(err)
     }
-
 })

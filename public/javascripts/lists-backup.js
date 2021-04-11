@@ -264,9 +264,12 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         list.addEventListener('click', async (event) => {
             event.preventDefault();
             event.stopPropagation();
+
             selectedListId = event.target.id;
             selectedTaskIds = new Set();
-            await updateTasksSection(selectedListId, [], true);
+            selectedQuery = { complete: selectedQuery.complete }
+
+            await updateTasksSection(selectedListId, selectedQuery, true);
         })
     })
 

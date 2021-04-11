@@ -45,7 +45,7 @@ const getHiddenId = async () => {
     const obj = await res.json();
     for (let list of obj['lists']) {
         if (list['name'] === '_hidden')
-            return list['id'];
+            return `${list['id']}`;
     }
 }
 
@@ -162,7 +162,7 @@ const filterTasks = async (tasks, query) => {
                 if (term !== null) {
                     term = term.toLowerCase();
                     const inName = task['name'].toLowerCase().includes(term);
-                    if (includeNotes) {
+                    if (includeNotes && task.notes) {
                         if (!inName && !task['notes'].toLowerCase().includes(term))
                             return false;
                     }
@@ -177,7 +177,7 @@ const filterTasks = async (tasks, query) => {
                 if (term !== null) {
                     term = term.toLowerCase();
                     const inName = task['name'].toLowerCase().includes(term);
-                    if (includeNotes) {
+                    if (includeNotes && task.notes) {
                         if (inName || task['notes'].toLowerCase().includes(term))
                             return false;
                     }

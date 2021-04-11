@@ -4,16 +4,17 @@ mixin tasks
         div(id='tasks-section__utils')
             div(id='utils__incomplete' class='tab') Incomplete
             div(id='utils__completed' class='tab') Completed
-            div(id='utils__sort')
+            div(id='utils__sort' class='tooltip')
                 i(class='fas fa-cog')
                 div(class='dropdown')
                     i(class="fas fa-caret-down")
                 div(class='dropdown-content')
                     a(id='utils_name' class='selector_opt') Sort by name
                     a(id='utils_date' class='selector_opt') Sort by date
+                div(class='tooltip-text') Sort Order
         div(id='tasks-section__toolbar')
             div(class='button-group')
-                div(id='toolbar__selector')
+                div(id='toolbar__selector' class='tooltip')
                     input(type='checkbox')
                     div(class='dropdown')
                         i(class="fas fa-caret-down")
@@ -24,6 +25,7 @@ mixin tasks
                         a(id='selector_today' class='selector_opt') Today
                         a(id='selector_tomorrow' class='selector_opt') Tomorrow
                         a(id='selector_overdue' class='selector_opt') Overdue
+                    div(class='tooltip-text') Select
             div(id='toolbar_group-2' class='button-group')
                 div(id='toolbar__complete' class='tooltip')
                     i(class='fas fa-check')
@@ -38,22 +40,25 @@ mixin tasks
                     i(class='fas fa-trash')
                     div(class='tooltip-text') Delete
             div(id='toolbar_group-3' class='button-group')
-                div(id='toolbar__date')
+                div(id='toolbar__date' class='tooltip')
                     i(class='fas fa-calendar-alt')
                     div(class='dropdown')
                         i(class="fas fa-caret-down")
                     div(class='dropdown-content')
-                div(id='toolbar__list')
+                    div(class='tooltip-text') Edit Date
+                div(id='toolbar__list' class='tooltip')
                     i(class='fas fa-list')
                     div(class='dropdown')
                         i(class="fas fa-caret-down")
                     div(class='dropdown-content')
                         a(id='c') C
                         a(id='cc') CC
-                div(id='toolbar__tag')
+                    div(class='tooltip-text') Edit List
+                div(id='toolbar__tag' class='tooltip')
                     i(class='fas fa-tag')
                     div(class='dropdown')
                         i(class="fas fa-caret-down")
+                    div(class='tooltip-text') Edit Tags
         form(id='tasks-section__form')
             input(type='hidden' name='_csrf' value=csrfToken)
             label Reps
