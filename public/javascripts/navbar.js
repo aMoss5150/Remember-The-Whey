@@ -107,8 +107,15 @@ btnExtSubmit.addEventListener('click', async (e) => {
 
         if (tasks.length === 0) {
             alert("No tasks matched your search");
+            searchExcInp.value = '';
+            searchIncInp.value = '';
         } else {
             await displayTasks(tasks);
+            searchExcInp.value = '';
+            searchIncInp.value = '';
+            searchNotesInp.checked = false;
+            extendSearchDiv.classList.remove(`search_bar-extend--show`)
+            extendSearchDiv.classList.add(`search_bar-extend--hide`)
         }
     } catch (err) {
         console.log(err)

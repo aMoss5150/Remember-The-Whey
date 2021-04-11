@@ -10,6 +10,7 @@ append head
   link(rel="stylesheet" href="/stylesheets/index.css")
   link(rel="stylesheet", href="/stylesheets/tasks.css")
   link(rel="stylesheet" href="/stylesheets/nav.css")
+  link(rel="stylesheet" href="/stylesheets/lists.css")
   //- add page specific js
   script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js")
   script(src="/javascripts/index.js" type="module" defer)
@@ -51,6 +52,12 @@ block content
 
   div(class="column__container column__container--regular")
     div(class="list__column show")
+      #logo
+        div(class="logoText")
+          span(class="topText") Remember
+          span(class="bottomText") the
+        div(class="logoImg")
+          img(src="/whey.png" class="whey_logo")
       +lists(lists, csrfToken)
     //- .task__column
     .task__column
