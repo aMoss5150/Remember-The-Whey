@@ -19,7 +19,7 @@ let taskCount = 0;                  // # of tasks in tasks container
 let viewCompleted = false;          // Display completed/incomplete sections
 let selectedListId = null;          // Holds the Id for the currently selected list in lists container
 let selectedTaskIds = new Set();    // Holds the Ids for the currently selected tasks in tasks container
-let selectedQueries = [];           // Holds the currently applied query objects
+let selectedQuery = {};           // Holds the currently applied query object
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -209,10 +209,10 @@ const displayTasks = async (tasks, keepSelected = false) => {
     setTasksActiveState(true, selectedTaskIds);
 };
 
-const updateTasksSection = async (listId = null, queries = [], keepSelected = false) => {
+const updateTasksSection = async (listId = null, query = {}, keepSelected = false) => {
     let tasks = await getTasks(listId);
-    for (let query of queries)
-        tasks = await filterTasks(tasks, query);
+    tasks = await filterTasks(tasks, query);
+    console.log(tasks)
     await displayTasks(tasks, keepSelected);
 }
 
@@ -363,7 +363,7 @@ const fetchHelper = async (method, body = {}) => {
     }
 
     // Re-display the tasks
-    updateTasksSection(selectedListId, [], true);
+    updateTasksSection(selectedListId, selectedQuery, true);
 
     return responses;
 }
@@ -401,7 +401,7 @@ const toolbarDuplicateHandler = async (ev) => {
                 console.log('RES NOT OKAY')
             }
             else {
-                updateTasksSection(selectedListId, [], true);
+                updateTasksSection(selectedListId, selectedQuery, true);
             }
         }
         catch (err) {
@@ -521,7 +521,7 @@ const taskFormSubmitHandler = async (ev) => {
         }
         else {
             clearTaskFields();
-            updateTasksSection(selectedListId, [], true);
+            updateTasksSection(selectedListId, selectedQuery, true);
         }
     }
     catch (err) {
@@ -559,7 +559,7 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
-updateTasksSection(selectedListId, selectedQueries, true);
+updateTasksSection(selectedListId, selectedQuery, true);
 
 new Sortable(tasksContainer, {
     handle: '.handle',

@@ -61,16 +61,18 @@ searchInp.addEventListener('keypress', async (e) => {
         try {
             let tasks = await getTasks();
 
-            tasks = await filterTasks(tasks, {
+            const tmpQuery = {
                 include: {
                     term: searchIncTerm,
                     includeNotes: false
                 }
-            });
+            }
+            tasks = await filterTasks(tasks, tmpQuery);
 
             if (tasks.length === 0) {
                 alert("No tasks matched your search");
             } else {
+                selectedQuery = tmpQuery;
                 await displayTasks(tasks);
             }
         } catch (err) {
