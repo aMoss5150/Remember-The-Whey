@@ -2,6 +2,10 @@ body {
     font-family: "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important;
 }
 
+#tasks-section {
+    width: 100%;
+}
+
 #tasks-section > *:not(:first-child) {
     border-top: 1px dotted #e5e5e5;
 }
