@@ -13,7 +13,7 @@ append head
   //- add page specific js
   script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js")
   script(src="/javascripts/index.js" type="module" defer)
-  script(src="/javascripts/tasks.js" defer)
+  script(src="/javascripts/tasks.js" type="module" defer)
   script(src="/javascripts/slideout.js" type="module" defer)
   script(src="/javascripts/navbar.js" type="module" defer)
 
@@ -63,38 +63,42 @@ block content
         i(class="fas fa-times slideout__closebtn")
         i(class="fas fa-print")
         span(class="info__tooltip") &#8505;
+
         form(method="PATCH" action="" class="form__update-task")  
           input(type="hidden" name="_csrf" value=csrfToken)
           input(class="update__task" placeholder="taskname" type="text" name="name")
-          button(type="submit")
-        form(method="PATCH" action="" class="form__update-list update__list")  
+          button(type="submit" class="form__buttons") Update Task Name
+
+        form(method="PATCH" action="" class="form__update-list")  
           input(type="hidden" name="_csrf" value=csrfToken)
           label(id="listLabel") list
-          select(class="update__list" placeholder="currentlist" type="text" name="list")
-            option today
-            option tomorrow
-        form(method="PATCH" action="" class="form__update-reps update__reps")  
+          input(class="update__list" placeholder="currentlist" type="text" name="list")
+          button(type="submit" class="form__buttons") Update List
+
+        form(method="PATCH" action="" class="form__update-reps")  
           input(type="hidden" name="_csrf" value=csrfToken)
           label(id="repsLabel") reps
           input(type="hidden" name="_csrf" value=csrfToken)
           input(class="update__reps" placeholder="currentreps" type="text" name="reps")
-          button(type="submit")
-        form(method="PATCH" action="" class="form__update-sets update__sets")  
+          button(type="submit" class="form__buttons") Update Reps
+
+        form(method="PATCH" action="" class="form__update-sets")  
           input(type="hidden" name="_csrf" value=csrfToken)
           label(id="setsLabel") sets
           input(class="update__sets" placeholder="currentsets" type="text" name="sets")
-          button(type="submit")
-        form(method="PATCH" action="" class="form__update-duration update__duration")  
+          button(type="submit" class="form__buttons") Update Sets
+
+        form(method="PATCH" action="" class="form__update-duration")  
           input(type="hidden" name="_csrf" value=csrfToken)
           label(id="durationLabel") duration
           input(class="update__duration" placeholder="currentduration" type="text" name="duration")
-          button(type="submit")
-        form(method="PATCH" action="" class="form__update-notes update__notes")  
+          button(type="submit" class="form__buttons") Update Duration
+          
+        form(method="PATCH" action="" class="form__update-notes")  
           input(type="hidden" name="_csrf" value=csrfToken)
           label(id="notesLabel") notes
           textarea(class="update__notes" placeholder="Add a note..." name="notes")
-          button(type="submit")
-            .notes__div
+          button(type="submit" class="form__buttons") Update Notes
         
         
         

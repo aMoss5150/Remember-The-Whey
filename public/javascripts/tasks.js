@@ -1,3 +1,6 @@
+import { closeSlideout, openSlideout } from "/javascripts/slideout.js"
+
+
 const toolbarSelector = document.querySelector('#toolbar__selector');
 const selectorInp = document.querySelector('#toolbar__selector input');
 const toolbarComplete = document.querySelector('#toolbar__complete');
@@ -161,14 +164,15 @@ const filterTasks = async (tasks, query) => {
     return filteredTasks;
 }
 
-const displayTasks = async (tasks) => {
+const displayTasks = async (tasks, keepSelected = false) => {
     if (!tasks) tasks = await getTasks();
 
     // Update taskCount now bc they will not be filtered further before display
     taskCount = tasks.length;
 
     // Reset selectedTaskIds
-    selectedTaskIds = new Set();
+    if (!keepSelected)
+        selectedTaskIds = new Set();
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
@@ -191,13 +195,15 @@ const displayTasks = async (tasks) => {
     });
 
     tasksContainer.innerHTML = tasksHtml.join('');
+
+    setTasksActiveState(true, selectedTaskIds);
 };
 
-const updateTasksSection = async (listIds, queries = []) => {
+const updateTasksSection = async (listIds = [], queries = [], keepSelected = false) => {
     let tasks = await getTasks(listIds);
     for (let query of queries)
         tasks = await filterTasks(tasks, query);
-    await displayTasks(tasks);
+    await displayTasks(tasks, keepSelected);
 }
 
 const getDateInfo = () => {
@@ -497,10 +503,9 @@ const taskFormSubmitHandler = async (ev) => {
     }
 }
 
-const taskSelectHandler = (ev) => {
+const taskSelectHandler = async (ev) => {
     const currTask = ev.target.closest('.tasks-section__task');
     const taskId = currTask.id.split('-')[1];
-
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
         setTasksActiveState(null, [taskId]);
@@ -510,11 +515,27 @@ const taskSelectHandler = (ev) => {
         setTasksActiveState(false);
         setTasksActiveState(true, [taskId]);
     }
+    if (!selectedTaskIds.size) {
+        closeSlideout()
+    }
+    if (selectedTaskIds.size === 1) {
+        openSlideout()
+    }
+    if (selectedTaskIds.size > 1) {
+        //grab whole slideout div, change in
+        let slideout = document.querySelector('.summary__slideout')
+        //!CLUTch-------------
+        // slideout.innerText = `${selectedTaskIds.size} tasks selected`
+        // slideout.style.
+
+        // innerHtml = `${selectedTaskIds.size} tasks selected`
+    }
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //!--start--SUMMARY SECTION ANDREW
-
+console.log('closeSlideout:', closeSlideout)
 document.addEventListener('DOMContentLoaded', () => {
     //!.SUMMARY ELEMENTS
     let taskNumber = document.querySelector('.title__container')
@@ -539,7 +560,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //!.summary SLIDEOUT ELEMENTS
 
 
-    //!HELPER
+    //!HELPERS 
+    //FETCH
     const summaryFetchHelper = async (method, inputForm, field) => {
         const formData = new FormData(inputForm);
         const responses = [];
@@ -556,6 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
             req['body'] = JSON.stringify(body);
             //FETCH REQUEST TO UPDATE DB
             const res = await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`, req); //grab the ID from selectedTaskIds SET
+
             if (!res.ok) {
                 console.log('RES NOT OKAY')
             }
@@ -564,7 +587,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const obj = await res.json();
                     responses.push(obj);
                 }
-                await getAllTasks();
+                await updateTasksSection([], [], true);
+                await summaryDisplayTasks()
             }
         }
         catch (err) {
@@ -573,22 +597,84 @@ document.addEventListener('DOMContentLoaded', () => {
         // return responses;
         return
     }
+
+    //!HELPERS
+    //UPDATE DISPLAY!!!!
+
+    const summaryDisplayTasks = async () => {
+        const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json()
+        const list = await (await fetch(`/lists/${task.listId}`)).json()
+        console.log('task:', task)
+        console.log("list:", list)
+        // if (!tasks) tasks = await getTasks();
+        taskInput.value = task.name
+        listInput.value = list.list.name
+        repsInput.value = task.reps
+        setsInput.value = task.sets
+        durationInput.value = task.duration
+        notesInput.value = task.notes
+    };
+
+
+    document.body.addEventListener('click', summaryDisplayTasks)
+
     //create a tooltip display for this as well!
     //!TASKS  -E
     taskInputForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        summaryFetchHelper('PATCH', taskInputForm, "name")
-        taskInput.value = ''
+        e.preventDefault()
+        summaryFetchHelper("PATCH", taskInputForm, "name")
     })
-    //!LISTS  -E
+    //!LISTS  -E  NEEDS TO BE COMPLETED
     //need fetch call to grab and populate lists dropdown
 
     //! need to access table to get access to name at the listId.... simple query and include lists
     listInputForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        summaryFetchHelper('PATCH', listInputForm, 'listId')
+        e.preventDefault()
     })
 
+    // listInputForm.addEventListener('submit', async (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData(listInputForm);
+    //     const responses = [];
+    //     let req = {}
+    //     let body = {}
+    //     try {
+
+    //         req.method = "PATCH"
+    //         req.headers = {
+    //             "Content-Type": "application/json"
+    //         }
+    //         body["name"] = formData.get("name")
+    //         body['_csrf'] = formData.get('_csrf');
+    //         req['body'] = JSON.stringify(body);
+    //         //FETCH REQUEST TO UPDATE DB
+    //         const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json() //grab the ID from selectedTaskIds SET
+    //         const res = await fetch(`/lists/${task.listId}`, req)
+    //         console.log('res:', res)
+
+    //         if (!res.ok) {
+    //             console.log('RES NOT OKAY')
+    //         }
+    //         else {
+    //             if (res.status !== 204) {
+    //                 const obj = await res.json();
+    //                 responses.push(obj);
+    //             }
+    //             await summaryDisplayTasks()
+    //             await updateTasksSection([], [], true);
+    //         }
+    //     }
+    //     catch (err) {
+    //         console.log('Error:', err)
+    //     }
+    //     // return responses;
+    //     return
+
+
+
+
+    // })
+    //!COMPLETE THE LIST DISPLAY SECTION ^^^^^^^^^^^^^^
     //!REPS  -E
 
     repsInputForm.addEventListener('submit', (e) => {

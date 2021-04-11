@@ -15,7 +15,6 @@ body {
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
     height: 100%;
-
 }
 
 .list__column {
@@ -29,7 +28,6 @@ body {
     padding: 25px;
     border-radius: 3px;
     margin-top: 5px;
-
 }
 
 .task__column {
@@ -46,8 +44,6 @@ body {
     padding: 25px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-
-
 }
 
 .summary__column {
@@ -87,15 +83,31 @@ body {
     display: flex;
     position: relative;
     left: 1200px;
+    right: 0px;
     background-color: white;
     z-index: 100;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left, right;
+    transition-duration: 2s;
+}
+
+.shown__slide {
+    margin-top: 5px;
+    grid-area: summary;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    z-index: 100;
+    left: 0px;
+    right: 1200px;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     transition-property: left;
     transition-duration: 2s;
 }
-
 
 .info__tooltip {
     align-self: flex-end;
@@ -160,28 +172,32 @@ body {
     margin: 20px;
     /* position: relative; */
     /* left: 120px; */
-    /* border: hidden; */
+    border: hidden;
+}
+
+.update__list:hover {
+    outline: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .update__reps {
     margin: 20px;
     /* position: relative; */
     /* left: 120px; */
-    /* border: hidden; */
-    /* width: auto; */
+    border: hidden;
+    width: auto;
 }
 
 .update__reps:hover {
     outline: 1px solid rgba(0, 0, 0, 0.3);
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 .update__sets {
     margin: 20px;
     /* position: relative; */
     /* left: 120px; */
-    /* border: hidden; */
-    /* width: auto 0; */
+    border: hidden;
+    width: auto 0;
 }
 
 .update__sets:hover {
@@ -192,8 +208,8 @@ body {
     margin: 20px;
     /* position: relative; */
     /* left: 120px; */
-    /* border: hidden; */
-    /* width: auto; */
+    border: hidden;
+    width: auto;
 }
 
 .update__duration:hover {
@@ -202,10 +218,27 @@ body {
 
 .update__notes {
     margin: 20px;
-    /* position: relative; */
-    /* top: 17px; */
-    /* width: 100%; */
+    position: relative;
+    top: 17px;
+    width: 100%;
 }
+
+/*!BUTTON HELPERS*/
+
+.form__buttons {
+    background-color: #d7e7f5;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    opacity: .9;
+    height: 30px;
+    display: none;
+    position: relative;
+}
+
+.label__positioner {}
+
+.button__positioner {}
 
 /*!FORM LABELS*/
 
