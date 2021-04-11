@@ -9,7 +9,7 @@ const extendSearchDiv = document.querySelector('#search_bar-extend')
 searchExpandBtn.addEventListener('click', async (e) => {
     //prevent refresh of page
     e.preventDefault()
-    if(extendSearchDiv.classList.contains("search_bar-extend--hide")) {
+    if (extendSearchDiv.classList.contains("search_bar-extend--hide")) {
         extendSearchDiv.classList.remove("search_bar-extend--hide")
         extendSearchDiv.classList.add("search_bar-extend--show")
 
@@ -32,7 +32,7 @@ hamburger.addEventListener('click', e => {
     const colContainer = document.querySelector('.column__container')
     const listSection = document.querySelector('.list__column')
 
-    if(listSection.classList.contains("show")) {
+    if (listSection.classList.contains("show")) {
         listSection.classList.remove("show")
         listSection.classList.add("hide")
         colContainer.classList.remove("column__container--regular")
@@ -53,7 +53,7 @@ hamburger.addEventListener('click', e => {
 const btnExtSubmit = document.querySelector('.extended_search-btn')
 const navSearch = document.querySelector('.navbar__search_input')
 
-searchInp.addEventListener('keypress', async(e) => {
+searchInp.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
         const searchIncTerm = navSearch.value || null;
         console.log(searchIncTerm)
@@ -84,14 +84,13 @@ const searchIncInp = document.querySelector('.extSearch__form--searchIncTerm')
 const searchExcInp = document.querySelector('.extSearch__form--searchExcTerm')
 const searchNotesInp = document.querySelector('.extSearch__form--notes')
 
-btnExtSubmit.addEventListener('click', async(e) => {
+btnExtSubmit.addEventListener('click', async (e) => {
     e.preventDefault()
+    console.log("hi")
     const searchIncTerm = searchIncInp.value || null;
-    console.log(searchIncTerm)
     const searchExcTerm = searchExcInp.value || null;
-    console.log(searchExcTerm)
     const includeNotes = searchNotesInp.checked;
-    console.log(includeNotes)
+
     try {
         let tasks = await getTasks();
 
