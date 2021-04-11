@@ -1,8 +1,12 @@
 const utilsIncomplete = document.querySelector('#utils__incomplete');
 const utilsCompleted = document.querySelector('#utils__completed');
+const utilsSort = document.querySelector('#utils__sort');
+const toolbarBtnGroup2 = document.querySelector('#toolbar_group-2');
+const toolbarBtnGroup3 = document.querySelector('#toolbar_group-3');
 const toolbarSelector = document.querySelector('#toolbar__selector');
 const selectorInp = document.querySelector('#toolbar__selector input');
 const toolbarComplete = document.querySelector('#toolbar__complete');
+const toolbarUncomplete = document.querySelector('#toolbar__uncomplete');
 const toolbarDuplicate = document.querySelector('#toolbar__duplicate');
 const toolbarDelete = document.querySelector('#toolbar__delete');
 const toolbarDate = document.querySelector('#toolbar__date');
@@ -17,13 +21,33 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 let taskCount = 0;                  // # of tasks in tasks container
 let viewCompleted = false;          // Display completed/incomplete sections
+let _hiddenId = null;               // Holds the Id of the _hidden list which holds any task not assigned to another list
 let selectedListId = null;          // Holds the Id for the currently selected list in lists container
 let selectedTaskIds = new Set();    // Holds the Ids for the currently selected tasks in tasks container
-let selectedQuery = {};           // Holds the currently applied query object
-
+let selectedQuery = {               // Holds the currently applied query object
+    complete: false
+};
+let selectedOrder = {               // Holds the currently applied order object
+    value: 'name',
+    direction: 'ascending'
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Helper functions
+
+const getHiddenId = async () => {
+    const res = await fetch('/lists', {
+        method:'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const obj = await res.json();
+    for (let list of obj['lists']) {
+        if (list['name'] === '_hidden')
+            return list['id'];
+    }
+}
 
 const clearTaskFields = () => {
     for (let i = 1; i < tasksFormInputs.length; i++) {
@@ -96,14 +120,26 @@ const setTasksActiveState = (state, taskIds = []) => {
     const selectedTaskCount = document.querySelectorAll('.tasks-section__task.active').length;
     selectorInp.checked = false;
     selectorInp.indeterminate = false;
-    if (taskCount === selectedTaskCount)
+    if (taskCount === selectedTaskCount && selectedTaskCount > 0)
         selectorInp.checked = true;
     else if (selectedTaskCount > 0)
         selectorInp.indeterminate = true;
+
+    // Show toolbar only when something is selected
+    if(selectedTaskCount === 0) {
+        toolbarBtnGroup2.style.visibility = 'hidden';
+        toolbarBtnGroup3.style.visibility = 'hidden';
+    }
+    else {
+        toolbarBtnGroup2.style.visibility = 'initial';
+        toolbarBtnGroup3.style.visibility = 'initial';
+    }
 }
 
 const getTasks = async (listId = null) => {
-    if (listId === null) listId = '';
+    if (listId === null || parseInt(listId, 10) === parseInt(_hiddenId, 10))
+        listId = '';
+
     const res = await fetch(`/tasks?listId=${listId}`, {
         method: 'GET',
         headers: {
@@ -173,8 +209,37 @@ const filterTasks = async (tasks, query) => {
     return filteredTasks;
 }
 
+const sortTasks = async (tasks, orderBy) => {
+    if (orderBy['value'] === 'name') {
+        if (orderBy['direction'] === 'ascending') {
+            tasks.sort((a, b) => {
+                if (a.name.toLowerCase() < b.name.toLowerCase())
+                    return -1;
+                else if (a.name.toLowerCase() > b.name.toLowerCase())
+                    return 1;
+                return 0;
+            })
+        }
+    }
+    if (orderBy['value'] === 'date') {
+        if (orderBy['direction'] === 'ascending') {
+            tasks.sort((a, b) => {
+                let aDate = Date.parse(a.date);
+                let bDate = Date.parse(b.date);
+
+                if (aDate < bDate)
+                    return -1;
+                else if (aDate > bDate)
+                    return 1;
+                return 0;
+            })
+        }
+    }
+};
+
 const displayTasks = async (tasks, keepSelected = false) => {
-    if (!tasks) tasks = await getTasks();
+    if (!tasks)
+        tasks = await getTasks();
 
     // Update taskCount now bc they will not be filtered further before display
     taskCount = tasks.length;
@@ -182,6 +247,11 @@ const displayTasks = async (tasks, keepSelected = false) => {
     // Reset selectedTaskIds
     if (!keepSelected)
         selectedTaskIds = new Set();
+
+    console.log(selectedListId, selectedQuery, keepSelected)
+
+    // Sort tasks before display
+    sortTasks(tasks, selectedOrder);
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
@@ -212,7 +282,6 @@ const displayTasks = async (tasks, keepSelected = false) => {
 const updateTasksSection = async (listId = null, query = {}, keepSelected = false) => {
     let tasks = await getTasks(listId);
     tasks = await filterTasks(tasks, query);
-    console.log(tasks)
     await displayTasks(tasks, keepSelected);
 }
 
@@ -239,17 +308,50 @@ const getDateString = (dateArr) => {
 // Event Handlers
 
 const utilsIncompleteHandler = async (ev) => {
-    closeDropdowns();
-    viewCompleted = false;
-    tasksForm.style.display = 'initial';
-    console.log('incomplete');
+    if (viewCompleted) {
+        viewCompleted = false;
+        tasksForm.style.display = 'initial';
+        toolbarComplete.style.display = 'initial';
+        toolbarUncomplete.style.display = 'none';
+        selectedQuery['complete'] = false;
+        updateTasksSection(selectedListId, selectedQuery, false);
+    }
 }
 
 const utilsCompletedHandler = async (ev) => {
+    if (!viewCompleted) {
+        viewCompleted = true;
+        tasksForm.style.display = 'none';
+        toolbarComplete.style.display = 'none';
+        toolbarUncomplete.style.display = 'initial';
+        selectedQuery['complete'] = true;
+        updateTasksSection(selectedListId, selectedQuery, false);
+    }
+}
+
+const utilsSortHandler = async (ev) => {
+    ev.stopPropagation();
     closeDropdowns();
-    viewCompleted = true;
-    tasksForm.style.display = 'none';
-    console.log('completed');
+
+    const currTarget = ev.target.closest('A');
+
+    if (currTarget) {
+        let res;
+        if (currTarget.id === 'utils_name') {
+            selectedOrder.value = 'name';
+        }
+        else if (currTarget.id === 'utils_date') {
+            selectedOrder.value = 'date';
+        }
+
+        updateTasksSection(selectedListId, selectedQuery, true);
+
+        closeDropdowns();
+    }
+    else {
+        const dropdownContent = document.querySelector('#utils__sort .dropdown-content');
+        dropdownContent.classList.add('open');
+    }
 }
 
 const toolbarSelectorHandler = async (ev) => {
@@ -354,7 +456,6 @@ const fetchHelper = async (method, body = {}) => {
                     const obj = await res.json();
                     responses.push(obj);
                 }
-
             }
         }
         catch (err) {
@@ -370,6 +471,12 @@ const fetchHelper = async (method, body = {}) => {
 
 const toolbarCompleteHandler = async (ev) => {
     fetchHelper('PATCH', { complete: true });
+    selectedTaskIds = new Set();
+};
+
+const toolbarUncompleteHandler = async (ev) => {
+    fetchHelper('PATCH', { complete: false });
+    selectedTaskIds = new Set();
 };
 
 const toolbarDuplicateHandler = async (ev) => {
@@ -549,8 +656,10 @@ const taskSelectHandler = (ev) => {
 
 utilsIncomplete.addEventListener('click', utilsIncompleteHandler);
 utilsCompleted.addEventListener('click', utilsCompletedHandler);
+utilsSort.addEventListener('click', utilsSortHandler);
 toolbarSelector.addEventListener('click', toolbarSelectorHandler);
 toolbarComplete.addEventListener('click', toolbarCompleteHandler);
+toolbarUncomplete.addEventListener('click', toolbarUncompleteHandler);
 toolbarDuplicate.addEventListener('click', toolbarDuplicateHandler);
 toolbarDelete.addEventListener('click', toolbarDeleteHandler);
 toolbarDate.addEventListener('click', toolbarDateHandler);
@@ -559,7 +668,15 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// Run at start
+
 updateTasksSection(selectedListId, selectedQuery, true);
+
+(async () => {
+    _hiddenId = await getHiddenId();
+    selectedListId = _hiddenId;
+})();
 
 new Sortable(tasksContainer, {
     handle: '.handle',

@@ -8,6 +8,9 @@ mixin tasks
                 i(class='fas fa-cog')
                 div(class='dropdown')
                     i(class="fas fa-caret-down")
+                div(class='dropdown-content')
+                    a(id='utils_name' class='selector_opt') Sort by name
+                    a(id='utils_date' class='selector_opt') Sort by date
         div(id='tasks-section__toolbar')
             div(class='button-group')
                 div(id='toolbar__selector')
@@ -21,17 +24,20 @@ mixin tasks
                         a(id='selector_today' class='selector_opt') Today
                         a(id='selector_tomorrow' class='selector_opt') Tomorrow
                         a(id='selector_overdue' class='selector_opt') Overdue
-            div(class='button-group')
+            div(id='toolbar_group-2' class='button-group')
                 div(id='toolbar__complete' class='tooltip')
                     i(class='fas fa-check')
                     div(class='tooltip-text') Complete
+                div(id='toolbar__uncomplete' class='tooltip')
+                    i(class='fas fa-undo')
+                    div(class='tooltip-text') Uncomplete
                 div(id='toolbar__duplicate' class='tooltip')
                     i(class='fas fa-clone')
                     div(class='tooltip-text') Duplicate
                 div(id='toolbar__delete' class='tooltip')
                     i(class='fas fa-trash')
                     div(class='tooltip-text') Delete
-            div(class='button-group')
+            div(id='toolbar_group-3' class='button-group')
                 div(id='toolbar__date')
                     i(class='fas fa-calendar-alt')
                     div(class='dropdown')

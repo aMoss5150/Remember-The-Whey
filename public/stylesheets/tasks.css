@@ -93,6 +93,10 @@ body {
     display: inline-block;
 }
 
+#toolbar_group-2, #toolbar_group-3 {
+    visibility: hidden;
+}
+
 .dropdown {
     position: relative;
     display: inline-block;
@@ -105,7 +109,7 @@ body {
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 200;
 }
 
 .dropdown-content.open {

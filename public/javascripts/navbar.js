@@ -56,6 +56,9 @@ const navSearch = document.querySelector('.navbar__search_input')
 searchInp.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
         const searchIncTerm = navSearch.value || null;
+        if (!searchIncTerm){
+            return;
+        }
         console.log(searchIncTerm)
 
         try {
@@ -72,8 +75,11 @@ searchInp.addEventListener('keypress', async (e) => {
             if (tasks.length === 0) {
                 alert("No tasks matched your search");
             } else {
+                tmpQuery['complete'] = selectedQuery['complete'];
                 selectedQuery = tmpQuery;
-                await displayTasks(tasks);
+                selectedListId = _hiddenId;
+
+                await displayTasks(tasks, true);
             }
         } catch (err) {
             console.log(err)
