@@ -85,7 +85,8 @@ router.put('/:listId', csrfProtection, listValidators, asyncHandler(async(req,re
 
     if (validatorErrors.isEmpty()) {
         await list.update({name});
-        res.json({list});
+        // res.json({list});
+        list.save()
     }
     else {
         const errors = validatorErrors.array().map((error) => error.msg);

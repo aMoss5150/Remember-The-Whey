@@ -24,6 +24,14 @@ body {
     justify-content: flex-end;
 }
 
+.transfer__btn:hover, #form__btn:hover, .demo__btn:hover {
+    cursor: pointer;
+}
+
+.transfer__anchor{
+    height: 2px;
+}
+
 #main__form {
     box-sizing: border-box;
     height: 800px;

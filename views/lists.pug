@@ -7,20 +7,20 @@ append head
   script(src="/javascripts/lists.js" type="module")
 
 mixin lists()
-    div(id="main-list-container")
-        button(id="btn-create-list") Create New List
-        div(id="myModal" class='modal')
-            div(class="modal-content")
-                form(class="list-form")
-                    input(id="csurf" type="hidden" name="_csrf")
-                    span(class="close") X
-                    p(class="add-list") Add a list
-                    label(class="list-label" for="list-name") Please enter a new list name:
-                    br
-                    input(type="text" name="name" class="list-name--input" required)
-                    br
-                    input(type="submit" value="Add" class="list-add")
-                    input(type="button" value="Cancel" class="list-cancel")
         div(class="block_lists")
             p(id="block_lists--text") My Lists:
-            div(id="lists" class="list-section")
+            //- div(id="main-list-container")
+            button(id="btn-create-list") +
+            div(id="myModal" class='modal')
+                div(class="modal-content")
+                    form(class="list-form")
+                        input(id="csurf" type="hidden" name="_csrf")
+                        span(class="close") X
+                        p(class="add-list") Add a list
+                        label(class="list-label" for="list-name") Please enter a new list name:
+                        br
+                        input(type="text" name="name" class="list-name--input" required)
+                        br
+                        input(type="submit" value="Add" class="list-add")
+                        input(type="button" value="Cancel" class="list-cancel")
+        div(id="lists" class="list-section")

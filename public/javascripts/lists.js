@@ -47,15 +47,14 @@ async function fetchLists() {
         const { lists, csrfToken } = await res.json();
         //create an anchor, rename btn, and delete btn to each list item
         lists.forEach(list => {
-
             if (list.name !== "_hidden") {
-
                 const anchor = document.createElement('anchor');
                 const btnRename = document.createElement('button');
                 const btnDelete = document.createElement('button');
                 const divContainer = document.createElement('div');
 
                 divContainer.setAttribute('id', `div-container-${list.id}`);
+                divContainer.setAttribute('class', `list__div-container`)
 
                 anchor.setAttribute('id', list.id);
                 anchor.setAttribute('class', "list-anchors")
@@ -64,36 +63,37 @@ async function fetchLists() {
                 btnDelete.setAttribute('class', `list__btn--delete ${list.id}`);
 
                 anchor.innerText = list.name;
-                btnDelete.innerText = "Delete";
+                btnDelete.innerText = `x`;
 
                 //Create the modal for the rename btn
-                btnRename.innerHTML = `Rename <div id="myModal-rename-${list.id}" class="modal-rename ${list.id}">
-                                        <div class="modal-content-rename">
-                                            <form class="list-rename-form">
-                                                <span id="close-rename-${list.id}" class="close-rename">X</span>
-                                                <p class="add-list-rename">Rename List</p>
-                                                <label class="list-label-rename"> List name </label>
-                                                <br>
-                                                <input type="text" name="name" id="rename-input-${list.id}" class="list-name-rename--input" required>
-                                                <br>
-                                                <input type="submit" value="Save" class="list-rename">
-                                                <input type="button" value="Cancel" id="cancel-${list.id}" class="list-cancel-rename">
-                                        </div>
-                                    </div>`;
+                btnRename.innerHTML = `+ <div id="myModal-rename-${list.id}" class="modal-rename ${list.id}">
+                                            <div class="modal-content-rename">
+                                                <form class="list-rename-form">
+                                                    <span class="close-rename">X</span>
+                                                    <p class="add-list-rename">Rename List</p>
+                                                    <label class="list-label-rename"> List name </label>
+                                                    <br>
+                                                    <input type="text" name="name" class="list-name-rename--input-${list.id}" required>
+                                                    <br>
+                                                    <input type="submit" value="Save" class="list-rename ${list.id}">
+                                                    <input type="button" value="Cancel" id="cancel-${list.id}" class="list-cancel-rename">
+                                            </div>
+                                        </div>`;
 
                 divLists.appendChild(divContainer);
                 divContainer.appendChild(anchor);
                 divContainer.appendChild(btnRename);
                 divContainer.appendChild(btnDelete);
-            }
-        });
-
-        const inputCsurf = document.querySelector('#csurf')
-        inputCsurf.setAttribute('value', csrfToken);
+            };
+            const inputCsurf = document.querySelector('#csurf')
+            inputCsurf.value = csrfToken;
+        })
     } catch (error) {
         console.log(error);
     }
 }
+
+
 
 //-------------------------------------------------------------------------------
 //Display all tasks from the targeted list
@@ -167,14 +167,17 @@ async function updateList(id, name) {
             },
             body: JSON.stringify(body)
         });
+        console.log(res)
         if (!res.ok) {
             throw res;
         }
+        console.log('before')
         const { list } = await res.json();
+        console.log('after')
 
-        let anchor = document.getElementById(id);
+        // let anchor = document.getElementById(`${id}`);
 
-        anchor.innerText = list.name;
+        // anchor.innerText = list.name;
     }
     catch (err) {
         console.log(err);
@@ -184,7 +187,7 @@ async function updateList(id, name) {
 //Delete a list
 async function deleteList(id) {
 
-    const divLists = document.querySelector('#lists');
+    const divLists = document.querySelector('#lists');  // check how we are selecting div based on id
 
     const form = document.querySelector('.list-form');
     const formData = new FormData(form);
