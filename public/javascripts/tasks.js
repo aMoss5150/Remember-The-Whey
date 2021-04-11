@@ -62,26 +62,27 @@ const setTasksActiveState = (state, taskIds = []) => {
     }
 
     for (let task of tasks) {
+        const taskInp = document.querySelector(`#${task.id}  input`)
         if (state === true) {
             task.classList.add('active');
-            task.children[1].checked = true;
+            taskInp.checked = true;
             selectedTaskIds.add(task.id.split('-')[1]);
         }
         else if (state === false) {
             task.classList.remove('active');
-            task.children[1].checked = false;
+            taskInp.checked = false;
             selectedTaskIds.delete(task.id.split('-')[1]);
         }
         else {
             // Flip active state
             if (task.classList.contains('active')) {
                 task.classList.remove('active');
-                task.children[1].checked = false;
+                taskInp.checked = false;
                 selectedTaskIds.delete(task.id.split('-')[1]);
             }
             else {
                 task.classList.add('active');
-                task.children[1].checked = true;
+                taskInp.checked = true;
                 selectedTaskIds.add(task.id.split('-')[1]);
             }
         }
@@ -119,7 +120,12 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (!task['name'].toLowerCase().includes(term) && (includeNotes && !task['notes'].toLowerCase().includes(term)))
+                    const inName = task['name'].toLowerCase().includes(term);
+                    if (includeNotes) {
+                        if (!inName && !task['notes'].toLowerCase().includes(term))
+                            return false;
+                    }
+                    else if (!inName)
                         return false;
                 }
             }
@@ -129,7 +135,12 @@ const filterTasks = async (tasks, query) => {
                 let { term, includeNotes } = query[prop];
                 if (term !== null) {
                     term = term.toLowerCase();
-                    if (task['name'].toLowerCase().includes(term) && (includeNotes && task['notes'].toLowerCase().includes(term)))
+                    const inName = task['name'].toLowerCase().includes(term);
+                    if (includeNotes) {
+                        if (inName || task['notes'].toLowerCase().includes(term))
+                            return false;
+                    }
+                    else if (inName)
                         return false;
                 }
             }
@@ -157,14 +168,15 @@ const filterTasks = async (tasks, query) => {
     return filteredTasks;
 }
 
-const displayTasks = async (tasks) => {
+const displayTasks = async (tasks, keepSelected = false) => {
     if (!tasks) tasks = await getTasks();
 
     // Update taskCount now bc they will not be filtered further before display
     taskCount = tasks.length;
 
     // Reset selectedTaskIds
-    selectedTaskIds = new Set();
+    if (!keepSelected)
+        selectedTaskIds = new Set();
 
     const tasksHtml = tasks.map(task => {
         let taskStr = '';
@@ -181,19 +193,22 @@ const displayTasks = async (tasks) => {
                     <div class="handle">
                         <i class="fas fa-ellipsis-v"></i>
                     </div>
+                    <div class='divider'></div>
                     <input type="checkbox">
                     <div class="card-text">${taskStr}</div>
                 </div>`;
     });
 
     tasksContainer.innerHTML = tasksHtml.join('');
+
+    setTasksActiveState(true, selectedTaskIds);
 };
 
-const updateTasksSection = async (listIds, queries = []) => {
+const updateTasksSection = async (listIds = [], queries = [], keepSelected = false) => {
     let tasks = await getTasks(listIds);
     for (let query of queries)
         tasks = await filterTasks(tasks, query);
-    await displayTasks(tasks);
+    await displayTasks(tasks, keepSelected);
 }
 
 const getDateInfo = () => {
@@ -521,10 +536,10 @@ tasksForm.addEventListener('submit', taskFormSubmitHandler);
 tasksContainer.addEventListener('click', taskSelectHandler);
 window.addEventListener('click', closeDropdowns);
 
-updateTasksSection(undefined, []);
-// updateTasksSection(undefined, [{exclude: {term: 'e', from: 'name'}}]);
+updateTasksSection([], [], true);
 
 new Sortable(tasksContainer, {
     handle: '.handle',
-    animation: 150
+    animation: 150,
+    dragoverBubble: false
 });
