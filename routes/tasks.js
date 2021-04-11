@@ -20,8 +20,8 @@ router.get('/', requireAuth, csrfProtection, asyncHandler(async (req, res) => {
     let lists;
 
     // Select
-    if (req.query.listIds) {
-        lists = req.query.listIds.split(',');
+    if (req.query.listId) {
+        lists = [req.query.listId];
     }
     else {
         lists = await db.List.findAll({
@@ -53,8 +53,6 @@ router.get('/:id(\\d+)', requireAuth, csrfProtection, asyncHandler(async (req, r
 
 // POST /tasks - Posts a new task to a specific list
 router.post('/', requireAuth, csrfProtection, taskValidators, asyncHandler(async (req, res) => {
-    req.body['listId'] = 2;
-
     const task = db.Task.build(req.body);
 
     const validatorErrors = validationResult(req);
