@@ -20,7 +20,8 @@ body {
     grid-template-columns: 200px 1fr 1fr;
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
-    height: 94vh
+    height: 94vh;
+    overflow: hidden;
 }
 
 .list__column {
@@ -39,7 +40,7 @@ body {
 }
 
 .task__column {
-    overflow-y: hidden;
+    overflow-x: hidden;
     margin-top: 5px;
     grid-area: tasks;
     display: flex;
