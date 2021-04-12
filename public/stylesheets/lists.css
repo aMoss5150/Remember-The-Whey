@@ -6,6 +6,8 @@
   border: none;
   font-weight: 500;
   cursor: pointer;
+  outline-offset: 0px;
+  outline: none;
 }
 
 #all-tasks-section {
