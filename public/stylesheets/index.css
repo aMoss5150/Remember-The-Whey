@@ -66,8 +66,6 @@ body {
     height: 100%;
     padding: 25px;
     border-radius: 6px;
-    z-index: -1;
-    position: static;
 }
 
 /*!SLIDEOUT*/
