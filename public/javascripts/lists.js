@@ -292,8 +292,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         }
         //List for a click when the anchor element is clicked
         if (btn.classList.contains('list-anchors')) {
-            event.preventDefault();
-
+            e.preventDefault();
+            // console.log(e.target.id);
             selectedListId = e.target.id;
             selectedTaskIds = new Set();
             selectedQuery = { complete: selectedQuery.complete }
