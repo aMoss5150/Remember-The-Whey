@@ -15,19 +15,20 @@
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
+  background-color: white;
   margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  padding: 29px 37px;
   border: 1px solid #888;
-  width: 60%; /* Could be more or less, depending on screen size */
+  max-width: 400px; /* Could be more or less, depending on screen size */
+  box-shadow: 0 6px 12px rgb(0 0 0 / 10%);
 }
 
 .modal-content-rename {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  padding: 29px 37px;
   border: 1px solid #888;
-  width: 60%; /* Could be more or less, depending on screen size */
+  max-width: 400px; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */
@@ -46,13 +47,85 @@
 }
 
 /* Label input button fields  */
-.add-list,
-.list-label,
-.list-name--input,
-.list-add,
-.list-cancel {
-    margin: 4px;
+
+.list-add {
+  background-color: #2e8ceb;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 8%);
+  margin: 0 8px 0 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: .875rem;
+  outline: none;
+  border-radius: 3px;
+  height: 32px;
+  position: relative;
+  text-align: center;
+  padding: 6px 13px;
+  min-width: 70px;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
+
+.list-cancel {
+  color: #444;
+  font-weight: 600;
+  border: 1px solid #c7cacd;
+  text-shadow: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: .875rem;
+  outline: none;
+  border-radius: 3px;
+  height: 32px;
+  position: relative;
+  text-align: center;
+  padding: 6px 13px;
+  min-width: 70px;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-sizing: border-box;
+  margin: 0 8px 0 0;
+}
+
+.list-cancel:hover {
+  color: #2e8ceb;
+}
+
+.list-name--input {
+  width: 300px;
+  margin-top: 5px;
+  cursor: text;
+  outline: none;
+  border: 1px solid #d0d3d6;
+  padding: 5px 6px;
+  height: 18px;
+  line-height: 1em;
+  border-radius: 3px;
+}
+
+.list-label {
+  display: inline-block;
+  width: 300px;
+}
+
+.add-list {
+  color: black;
+  cursor: default;
+  font-size: 1em;
+  font-weight: normal;
+  line-height: 24px;
+  line-height: 1.5em;
+}
+
+
+
+
 
 .add-list-rename,
 .list-label-rename,
@@ -62,12 +135,63 @@
     margin: 4px;
 }
 
-.list-name--input {
-    width: 60%;
+.list-rename {
+  background-color: #2e8ceb;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 8%);
+  margin: 0 8px 0 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: .875rem;
+  outline: none;
+  border-radius: 3px;
+  height: 32px;
+  position: relative;
+  text-align: center;
+  padding: 6px 13px;
+  min-width: 70px;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
+.list-cancel-rename {
+  color: #444;
+  font-weight: 600;
+  border: 1px solid #c7cacd;
+  text-shadow: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  line-height: .875rem;
+  outline: none;
+  border-radius: 3px;
+  height: 32px;
+  position: relative;
+  text-align: center;
+  padding: 6px 13px;
+  min-width: 70px;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-sizing: border-box;
+  margin: 0 8px 0 0;
+}
+
+
+
 .list-name-rename--input {
-  width: 60%;
+  width: 300px;
+  margin-top: 5px;
+  cursor: text;
+  outline: none;
+  border: 1px solid #d0d3d6;
+  padding: 5px 6px;
+  height: 18px;
+  line-height: 1em;
+  border-radius: 3px;
 }
 
 .close:hover,
