@@ -863,17 +863,21 @@ document.addEventListener('DOMContentLoaded', () => {
     //UPDATE DISPLAY!!!!
 
     const summaryDisplayTasks = async () => {
-        const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json()
-        const list = await (await fetch(`/lists/${task.listId}`)).json()
-        // console.log('task:', task)
-        // console.log("list:", list)
-        // if (!tasks) tasks = await getTasks();
-        taskInput.value = task.name
-        listInput.value = list.list.name
-        repsInput.value = task.reps
-        setsInput.value = task.sets
-        durationInput.value = task.duration
-        notesInput.value = task.notes
+        try {
+            const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json()
+            const list = await (await fetch(`/lists/${task.listId}`)).json()
+            // console.log('task:', task)
+            // console.log("list:", list)
+            // if (!tasks) tasks = await getTasks();
+            taskInput.value = task.name
+            listInput.value = list.list.name
+            repsInput.value = task.reps
+            setsInput.value = task.sets
+            durationInput.value = task.duration
+            notesInput.value = task.notes
+        } catch (err) {
+            return
+        }
     };
 
     document.body.addEventListener('click', summaryDisplayTasks)
