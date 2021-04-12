@@ -16,8 +16,8 @@
 /* Modal Content/Box */
 .modal-content {
   background-color: white;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 29px 37px;
+  margin: 15% auto;
+  padding: 10px 37px 20px 37px;
   border: 1px solid #888;
   max-width: 400px; /* Could be more or less, depending on screen size */
   box-shadow: 0 6px 12px rgb(0 0 0 / 10%);
@@ -26,9 +26,10 @@
 .modal-content-rename {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
-  padding: 29px 37px;
+  padding: 10px 37px 20px 37px;
   border: 1px solid #888;
   max-width: 400px; /* Could be more or less, depending on screen size */
+  box-shadow: 0 6px 12px rgb(0 0 0 / 10%);
 }
 
 /* The Close Button */
@@ -54,7 +55,7 @@
   font-weight: 600;
   border: none;
   text-shadow: 0 1px 0 rgb(0 0 0 / 8%);
-  margin: 0 8px 0 0;
+  margin: 8px 8px 0 0;
   cursor: pointer;
   font-family: inherit;
   font-size: 1em;
@@ -90,7 +91,7 @@
   vertical-align: middle;
   white-space: nowrap;
   box-sizing: border-box;
-  margin: 0 8px 0 0;
+  margin: 8px 8px 0 0;
 }
 
 .list-cancel:hover {
@@ -117,7 +118,7 @@
 .add-list {
   color: black;
   cursor: default;
-  font-size: 1em;
+  font-size: 1.1em;
   font-weight: normal;
   line-height: 24px;
   line-height: 1.5em;
@@ -141,7 +142,7 @@
   font-weight: 600;
   border: none;
   text-shadow: 0 1px 0 rgb(0 0 0 / 8%);
-  margin: 0 8px 0 0;
+  margin: 8px 8px 0 0;
   cursor: pointer;
   font-family: inherit;
   font-size: 1em;
@@ -177,7 +178,7 @@
   vertical-align: middle;
   white-space: nowrap;
   box-sizing: border-box;
-  margin: 0 8px 0 0;
+  margin: 8px 8px 0 0;
 }
 
 
@@ -206,20 +207,4 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
-}
-
-
-
-
-@media screen and (min-width: 840px) {
-    .modal-content {
-        margin: 15% auto; /* 15% from the top and centered */
-        padding: 20px;
-        width: 40%; /* Could be more or less, depending on screen size */
-      }
-    .modal-content-rename {
-      margin: 15% auto; /* 15% from the top and centered */
-      padding: 20px;
-      width: 40%; /* Could be more or less, depending on screen size */
-    }
 }
