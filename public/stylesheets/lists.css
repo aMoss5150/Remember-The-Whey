@@ -1,3 +1,33 @@
+/* All tasks btn */
+#all-tasks-btn {
+  background-color: transparent;
+  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#all-tasks-section {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid rgb(113, 156, 235, .4);
+  padding: 5px 5px;
+  width: 105%;
+}
+
+#all-tasks-section:hover {
+  background-color: rgb(113, 156, 235, .3);
+  cursor: pointer;
+}
+
+  /* Below is css properties for lists */
+
+#block_lists--text {
+  font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: 500;
+}
 
 .list__div-container{
   display: flex;
@@ -36,14 +66,6 @@
   cursor: pointer;
 }
 
-#logo-container__text {
-  font-family: "Segoe UI",Arial,"clean",sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important;
-  cursor: pointer;
-  color: #1874CD;
-  font-weight: 700;
-  font-size: 18px;
-}
-
 #btn-create-list {
   background-color: cornflowerblue;
   border-radius: 4px;
@@ -69,6 +91,7 @@
   align-items: center;
 }
 
+  /* Below is Logo section  */
 
 #logo {
   /* margin-top: px; */
