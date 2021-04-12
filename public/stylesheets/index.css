@@ -407,7 +407,7 @@ body {
     padding: 5px;
     position: relative;
     left: -64px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
@@ -435,7 +435,7 @@ body {
     position: relative;
     padding: 5px;
     left: -64px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
@@ -463,7 +463,7 @@ body {
     position: relative;
     padding: 5px;
     left: -40px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
@@ -513,8 +513,11 @@ body {
     .summary__update {
         display: none;
     }
-    .footer {
+    #footer {
         display: none;
+    }
+    .completed__container, .overdue__container, .tasks__container {
+        top: 40px
     }
 }
 
