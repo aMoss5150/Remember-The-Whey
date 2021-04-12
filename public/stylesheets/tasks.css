@@ -2,12 +2,30 @@ body {
     font-family: "Segoe UI",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol"!important;
 }
 
+i {
+    color: #6d6d6d;
+}
+
 #tasks-section {
     width: 100%;
 }
 
-#tasks-section > *:not(:first-child) {
+#tasks-section > * {
     border-top: 1px dotted #e5e5e5;
+    padding: 5px;
+}
+
+#tasks-section > div:first-child {
+   border-top: none;
+   padding-bottom: 0;
+}
+
+#tasks-section__tasks-container {
+    padding: 5px 0 0 0;
+}
+
+#tasks-section__tasks-empties {
+    padding: 0;
 }
 
 /* .tasks-section__utils  */
@@ -15,24 +33,69 @@ body {
 #tasks-section__utils {
     display: flex;
     justify-content: flex-end;
-    z-index: 6;
+    align-items: flex-end;
 }
 
 #tasks-section__utils .tab {
     border: 1px dotted #e5e5e5;
-    border-bottom: 1px solid #d7e7f5;
-    z-index: 6;
-    /* position:relative; */
+    border-bottom: 1px solid #e5e5e5;
+    color: #0060bf;
+    z-index: 2;
+    position:relative;
+    padding: 3px;
     top: 1px;
+}
+
+#tasks-section__utils .tab.active {
+    border-bottom: 1px solid white;
+    color: black;
+    font-weight: 450;
 }
 
 #tasks-section__utils  > .tab:not(:last-child) {
     border-right: none;
 }
 
+/* #tasks-section__form  */
+
+#tasks-section__form > div {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+#tasks-section__form > div {
+    margin: 3px;
+}
+
+#tasks-section__form input {
+    width: 100%;
+    margin: 0 2px;
+    border-radius: 3px;
+    border: 1px solid #d0d3d6;
+    padding: .5rem;
+}
+
+#tasks-section__form div:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#tasks-section__form button {
+    background-color: #2e8ceb;
+    color: #fff;
+    padding: 0 14px;
+    border: none;
+    border-radius: 3px;
+    text-shadow: 0 1px 0 rgb(0,0,0,0.8);
+    margin: 0 8px 0 0;
+    cursor: pointer;
+    height: 32px;
+}
+
 /* .tasks-section__task  */
 
-.tasks-section__task {
+.tasks-section__task, .tasks-section__task-empty {
     height: 33px;
     border-bottom: 1px dotted #e5e5e5;
     border-top: 1px solid #fff;
@@ -67,6 +130,8 @@ body {
 .tasks-section__task .handle {
     visibility: hidden;
     width: 17px;
+    display: flex;
+    justify-content: center;
 }
 
 .tasks-section__task:hover .handle {
@@ -85,13 +150,6 @@ body {
 #tasks-section__toolbar > * {
     display: inline-block;
     margin: 0 1rem;
-}
-
-/* #toolbar__selector  */
-
-#toolbar__selector {
-    border: 1px solid black;
-    display: inline-block;
 }
 
 #toolbar_group-2, #toolbar_group-3 {
@@ -135,14 +193,18 @@ body {
 }
 
 
-/* .btn-group  */
+/* .button-group  */
+
+.button-group {
+    border-radius: 3px;
+}
 
 .button-group > div {
-    border: 1px solid black; /* Green border */
-    color: black; /* White text */
-    padding: .5rem .5rem; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
+    border: 1px solid #d0d3d6;
+    color: black;
+    padding: .5rem;
+    cursor: pointer;
+    float: left;
 }
 
 .button-group > div:not(:last-child) {
@@ -165,7 +227,6 @@ body {
 .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 .tooltip .tooltip-text {

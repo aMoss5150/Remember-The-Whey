@@ -15,6 +15,7 @@ const toolbarList = document.querySelector('#toolbar__list');
 const tasksForm = document.querySelector('#tasks-section__form');
 const tasksFormInputs = tasksForm.querySelectorAll('input');
 const tasksContainer = document.querySelector('#tasks-section__tasks-container');
+const tasksEmpties = document.querySelector('#tasks-section__tasks-empties');
 
 const toolbarDateIds = ['date_today', 'date_tomorrow', 'date_plus-2', 'date_plus-3', 'date_plus-4', 'date_one-week'];
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -84,14 +85,14 @@ const setTasksActiveState = (state, taskIds = []) => {
 
     // Populate tasks with task elements
     if (taskIds.length === 0)
-        tasks = document.querySelectorAll('.tasks-section__task')
+        tasks = document.querySelectorAll('.tasks-section__task');
     else {
         for (let taskId of taskIds)
             tasks.push(document.querySelector(`#task-${taskId}`));
     }
 
     for (let task of tasks) {
-        const taskInp = document.querySelector(`#${task.id}  input`)
+        const taskInp = document.querySelector(`#${task.id} input`)
         if (state === true) {
             task.classList.add('active');
             taskInp.checked = true;
@@ -275,6 +276,12 @@ const displayTasks = async (tasks, keepSelected = false) => {
                 </div>`;
     });
 
+    // Insert some empty task divs
+    let emptiesHTML = '';
+    for (let i = 0; i < 30; i++)
+        emptiesHTML += `<div class="tasks-section__task-empty"></div>`;
+    tasksEmpties.innerHTML = emptiesHTML;
+
     tasksContainer.innerHTML = tasksHtml.join('');
 
     setTasksActiveState(true, selectedTaskIds);
@@ -311,6 +318,8 @@ const getDateString = (dateArr) => {
 const utilsIncompleteHandler = async (ev) => {
     if (viewCompleted) {
         viewCompleted = false;
+        utilsIncomplete.classList.add('active');
+        utilsCompleted.classList.remove('active');
         tasksForm.style.display = 'initial';
         toolbarComplete.style.display = 'initial';
         toolbarUncomplete.style.display = 'none';
@@ -322,6 +331,8 @@ const utilsIncompleteHandler = async (ev) => {
 const utilsCompletedHandler = async (ev) => {
     if (!viewCompleted) {
         viewCompleted = true;
+        utilsIncomplete.classList.remove('active');
+        utilsCompleted.classList.add('active');
         tasksForm.style.display = 'none';
         toolbarComplete.style.display = 'none';
         toolbarUncomplete.style.display = 'initial';
@@ -381,7 +392,7 @@ const toolbarSelectorHandler = async (ev) => {
                     date = getDateString(date);
 
                     let tasks = await getTasks(selectedListId);
-                    tasks = await filterTasks(tasks, { date: date });
+                    tasks = await filterTasks(tasks, { date: date, complete: selectedQuery.complete });
 
                     const taskIds = tasks.map(task => task.id);
 
@@ -394,7 +405,7 @@ const toolbarSelectorHandler = async (ev) => {
                     date = getDateString(date);
 
                     let tasks = await getTasks(selectedListId);
-                    tasks = await filterTasks(tasks, { date: date });
+                    tasks = await filterTasks(tasks, { date: date, complete: selectedQuery.complete });
 
                     const taskIds = tasks.map(task => task.id);
 
@@ -411,7 +422,8 @@ const toolbarSelectorHandler = async (ev) => {
                         date: {
                             value: dateToday,
                             comparison: 'isAfter'
-                        }
+                        },
+                        complete: selectedQuery.complete
                     });
 
                     const taskIds = tasks.map(task => task.id);
@@ -641,16 +653,35 @@ const toolbarListHandler = async (ev) => {
     ev.stopPropagation();
     closeDropdowns();
 
-    // TODO - Need list api routes to continue working here
+    const currTarget = ev.target.closest('A');
 
-    if (ev.target.id === 'a') {
-
-    }
-    else if (ev.target.id === 'aa') {
-
+    if (currTarget) {
+        res = await fetchHelper('PATCH', { listId: currTarget.id.split('-')[1] });
+        selectedTaskIds = new Set();
+        closeDropdowns();
     }
     else {
-        document.querySelector('#toolbar__list .dropdown-content').classList.add('open');
+        const dropdownContent = document.querySelector('#toolbar__list .dropdown-content');
+        const res = await fetch(`/lists`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if (!res.ok) throw res;
+        const { lists } = await res.json();
+
+        let dateOptionsHTML = [];
+
+        for (let list of lists) {
+            if (list.name === '_hidden')
+                dateOptionsHTML.unshift(`<a id=edit_listId-${list.id}> Unassign </a>`);
+            else
+                dateOptionsHTML.push(`<a id=edit_listId-${list.id}> ${list.name} </a>`);
+        }
+
+        dropdownContent.innerHTML = dateOptionsHTML.join('');
+        dropdownContent.classList.add('open');
     }
 };
 
@@ -692,6 +723,8 @@ const taskFormSubmitHandler = async (ev) => {
 
 const taskSelectHandler = async (ev) => {
     const currTask = ev.target.closest('.tasks-section__task');
+    if (currTask === null)
+        return;
     const taskId = currTask.id.split('-')[1];
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
