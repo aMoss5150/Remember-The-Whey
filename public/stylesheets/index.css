@@ -20,7 +20,8 @@ body {
     grid-template-columns: 200px 1fr 1fr;
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
-    height: 94vh
+    height: 94vh;
+    overflow: hidden;
 }
 
 .list__column {
@@ -53,6 +54,7 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     z-index: 1;
+    overflow: hidden;
 }
 
 .summary__column {
@@ -117,7 +119,7 @@ body {
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
-    transition-property: left, right;
+    transition-property: left;
     transition-duration: 2s;
 }
 
@@ -521,6 +523,9 @@ body {
     }
     .completed__container, .overdue__container, .tasks__container {
         top: 40px
+    }
+    .navbar__container {
+        /* overflow: hidden; */
     }
 }
 
