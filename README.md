@@ -30,10 +30,8 @@
 
 ## Technical Showcase
 
-
-
 All of the information to display for a user is aquired, then displayed without requiring a reload to the web-page.  The information is fetched asynchronously, then used to render HTML to the user's homepage to smoothly present all information a user could have access to.
-```javscript
+```javascript
 const displayTasks = async (tasks, keepSelected = false) => {
     if (!tasks)
         tasks = await getTasks();
@@ -216,7 +214,6 @@ Simple, clean, and modern styling features such as subtle color changes, hover e
 }
 ```
 
-
 ## TABLE USERS
   * id (integer, primary key, not null)
   * firstName (string, not null)
@@ -263,4 +260,11 @@ Simple, clean, and modern styling features such as subtle color changes, hover e
    * update task (PUT)
    * update task properties (PATCH)
    * delete task (DELETE)
+
+## ENVIORNMENT DEPENDENCIES/INSTALLATION
+   * Bcryptjs
+   * Cookie parser
+   * Csurf
+   * Express validators
+   * Heroku
 
