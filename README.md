@@ -1,9 +1,8 @@
 # Remeber the Whey
   Remember the Whey is a fitness organizational tool.  It enables a user to categorize and keep track of workouts by creating       customizable lists.  The user is also given the ability to customize each excercise or task on their custom list, while also       having easy access to a summary of the list or task info. 
 ![loginpage](https://user-images.githubusercontent.com/73197963/114326209-ac204280-9b01-11eb-86bd-1cf474da6e7f.JPG)
-![homepage](https://user-images.githubusercontent.com/73197963/114326343-54360b80-9b02-11eb-9f24-3e6a612e6169.JPG)
+![homepage](https://user-images.githubusercontent.com/73197963/114340719-282c8180-9b26-11eb-809c-eef0d66ea1af.JPG)
 
-  
 ## MVP
   * Ability to create new users and have user login with authorization
   * Ability to login as a demo user with full access to features

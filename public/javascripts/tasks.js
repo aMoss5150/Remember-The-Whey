@@ -192,6 +192,10 @@ const filterTasks = async (tasks, query) => {
             else if (prop === 'date' && typeof query[prop] === 'object') {
                 let { value, comparison } = query[prop];
                 if (value !== null) {
+                    if (task['date'] === null) {
+                        return false;
+                    }
+
                     let taskDate = Date.parse(task['date']);
                     let propDate = Date.parse(value);
 
@@ -266,13 +270,47 @@ const displayTasks = async (tasks, keepSelected = false) => {
             taskStr += ` for ${dur[0]}:${dur[1]}:${dur[2]}`
         }
 
+        const dates = getDateInfo();
+
+        let dateStr = '<div></div>';
+        if (task.date) {
+            let currDate = Date.parse(task.date);
+            let todayDate = Date.parse(getDateString(dates['date_today'][0]));
+            if (currDate === todayDate){
+                dateStr = '<div style="color:#0060bf;">Today</div>';
+            }
+            else if (currDate === Date.parse(getDateString(dates['date_tomorrow'][0]))){
+                dateStr = '<div style="color:#6e6e6e;">Tomorrow</div>';
+            }
+
+            else {
+                let date = task.date.split('-');
+                let color = '#ea5200;'; // Red
+                if (currDate > todayDate)
+                    color = '#b1b1b1'; // Grey
+                dateStr = `<div style="color:${color}">${months[parseInt(date[1], 10) - 1]} ${date[2]}</div>`;
+            }
+        }
+
+        let noteVisibile = '';
+        if (task.notes)
+            noteVisibile = 'active';
+
         return `<div id=task-${task.id} class="tasks-section__task">
-                    <div class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
+                    <div>
+                        <div class="handle">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                        <div class='divider'></div>
+                        <input type="checkbox">
+                        <div>${taskStr}</div>
                     </div>
-                    <div class='divider'></div>
-                    <input type="checkbox">
-                    <div class="card-text">${taskStr}</div>
+                    <div>
+                        ${dateStr}
+                        <div class='note-icon ${noteVisibile}'>
+                            <i class='fas fa-sticky-note'></i>
+                        </div>
+                    </div>
                 </div>`;
     });
 
@@ -320,8 +358,8 @@ const utilsIncompleteHandler = async (ev) => {
         viewCompleted = false;
         utilsIncomplete.classList.add('active');
         utilsCompleted.classList.remove('active');
-        tasksForm.style.display = 'initial';
-        toolbarComplete.style.display = 'initial';
+        tasksForm.style.display = 'block';
+        toolbarComplete.style.display = 'block';
         toolbarUncomplete.style.display = 'none';
         selectedQuery['complete'] = false;
         updateTasksSection(selectedListId, selectedQuery, false);
@@ -335,7 +373,7 @@ const utilsCompletedHandler = async (ev) => {
         utilsCompleted.classList.add('active');
         tasksForm.style.display = 'none';
         toolbarComplete.style.display = 'none';
-        toolbarUncomplete.style.display = 'initial';
+        toolbarUncomplete.style.display = 'block';
         selectedQuery['complete'] = true;
         updateTasksSection(selectedListId, selectedQuery, false);
     }
@@ -416,6 +454,7 @@ const toolbarSelectorHandler = async (ev) => {
                 else if (ev.target.id === 'selector_overdue') {
                     let dateToday = dates['date_today'][0];
                     dateToday = getDateString(dateToday);
+                    console.log(dateToday)
 
                     let tasks = await getTasks(selectedListId);
                     tasks = await filterTasks(tasks, {
