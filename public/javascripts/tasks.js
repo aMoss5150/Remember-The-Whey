@@ -192,6 +192,10 @@ const filterTasks = async (tasks, query) => {
             else if (prop === 'date' && typeof query[prop] === 'object') {
                 let { value, comparison } = query[prop];
                 if (value !== null) {
+                    if (task['date'] === null) {
+                        return false;
+                    }
+
                     let taskDate = Date.parse(task['date']);
                     let propDate = Date.parse(value);
 
@@ -267,13 +271,11 @@ const displayTasks = async (tasks, keepSelected = false) => {
         }
 
         const dates = getDateInfo();
-        console.log(dates)
 
         let dateStr = '<div></div>';
         if (task.date) {
             let currDate = Date.parse(task.date);
             let todayDate = Date.parse(getDateString(dates['date_today'][0]));
-            console.log(currDate, todayDate )
             if (currDate === todayDate){
                 dateStr = '<div style="color:#0060bf;">Today</div>';
             }
@@ -452,6 +454,7 @@ const toolbarSelectorHandler = async (ev) => {
                 else if (ev.target.id === 'selector_overdue') {
                     let dateToday = dates['date_today'][0];
                     dateToday = getDateString(dateToday);
+                    console.log(dateToday)
 
                     let tasks = await getTasks(selectedListId);
                     tasks = await filterTasks(tasks, {
