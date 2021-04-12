@@ -114,7 +114,7 @@ body {
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
-    transition-property: left, right;
+    transition-property: left;
     transition-duration: 2s;
 }
 
