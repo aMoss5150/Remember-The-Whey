@@ -8,6 +8,7 @@ body {
     font-size: 12px;
     border: 1px solid black;
     min-height: 100%;
+    position: relative;
 }
 
 /*!NAV*/
@@ -19,8 +20,7 @@ body {
     grid-template-columns: 200px 1fr 1fr;
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
-    height: 94vh
-
+    height: 94vh;
 }
 
 .list__column {
@@ -34,7 +34,8 @@ body {
     height: 100%;
     padding: 25px;
     border-radius: 3px;
-    z-index: 3;
+    position: relative;
+    z-index: 6;
 
 }
 
@@ -52,7 +53,8 @@ body {
     padding: 25px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    z-index: 1;
+    position: relative;
+    z-index: 4;
 
 
 }
@@ -68,6 +70,8 @@ body {
     height: 100%;
     padding: 25px;
     border-radius: 6px;
+    z-index: -1;
+    position: static;
 }
 
 /*!SLIDEOUT*/
@@ -77,13 +81,13 @@ body {
     grid-area: summary;
     display: flex;
     background-color: white;
-    z-index: 100;
     left: 0px;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     transition-property: left;
     transition-duration: 2s;
+    z-index: 0;
 }
 
 /*!TRANSITIONED STATE*/
@@ -94,7 +98,7 @@ body {
     position: relative;
     left: 1200px;
     background-color: white;
-    z-index: 100;
+    z-index: -1;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;

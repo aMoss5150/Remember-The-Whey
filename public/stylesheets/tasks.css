@@ -15,13 +15,14 @@ body {
 #tasks-section__utils {
     display: flex;
     justify-content: flex-end;
+    z-index: 6;
 }
 
 #tasks-section__utils .tab {
     border: 1px dotted #e5e5e5;
     border-bottom: 1px solid #d7e7f5;
-    z-index: 2;
-    position:relative;
+    z-index: 6;
+    /* position:relative; */
     top: 1px;
 }
 
@@ -113,7 +114,7 @@ body {
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 200;
+    z-index: 10;
 }
 
 .dropdown-content.open {
