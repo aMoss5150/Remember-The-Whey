@@ -123,8 +123,8 @@ async function fetchOneList(id) {
         }
         const { list, tasks } = await res.json();
 
-        console.log("list: ", list);
-        console.log("tasks: ", tasks);
+        // console.log("list: ", list);
+        // console.log("tasks: ", tasks);
     }
     catch (err) {
         console.log(err);
