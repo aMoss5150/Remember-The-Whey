@@ -79,7 +79,7 @@ body {
     flex-direction: column;
     background-color: white;
     z-index: 100;
-    left: 0px;
+    /* left: 0px; */
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
@@ -111,7 +111,7 @@ body {
     display: flex;
     position: relative;
     left: 1200px;
-    right: 0px;
+    /* right: 0px; */
     background-color: white;
     z-index: -1;
     opacity: 1;
@@ -129,7 +129,7 @@ body {
     background-color: white;
     z-index: 100;
     left: 0px;
-    right: 1200px;
+    /* right: 1200px; */
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
