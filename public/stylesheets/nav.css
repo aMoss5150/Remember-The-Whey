@@ -190,12 +190,19 @@ footer {
     margin-bottom: 7px;
 }
 
+.extended_search-btn:hover{
+    cursor: pointer;
+}
+
 .extended-search-exit {
     height: 20px;
     width: 400px;
     position: absolute;
     display: flex;
     justify-content: flex-end;
+}
+.x-icon:hover {
+    cursor: pointer;
 }
 
 .extended-text{
