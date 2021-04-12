@@ -1,9 +1,9 @@
 # Remeber the Whey
   Remember the Whey is a fitness organizational tool.  It enables a user to categorize and keep track of workouts by creating       customizable lists.  The user is also given the ability to customize each excercise or task on their custom list, while also       having easy access to a summary of the list or task info. 
 ![loginpage](https://user-images.githubusercontent.com/73197963/114326209-ac204280-9b01-11eb-86bd-1cf474da6e7f.JPG)
-![homepage](https://user-images.githubusercontent.com/73197963/114326343-54360b80-9b02-11eb-9f24-3e6a612e6169.JPG)
+![homepage](https://user-images.githubusercontent.com/73197963/114340989-c28cc500-9b26-11eb-8136-012a83e08995.JPG)
 
-  
+
 ## MVP
   * Ability to create new users and have user login with authorization
   * Ability to login as a demo user with full access to features
@@ -31,10 +31,8 @@
 
 ## Technical Showcase
 
-
-
 All of the information to display for a user is aquired, then displayed without requiring a reload to the web-page.  The information is fetched asynchronously, then used to render HTML to the user's homepage to smoothly present all information a user could have access to.
-```javscript
+```javascript
 const displayTasks = async (tasks, keepSelected = false) => {
     if (!tasks)
         tasks = await getTasks();
@@ -217,7 +215,6 @@ Simple, clean, and modern styling features such as subtle color changes, hover e
 }
 ```
 
-
 ## TABLE USERS
   * id (integer, primary key, not null)
   * firstName (string, not null)
@@ -264,4 +261,11 @@ Simple, clean, and modern styling features such as subtle color changes, hover e
    * update task (PUT)
    * update task properties (PATCH)
    * delete task (DELETE)
+
+## ENVIORNMENT DEPENDENCIES/INSTALLATION
+   * Bcryptjs
+   * Cookie parser
+   * Csurf
+   * Express validators
+   * Heroku
 

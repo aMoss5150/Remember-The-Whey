@@ -96,15 +96,39 @@ i {
 /* .tasks-section__task  */
 
 .tasks-section__task, .tasks-section__task-empty {
+    display: flex;
+    justify-content: space-between;
+
     height: 33px;
     border-bottom: 1px dotted #e5e5e5;
     border-top: 1px solid #fff;
     padding: 2px 0;
+}
 
-
+.tasks-section__task > div:first-child {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.tasks-section__task > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.tasks-section__task > div:last-child > div:first-child {
+    font-size: 0.8rem ;
+}
+
+.tasks-section__task .note-icon {
+    visibility: hidden;
+    padding: 0 5px;
+}
+
+.tasks-section__task .note-icon.active {
+    visibility: visible;
+    padding: 0 5px;
 }
 
 .tasks-section__task:hover {
