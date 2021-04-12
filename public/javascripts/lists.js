@@ -11,25 +11,42 @@ let span = document.getElementsByClassName("close")[0];
 // Get the <input> element that closes the modal
 let btnCancel = document.getElementsByClassName("list-cancel")[0];
 
+//Get the <input> element with the type text
+const inputListValue = document.querySelector('.list-name--input');
+
+//Get the <div> modal element
+const divModal = document.querySelector('.modal-content');
+
 // When the user clicks on the button, open the modal
 btn.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "none";
 }
 
 // When the user clicks on <input> "cancel", close the modal
 btnCancel.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target === modal) {
+        inputListValue.style.border = "1px solid #d0d3d6";
         modal.style.display = "none";
+    }
+}
+
+// When the user clicks on the modal content, change the input field's border back to original color
+divModal.onclick = function (event) {
+    if (event.target !== inputListValue) {
+        inputListValue.style.border = "1px solid #d0d3d6";
     }
 }
 
@@ -269,6 +286,11 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         await createList(inputListValue.value);
         modal.style.display = "none";
         inputListValue.value = "";
+    });
+
+    //change the border color when input field is clicked
+    inputListValue.addEventListener('click', event => {
+        inputListValue.style.border = "1px solid #2e8ceb";
     });
 
     //----------------------------------------------------------------------------------
