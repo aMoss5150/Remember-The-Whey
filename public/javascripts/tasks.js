@@ -249,7 +249,7 @@ const displayTasks = async (tasks, keepSelected = false) => {
     if (!keepSelected)
         selectedTaskIds = new Set();
 
-    console.log(selectedListId, selectedQuery, keepSelected)
+    // console.log(selectedListId, selectedQuery, keepSelected)
 
     // Sort tasks before display
     sortTasks(tasks, selectedOrder);
@@ -428,6 +428,14 @@ const toolbarSelectorHandler = async (ev) => {
             document.querySelector('#toolbar__selector .dropdown-content').classList.add('open');
         }
     }
+
+    let multSlideout = document.querySelector('.summary__mult')
+    let taskNumber = document.querySelector('.tasks__container-number')
+    taskNumber.innerHTML = taskCount
+    multSlideout.innerText = `${selectedTaskIds.size} tasks selected`
+    multSlideout.style.display = "flex"
+    closeSlideout()
+
 }
 
 const fetchHelper = async (method, body = {}) => {
@@ -471,13 +479,45 @@ const fetchHelper = async (method, body = {}) => {
 }
 
 const toolbarCompleteHandler = async (ev) => {
-    fetchHelper('PATCH', { complete: true });
+    await fetchHelper('PATCH', { complete: true });
     selectedTaskIds = new Set();
+    (async () => {
+        let tasks = await getTasks();
+        let compCount = 0
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].complete) {
+                compCount++
+            }
+        }
+        // console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        let completedNum = document.querySelector('.completed__container-number')
+        completedNum.innerText = compCount
+        taskNum.innerText = tasks.length
+    })();
+    closeSlideout()
 };
 
 const toolbarUncompleteHandler = async (ev) => {
     fetchHelper('PATCH', { complete: false });
     selectedTaskIds = new Set();
+
+    (async () => {
+        let tasks = await getTasks();
+        let compCount = 0
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].complete) {
+                compCount++
+            }
+        }
+        // console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        let completedNum = document.querySelector('.completed__container-number')
+        completedNum.innerText = compCount
+        taskNum.innerText = tasks.length
+    })();
+    closeSlideout()
+
 };
 
 const toolbarDuplicateHandler = async (ev) => {
@@ -516,11 +556,24 @@ const toolbarDuplicateHandler = async (ev) => {
             console.log('Error:', err)
         }
     }
+    const pageLoadTaskUpdate = (async () => {
+        let tasks = await getTasks();
+        // console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        taskNum.innerText = tasks.length
+    })()
 };
 
 const toolbarDeleteHandler = async (ev) => {
-    fetchHelper('DELETE');
+    await fetchHelper('DELETE');
     selectedTaskIds = new Set();
+    const pageLoadTaskUpdate = (async () => {
+        let tasks = await getTasks();
+        // console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        taskNum.innerText = tasks.length
+    })()
+    closeSlideout()
 };
 
 const toolbarDateHandler = async (ev) => {
@@ -708,18 +761,13 @@ slideoutBtn.addEventListener('click', closeSlideout)
 // })
 
 
-console.log('closeSlideout:', closeSlideout)
+// console.log('closeSlideout:', closeSlideout)
 document.addEventListener('DOMContentLoaded', () => {
     //!.SUMMARY ELEMENTS
-    const pageLoadTaskUpdate = (async () => {
-        let tasks = await getTasks();
-        console.log('tasks:', tasks)
-        let taskNum = document.querySelector('.tasks__container-number')
-        taskNum.innerText = tasks.length
-    })()
-    let taskNumber = document.querySelector('.title__container')
-    let overdueNumber = document.querySelector('.overdue__container')
-    let completedNumber = document.querySelector('.completed__container')
+
+    // let taskNumber = document.querySelector('.title__container')
+    // let overdueNum = document.querySelector('.overdue__container-number')
+    // let completedNum = document.querySelector('.completed__container-number')
 
 
 
@@ -784,8 +832,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryDisplayTasks = async () => {
         const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json()
         const list = await (await fetch(`/lists/${task.listId}`)).json()
-        console.log('task:', task)
-        console.log("list:", list)
+        // console.log('task:', task)
+        // console.log("list:", list)
         // if (!tasks) tasks = await getTasks();
         taskInput.value = task.name
         listInput.value = list.list.name
@@ -794,7 +842,6 @@ document.addEventListener('DOMContentLoaded', () => {
         durationInput.value = task.duration
         notesInput.value = task.notes
     };
-
 
     document.body.addEventListener('click', summaryDisplayTasks)
 
@@ -915,6 +962,22 @@ updateTasksSection(selectedListId, selectedQuery, true);
 (async () => {
     _hiddenId = await getHiddenId();
     selectedListId = _hiddenId;
+})();
+
+
+(async () => {
+    let tasks = await getTasks();
+    let compCount = 0
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].complete) {
+            compCount++
+        }
+    }
+    // console.log('tasks:', tasks)
+    let taskNum = document.querySelector('.tasks__container-number')
+    let completedNum = document.querySelector('.completed__container-number')
+    completedNum.innerText = compCount
+    taskNum.innerText = tasks.length
 })();
 
 new Sortable(tasksContainer, {
