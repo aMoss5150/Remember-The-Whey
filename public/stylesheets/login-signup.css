@@ -24,6 +24,14 @@ body {
     justify-content: flex-end;
 }
 
+.transfer__btn:hover, #form__btn:hover, .demo__btn:hover {
+    cursor: pointer;
+}
+
+.transfer__anchor{
+    height: 2px;
+}
+
 #main__form {
     box-sizing: border-box;
     height: 800px;
@@ -63,6 +71,42 @@ body {
     box-shadow: 0px 0px 15px 0px lightblue
 }
 
+#logo {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+
+}
+
+.logoText {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.topText {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 15px;
+    color: cornsilk;
+}
+.bottomText {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    /* margin-left: px; */
+    color: cornsilk;
+}
+
+.whey_logo{
+    height: 140px;
+    width: 120px;
+}
 #form__btn, .demo__btn{
     background-color: #009dff;
     width: 400px;
