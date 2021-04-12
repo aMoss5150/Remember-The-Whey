@@ -240,7 +240,6 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     //grab the user's lists when DOM is loaded
     await fetchLists();
 
-    const listAnchors = document.querySelectorAll('.list-anchors');
     const inputAddListBtn = document.querySelector('.list-add');
     const inputListValue = document.querySelector('.list-name--input');
     const allTasksBtn = document.querySelector('#all-tasks-btn');
