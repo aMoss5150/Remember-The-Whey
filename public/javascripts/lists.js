@@ -260,24 +260,26 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     //Listen for a click on the "All Tasks" btn
     allTasksBtn.addEventListener('click', async (event) => {
         event.preventDefault();
+        event.stopPropagation();
 
-        let hiddenListId = 1; //_hidden list id
+        selectedListId = _hiddenId;
         selectedTaskIds = new Set();
         selectedQuery = { complete: selectedQuery.complete }
 
-        await updateTasksSection(hiddenListId, selectedQuery, true);
+        await updateTasksSection(selectedListId, selectedQuery, true);
 
     });
 
     //Listen for a click on the all tasks div container
     allTasksDiv.addEventListener('click', async (event) => {
         event.preventDefault();
+        event.stopPropagation();
 
-        let hiddenListId = 1; //_hidden list id
+        selectedListId = _hiddenId;
         selectedTaskIds = new Set();
         selectedQuery = { complete: selectedQuery.complete }
 
-        await updateTasksSection(hiddenListId, selectedQuery, true);
+        await updateTasksSection(selectedListId, selectedQuery, true);
     });
 
     //listen for a click on the add btn to create a new list
