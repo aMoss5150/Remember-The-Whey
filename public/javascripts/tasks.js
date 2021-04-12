@@ -1,3 +1,6 @@
+import { closeSlideout, openSlideout } from "/javascripts/slideout.js"
+
+
 const utilsIncomplete = document.querySelector('#utils__incomplete');
 const utilsCompleted = document.querySelector('#utils__completed');
 const utilsSort = document.querySelector('#utils__sort');
@@ -37,7 +40,7 @@ let selectedOrder = {               // Holds the currently applied order object
 
 const getHiddenId = async () => {
     const res = await fetch('/lists', {
-        method:'GET',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json"
         }
@@ -126,7 +129,7 @@ const setTasksActiveState = (state, taskIds = []) => {
         selectorInp.indeterminate = true;
 
     // Show toolbar only when something is selected
-    if(selectedTaskCount === 0) {
+    if (selectedTaskCount === 0) {
         toolbarBtnGroup2.style.visibility = 'hidden';
         toolbarBtnGroup3.style.visibility = 'hidden';
     }
@@ -636,10 +639,9 @@ const taskFormSubmitHandler = async (ev) => {
     }
 }
 
-const taskSelectHandler = (ev) => {
+const taskSelectHandler = async (ev) => {
     const currTask = ev.target.closest('.tasks-section__task');
     const taskId = currTask.id.split('-')[1];
-
     // Handle user click of input checkbox
     if (ev.target.type === 'checkbox') {
         setTasksActiveState(null, [taskId]);
@@ -649,9 +651,222 @@ const taskSelectHandler = (ev) => {
         setTasksActiveState(false);
         setTasksActiveState(true, [taskId]);
     }
+    if (!selectedTaskIds.size) {
+        closeSlideout()
+        let multSlideout = document.querySelector('.summary__mult')
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
+        multSlideout.style.display = "none"
+    }
+    if (selectedTaskIds.size === 1) {
+        openSlideout()
+        let multSlideout = document.querySelector('.summary__mult')
+        multSlideout.innerText = `${selectedTaskIds.size} tasks selected`
+        multSlideout.style.display = "none"
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
+    }
+    if (selectedTaskIds.size > 1) {
+        closeSlideout()
+        //grab whole slideout div, change in
+        let multSlideout = document.querySelector('.summary__mult')
+
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
+        //!CLUTch-------------
+        multSlideout.innerText = `${selectedTaskIds.size} tasks selected`
+        multSlideout.style.display = "flex"
+
+        // innerHtml = `${selectedTaskIds.size} tasks selected`
+    }
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////
+//!--start--SUMMARY SECTION ANDREW
+console.log('closeSlideout:', closeSlideout)
+document.addEventListener('DOMContentLoaded', () => {
+    //!.SUMMARY ELEMENTS
+    const pageLoadTaskUpdate = (async () => {
+        let tasks = await getTasks();
+        console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        taskNum.innerText = tasks.length
+    })()
+    let taskNumber = document.querySelector('.title__container')
+    let overdueNumber = document.querySelector('.overdue__container')
+    let completedNumber = document.querySelector('.completed__container')
+
+
+
+    let taskTooltip = document.querySelector('.info__tooltip')
+    let taskInput = document.querySelector('.update__task')
+    let listInput = document.querySelector('.update__list')
+    let repsInput = document.querySelector('.update__reps')
+    let setsInput = document.querySelector('.update__sets')
+    let durationInput = document.querySelector('.update__duration')
+    let notesInput = document.querySelector('.update__notes')
+
+    let taskInputForm = document.querySelector('.form__update-task')
+    let listInputForm = document.querySelector('.form__update-list')
+    let repsInputForm = document.querySelector('.form__update-reps')
+    let setsInputForm = document.querySelector('.form__update-sets')
+    let durationInputForm = document.querySelector('.form__update-duration')
+    let notesInputForm = document.querySelector('.form__update-notes')
+    //!.summary SLIDEOUT ELEMENTS
+
+
+    //!HELPERS 
+    //FETCH
+    const summaryFetchHelper = async (method, inputForm, field) => {
+        const formData = new FormData(inputForm);
+        const responses = [];
+        let req = {}
+        let body = {}
+        try {
+
+            req.method = method.toUpperCase()
+            req.headers = {
+                "Content-Type": "application/json"
+            }
+            body[field] = formData.get(field)
+            body['_csrf'] = formData.get('_csrf');
+            req['body'] = JSON.stringify(body);
+            //FETCH REQUEST TO UPDATE DB
+            const res = await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`, req); //grab the ID from selectedTaskIds SET
+
+            if (!res.ok) {
+                console.log('RES NOT OKAY')
+            }
+            else {
+                if (res.status !== 204) {
+                    const obj = await res.json();
+                    responses.push(obj);
+                }
+                await updateTasksSection([], [], true);
+                await summaryDisplayTasks()
+            }
+        }
+        catch (err) {
+            console.log('Error:', err)
+        }
+        // return responses;
+        return
+    }
+
+    //!HELPERS
+    //UPDATE DISPLAY!!!!
+
+    const summaryDisplayTasks = async () => {
+        const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json()
+        const list = await (await fetch(`/lists/${task.listId}`)).json()
+        console.log('task:', task)
+        console.log("list:", list)
+        // if (!tasks) tasks = await getTasks();
+        taskInput.value = task.name
+        listInput.value = list.list.name
+        repsInput.value = task.reps
+        setsInput.value = task.sets
+        durationInput.value = task.duration
+        notesInput.value = task.notes
+    };
+
+
+    document.body.addEventListener('click', summaryDisplayTasks)
+
+    //create a tooltip display for this as well!
+    //!TASKS  -E
+    taskInputForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        summaryFetchHelper("PATCH", taskInputForm, "name")
+    })
+    //!LISTS  -E  NEEDS TO BE COMPLETED
+    //need fetch call to grab and populate lists dropdown
+
+    //! need to access table to get access to name at the listId.... simple query and include lists
+    listInputForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+    })
+
+    // listInputForm.addEventListener('submit', async (e) => {
+    //     e.preventDefault();
+    //     const formData = new FormData(listInputForm);
+    //     const responses = [];
+    //     let req = {}
+    //     let body = {}
+    //     try {
+
+    //         req.method = "PATCH"
+    //         req.headers = {
+    //             "Content-Type": "application/json"
+    //         }
+    //         body["name"] = formData.get("name")
+    //         body['_csrf'] = formData.get('_csrf');
+    //         req['body'] = JSON.stringify(body);
+    //         //FETCH REQUEST TO UPDATE DB
+    //         const task = await (await fetch(`/tasks/${Array.from(selectedTaskIds)[0]}`)).json() //grab the ID from selectedTaskIds SET
+    //         const res = await fetch(`/lists/${task.listId}`, req)
+    //         console.log('res:', res)
+
+    //         if (!res.ok) {
+    //             console.log('RES NOT OKAY')
+    //         }
+    //         else {
+    //             if (res.status !== 204) {
+    //                 const obj = await res.json();
+    //                 responses.push(obj);
+    //             }
+    //             await summaryDisplayTasks()
+    //             await updateTasksSection([], [], true);
+    //         }
+    //     }
+    //     catch (err) {
+    //         console.log('Error:', err)
+    //     }
+    //     // return responses;
+    //     return
+
+
+
+
+    // })
+    //!COMPLETE THE LIST DISPLAY SECTION ^^^^^^^^^^^^^^
+    //!REPS  -E
+
+    repsInputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        summaryFetchHelper('PATCH', repsInputForm, 'reps')
+    })
+
+    //!SETS  -E
+
+    setsInputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        summaryFetchHelper('PATCH', setsInputForm, 'sets')
+    })
+
+    //!DURATION  -E
+
+    durationInputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        summaryFetchHelper('PATCH', durationInputForm, 'duration')
+    })
+
+    //!NOTES  -E
+
+    notesInputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        summaryFetchHelper('PATCH', notesInputForm, 'notes')
+        const addNote = () => {
+
+        }
+    })
+
+    //!--end--SUMMARY SECTION ANDREW
+
+
+})
+
 // Event Listeners
 
 utilsIncomplete.addEventListener('click', utilsIncompleteHandler);

@@ -15,7 +15,7 @@ append head
   //- add page specific js
   script(src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js")
   script(src="/javascripts/index.js" type="module" defer)
-  script(src="/javascripts/tasks.js" defer)
+  script(src="/javascripts/tasks.js" type="module" defer)
   script(src="/javascripts/slideout.js" type="module" defer)
   script(src="/javascripts/navbar.js" type="module" defer)
   script(src="/javascripts/lists.js" type="module" defer)
@@ -67,35 +67,68 @@ block content
     .summary__column
       +summary
       .title__container All Tasks
-      .tasks__container 0
+      .tasks__container
+        .tasks__container-number 0
         .tasks__container-title Tasks
-      .completed__container 0
+      .completed__container
+        .completed__container-number 0
         .completed__container-title Completed
-      .overdue__container 0
+      .overdue__container 
+        .overdue__container-number 0
         .overdue__container-title Overdue
       footer
-        .footer__links_container
+        .footer__links_container#footer
           a(class="footer__link" href="https://github.com/mkellydevv") Michael Kelly
           a(class="footer__link" href="https://github.com/crespohector") Hector Crespo
           a(class="footer__link" href="https://github.com/aMoss5150") Andrew Moss
           a(class="footer__link" href="https://github.com/earlwoo") Earl Woo
           a(class="footer__link" href="https://github.com/aMoss5150/Remember-The-Whey") Project Github
-
-    .summary__slideout
-      form(class="form__flex hide")
+    .summary__mult
+      div(class="selection__display")
+    .summary__slideout.hidden__slide
+      div(class="form__flex hide")
         i(class="fas fa-times slideout__closebtn")
-        i(class="fas fa-print")
-        span(class="info__tooltip") &#8505;
-        input(class="update__task" placeholder="taskname" type="text")
-        label(id="listLabel") list
-        select(class="update__list" placeholder="currentlist" type="text")
-          option today
-          option tomorrow
-        label(id="repsLabel") reps
-        input(class="update__reps" placeholder="currentreps" type="text")
-        label(id="setsLabel") sets
-        input(class="update__sets" placeholder="currentsets" type="text")
-        label(id="durationLabel") duration
-        input(class="update__duration" placeholder="currentduration" type="text")
-        label(id="notesLabel") notes
-        textarea(class="update__notes" placeholder="Add a note...")
+        i(class="fas fa-print" data-tooltip="Print")
+        span(class="info__tooltip" data-tooltip="Task Info") &#8505;
+
+        form(method="PATCH" action="" class="form__update-task")  
+          input(type="hidden" name="_csrf" value=csrfToken)
+          input(class="update__task" placeholder="taskname" type="text" name="name")
+          button(type="submit" class="form__buttons") Update Task Name
+
+        form(method="PATCH" action="" class="form__update-list")  
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(id="listLabel" class="form__label") list
+          input(class="update__list form__input" placeholder="currentlist" type="text" name="list")
+          button(type="submit" class="form__buttons") Update List
+
+        form(method="PATCH" action="" class="form__update-reps") 
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(id="repsLabel" class="form__label") reps
+          input(type="hidden" name="_csrf" value=csrfToken)
+          input(class="update__reps form__input" placeholder="currentreps" type="text" name="reps")
+          button(type="submit" class="form__buttons") Update Reps
+
+        form(method="PATCH" action="" class="form__update-sets")  
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(id="setsLabel" class="form__label") sets
+          input(class="update__sets form__input" placeholder="currentsets" type="text" name="sets")
+          button(type="submit" class="form__buttons") Update Sets
+
+        form(method="PATCH" action="" class="form__update-duration")  
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(id="durationLabel" class="form__label") duration
+          input(class="update__duration form__input" placeholder="currentduration" type="text" name="duration")
+          button(type="submit" class="form__buttons") Update Duration
+          hr(class="prenotes__hr")
+          
+        form(method="PATCH" action="" class="form__update-notes")  
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(id="notesLabel" class="notes__label") notes
+          hr(class="notes__hr")
+          textarea(class="update__notes" placeholder="Add a note..." name="notes")
+          button(type="submit" class="notes__button") Update Notes
+          hr(class="postnotes__hr")
+        
+        
+        
