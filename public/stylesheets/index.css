@@ -1,4 +1,4 @@
-html{
+html {
     height: 100%
 }
 
@@ -20,7 +20,6 @@ body {
     /* display: flex; */
     grid-template-areas: "lists tasks summary";
     height: 94vh
-
 }
 
 .list__column {
@@ -34,8 +33,8 @@ body {
     height: 100%;
     padding: 25px;
     border-radius: 3px;
+    margin-top: 5px;
     z-index: 3;
-
 }
 
 .task__column {
@@ -53,8 +52,6 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     z-index: 1;
-
-
 }
 
 .summary__column {
@@ -76,6 +73,24 @@ body {
     margin-top: 5px;
     grid-area: summary;
     display: flex;
+    flex-direction: column;
+    background-color: white;
+    z-index: 100;
+    left: 0px;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left;
+    transition-duration: 2s;
+}
+
+.summary__mult {
+    margin-top: 5px;
+    grid-area: summary;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     background-color: white;
     z-index: 100;
     left: 0px;
@@ -93,15 +108,31 @@ body {
     display: flex;
     position: relative;
     left: 1200px;
+    right: 0px;
     background-color: white;
     z-index: 100;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left, right;
+    transition-duration: 2s;
+}
+
+.shown__slide {
+    margin-top: 5px;
+    grid-area: summary;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    z-index: 100;
+    left: 0px;
+    right: 1200px;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     transition-property: left;
     transition-duration: 2s;
 }
-
 
 .info__tooltip {
     align-self: flex-end;
@@ -113,20 +144,32 @@ body {
     font-size: 21px;
 }
 
-.fa-print {
-    align-self: flex-end;
-    position: relative;
-    /* bottom: 10px; */
-    top: 5px;
-    left: 6px;
-    font-size: 13px;
-    font-weight: bolder;
-    color: rgba(0, 0, 0, 0.6)
+.info__tooltip::before, .info__tooltip::after {
+    visibility: hidden;
+    position: absolute;
+    top: -.25rem;
+    height: 15px;
+    width: 50px;
+    left: 50%;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-size: 11px;
+    background-color: #333;
+    transform: translateX(-50%) translateY(-100%);
+    content: attr(data-tooltip)
 }
 
-.print__tooltip {}
+.info__tooltip:hover::before {
+    visibility: visible;
+}
+
+.info__tooltip:hover {
+    cursor: pointer;
+}
 
 .fa-times {
+    cursor: pointer;
     align-self: flex-end;
     position: relative;
     bottom: 10px;
@@ -135,6 +178,39 @@ body {
     font-weight: bolder;
     color: rgba(0, 0, 0, 0.6)
 }
+
+.fa-print {
+    cursor: pointer;
+    align-self: flex-end;
+    position: relative;
+    top: 3px;
+    left: 10px;
+    font-size: 11px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.6)
+}
+
+/*!WHY does this render print icon invisible???*/
+
+/* .fa-print::before {
+    visibility: hidden;
+    position: absolute;
+    top: -.25rem;
+    height: 15px;
+    width: 50px;
+    left: 50%;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-size: 11px;
+    background-color: #333;
+    transform: translateX(-50%) translateY(-100%);
+    content: attr(data-tooltip)
+} */
+
+/* .fa-print:hover::before {
+    visibility: visible;
+} */
 
 /*!summary-slideout--FORM container*/
 
@@ -146,15 +222,24 @@ body {
     height: auto;
     width: 100%;
     /* justify-content: center; */
-    align-items: flex-start;
+    /* align-items: flex-start; */
 }
 
 /*!FORM FIELDS / ELEMENTS*/
+
+.form__input {
+    font-size: 16px;
+    display: flex;
+    position: relative;
+    left: 80px;
+    bottom: 21px;
+}
 
 .update__task {
     font-size: 20px;
     border: hidden;
     width: 100%;
+    margin: 20px;
 }
 
 .update__task:hover {
@@ -162,25 +247,33 @@ body {
 }
 
 .update__list {
-    position: relative;
-    left: 120px;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
     border: hidden;
 }
 
+.update__list:hover {
+    outline: 1px solid rgba(0, 0, 0, 0.3);
+}
+
 .update__reps {
-    position: relative;
-    left: 120px;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
     border: hidden;
     width: auto;
 }
 
 .update__reps:hover {
-    outline: 1px solid rgba(0, 0, 0, 0.3)
+    outline: 1px solid rgba(0, 0, 0, 0.3);
+    /* border: 1px solid red; */
 }
 
 .update__sets {
-    position: relative;
-    left: 120px;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
     border: hidden;
     width: auto 0;
 }
@@ -190,8 +283,9 @@ body {
 }
 
 .update__duration {
-    position: relative;
-    left: 120px;
+    margin: 20px;
+    /* position: relative; */
+    /* left: 120px; */
     border: hidden;
     width: auto;
 }
@@ -201,10 +295,63 @@ body {
 }
 
 .update__notes {
+    margin: 20px;
     position: relative;
     top: 17px;
     width: 100%;
 }
+
+/*!BUTTON HELPERS*/
+
+.form__buttons {
+    background-color: #d7e7f5;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    opacity: .9;
+    height: 30px;
+    display: none;
+    position: relative;
+}
+
+.notes__button {
+    font-size: 13px;
+    background-color: #d7e7f5;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    opacity: .9;
+    height: 30px;
+    position: relative;
+    top: 15px;
+}
+
+.prenotes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 3px;
+}
+
+.notes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 25px;
+}
+
+.postnotes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 25px;
+}
+
+.notes__label#notesLabel {
+    display: flex;
+    font-size: 17px;
+}
+
+.label__positioner {}
+
+.button__positioner {}
 
 /*!FORM LABELS*/
 
@@ -260,7 +407,7 @@ body {
     padding: 5px;
     position: relative;
     left: -64px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
@@ -270,6 +417,11 @@ body {
     font-weight: bolder;
     font-size: 19px;
     margin-left: 2px;
+}
+
+.tasks__container-number {
+    font-weight: bolder;
+    font-size: 19px;
 }
 
 .tasks__container-title {
@@ -283,7 +435,7 @@ body {
     position: relative;
     padding: 5px;
     left: -64px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
@@ -292,6 +444,11 @@ body {
     font-size: 19px;
     font-weight: bolder;
     color: rgba(0, 0, 0, 0.4)
+}
+
+.completed__container-number {
+    font-weight: bolder;
+    font-size: 19px;
 }
 
 .completed__container-title {
@@ -306,12 +463,22 @@ body {
     position: relative;
     padding: 5px;
     left: -40px;
-    top: 40px;
+    top: 60px;
     height: 50px;
     /* border: 1px solid blue; */
     border-radius: 7px;
     margin: 2px;
     background-color: #d7e7f5;
+}
+
+.overdue__container-number {
+    font-weight: bolder;
+    font-size: 19px;
+}
+
+.overdue__container-title {
+    font-size: 12px;
+    margin: 2px;
 }
 
 /* .hide {
@@ -335,7 +502,9 @@ body {
         height: 690px;
         min-width: 200px;
     }
-    /* .summary__slideout {} */
+    .summary__slideout {
+        overflow-x: scroll;
+    }
     .summary__column {
         grid-area: summary;
         height: 150px;
@@ -344,8 +513,11 @@ body {
     .summary__update {
         display: none;
     }
-    .footer {
+    #footer {
         display: none;
+    }
+    .completed__container, .overdue__container, .tasks__container {
+        top: 40px
     }
 }
 
