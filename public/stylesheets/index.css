@@ -8,6 +8,7 @@ body {
     font-size: 12px;
     border: 1px solid black;
     min-height: 100%;
+    position: relative;
 }
 
 /*!NAV*/
@@ -39,7 +40,7 @@ body {
 }
 
 .task__column {
-    overflow-y: hidden;
+    overflow-x: hidden;
     margin-top: 5px;
     grid-area: tasks;
     display: flex;
@@ -94,13 +95,13 @@ body {
     align-items: center;
     flex-direction: column;
     background-color: white;
-    z-index: 100;
     left: 0px;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     transition-property: left;
     transition-duration: 2s;
+    z-index: 0;
 }
 
 /*!TRANSITIONED STATE*/
@@ -112,7 +113,7 @@ body {
     left: 1200px;
     right: 0px;
     background-color: white;
-    z-index: 100;
+    z-index: -1;
     opacity: 1;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
