@@ -1,5 +1,4 @@
 
-
 const utilsIncomplete = document.querySelector('#utils__incomplete');
 const utilsCompleted = document.querySelector('#utils__completed');
 const utilsSort = document.querySelector('#utils__sort');
@@ -709,7 +708,6 @@ slideoutBtn.addEventListener('click', closeSlideout)
 // })
 
 
-
 console.log('closeSlideout:', closeSlideout)
 document.addEventListener('DOMContentLoaded', () => {
     //!.SUMMARY ELEMENTS
@@ -742,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //!.summary SLIDEOUT ELEMENTS
 
 
-    //!HELPERS 
+    //!HELPERS
     //FETCH
     const summaryFetchHelper = async (method, inputForm, field) => {
         const formData = new FormData(inputForm);
