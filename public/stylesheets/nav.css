@@ -79,8 +79,10 @@
     margin-left: 4px;
 }
 
-.hamburger__icon {
-    padding-left: 5px;
+#hamburger__icon {
+    padding-left: 15px;
+    color: rgba(255,255,255,.7)
+    
 }
 
 .hide {
