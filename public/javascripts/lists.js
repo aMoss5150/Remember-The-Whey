@@ -11,25 +11,42 @@ let span = document.getElementsByClassName("close")[0];
 // Get the <input> element that closes the modal
 let btnCancel = document.getElementsByClassName("list-cancel")[0];
 
+//Get the <input> element with the type text
+const inputListValue = document.querySelector('.list-name--input');
+
+//Get the <div> modal element
+const divModal = document.querySelector('.modal-content');
+
 // When the user clicks on the button, open the modal
 btn.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "none";
 }
 
 // When the user clicks on <input> "cancel", close the modal
 btnCancel.onclick = function () {
+    inputListValue.style.border = "1px solid #d0d3d6";
     modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target === modal) {
+        inputListValue.style.border = "1px solid #d0d3d6";
         modal.style.display = "none";
+    }
+}
+
+// When the user clicks on the modal content, change the input field's border back to original color
+divModal.onclick = function (event) {
+    if (event.target !== inputListValue) {
+        inputListValue.style.border = "1px solid #d0d3d6";
     }
 }
 
@@ -54,7 +71,7 @@ async function fetchLists() {
                 const divContainer = document.createElement('div');
 
                 divContainer.setAttribute('id', `div-container-${list.id}`);
-                divContainer.setAttribute('class', `list__div-container`)
+                divContainer.setAttribute('class', `list__div-container ${list.id}`)
 
                 anchor.setAttribute('id', list.id);
                 anchor.setAttribute('class', "list-anchors")
@@ -96,16 +113,18 @@ async function fetchLists() {
 
 
 //-------------------------------------------------------------------------------
-//Display all tasks from the targeted list
+//Fetch all tasks from the targeted list
 async function fetchOneList(id) {
 
-    // const ulTasks = document.querySelector('#tasks');
     try {
         const res = await fetch(`/lists/${id}`);
         if (!res.ok) {
             throw res;
         }
         const { list, tasks } = await res.json();
+
+        console.log("list: ", list);
+        console.log("tasks: ", tasks);
     }
     catch (err) {
         console.log(err);
@@ -167,17 +186,14 @@ async function updateList(id, name) {
             },
             body: JSON.stringify(body)
         });
-        console.log(res)
         if (!res.ok) {
             throw res;
         }
-        console.log('before')
         const { list } = await res.json();
-        console.log('after')
 
-        // let anchor = document.getElementById(`${id}`);
+        let anchor = document.getElementById(`${id}`);
 
-        // anchor.innerText = list.name;
+        anchor.innerText = list.name;
     }
     catch (err) {
         console.log(err);
@@ -227,6 +243,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     const listAnchors = document.querySelectorAll('.list-anchors');
     const inputAddListBtn = document.querySelector('.list-add');
     const inputListValue = document.querySelector('.list-name--input');
+    const allTasksBtn = document.querySelector('#all-tasks-btn');
+    const allTasksDiv = document.querySelector('#all-tasks-section');
 
     //------------------Rename Button Modal----------------------------------------------
     // Declare the modal
@@ -239,19 +257,28 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     let btnCancel_rename;
     //---------------------------------------------------------------------------------
 
-    //Listen for a click on each anchor element to display tasks
-    listAnchors.forEach(list => {
-        list.addEventListener('click', async (event) => {
-            event.preventDefault();
-            event.stopPropagation();
+    //Listen for a click on the "All Tasks" btn
+    allTasksBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
 
-            selectedListId = event.target.id;
-            selectedTaskIds = new Set();
-            selectedQuery = { complete: selectedQuery.complete }
+        let hiddenListId = 1; //_hidden list id
+        selectedTaskIds = new Set();
+        selectedQuery = { complete: selectedQuery.complete }
 
-            await updateTasksSection(selectedListId, selectedQuery, true);
-        })
-    })
+        await updateTasksSection(hiddenListId, selectedQuery, true);
+
+    });
+
+    //Listen for a click on the all tasks div container
+    allTasksDiv.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        let hiddenListId = 1; //_hidden list id
+        selectedTaskIds = new Set();
+        selectedQuery = { complete: selectedQuery.complete }
+
+        await updateTasksSection(hiddenListId, selectedQuery, true);
+    });
 
     //listen for a click on the add btn to create a new list
     inputAddListBtn.addEventListener('click', async (event) => {
@@ -259,6 +286,11 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         await createList(inputListValue.value);
         modal.style.display = "none";
         inputListValue.value = "";
+    });
+
+    //change the border color when input field is clicked
+    inputListValue.addEventListener('click', event => {
+        inputListValue.style.border = "1px solid #2e8ceb";
     });
 
     //----------------------------------------------------------------------------------
@@ -270,6 +302,26 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         e.preventDefault()
         let btn = e.target
         // console.log("event.target btn: ", btn.classList)
+
+        //Listen for a click on the list div element to display tasks
+        if (btn.classList.contains("list__div-container")) {
+
+            selectedListId = e.target.classList[1];
+            selectedTaskIds = new Set();
+            selectedQuery = { complete: selectedQuery.complete }
+
+            await updateTasksSection(selectedListId, selectedQuery, true);
+        }
+        //List for a click when the anchor element is clicked
+        if (btn.classList.contains('list-anchors')) {
+            e.preventDefault();
+            // console.log(e.target.id);
+            selectedListId = e.target.id;
+            selectedTaskIds = new Set();
+            selectedQuery = { complete: selectedQuery.complete }
+
+            await updateTasksSection(selectedListId, selectedQuery, true);
+        }
 
         //Delete a list when "delete" btn is clicked
         if (btn.classList.contains('list__btn--delete')) {
@@ -292,7 +344,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         //Rename the targeted list when "save" btn is clicked
         if (btn.classList.contains("list-rename")) {
 
-            let inputVal = document.querySelector(`#rename-input-${modalId}`);
+            let inputVal = document.querySelector(`.list-name-rename--input-${modalId}`);
             // console.log("id:", modalId);
             // console.log(inputVal.value);
 
