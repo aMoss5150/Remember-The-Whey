@@ -517,16 +517,29 @@ const taskSelectHandler = async (ev) => {
     }
     if (!selectedTaskIds.size) {
         closeSlideout()
+        let multSlideout = document.querySelector('.summary__mult')
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
+        multSlideout.style.display = "none"
     }
     if (selectedTaskIds.size === 1) {
         openSlideout()
+        let multSlideout = document.querySelector('.summary__mult')
+        multSlideout.innerText = `${selectedTaskIds.size} tasks selected`
+        multSlideout.style.display = "none"
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
     }
     if (selectedTaskIds.size > 1) {
+        closeSlideout()
         //grab whole slideout div, change in
-        let slideout = document.querySelector('.summary__slideout')
+        let multSlideout = document.querySelector('.summary__mult')
+
+        let taskNumber = document.querySelector('.tasks__container-number')
+        taskNumber.innerHTML = taskCount
         //!CLUTch-------------
-        // slideout.innerText = `${selectedTaskIds.size} tasks selected`
-        // slideout.style.
+        multSlideout.innerText = `${selectedTaskIds.size} tasks selected`
+        multSlideout.style.display = "flex"
 
         // innerHtml = `${selectedTaskIds.size} tasks selected`
     }
@@ -538,9 +551,16 @@ const taskSelectHandler = async (ev) => {
 console.log('closeSlideout:', closeSlideout)
 document.addEventListener('DOMContentLoaded', () => {
     //!.SUMMARY ELEMENTS
+    const pageLoadTaskUpdate = (async () => {
+        let tasks = await getTasks();
+        console.log('tasks:', tasks)
+        let taskNum = document.querySelector('.tasks__container-number')
+        taskNum.innerText = tasks.length
+    })()
     let taskNumber = document.querySelector('.title__container')
     let overdueNumber = document.querySelector('.overdue__container')
     let completedNumber = document.querySelector('.completed__container')
+
 
 
     let taskTooltip = document.querySelector('.info__tooltip')

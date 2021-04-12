@@ -76,6 +76,23 @@ body {
     transition-duration: 2s;
 }
 
+.summary__mult {
+    margin-top: 5px;
+    grid-area: summary;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    z-index: 100;
+    left: 0px;
+    opacity: 1;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    transition-property: left;
+    transition-duration: 2s;
+}
+
 /*!TRANSITIONED STATE*/
 
 .hidden__slide {
@@ -119,20 +136,32 @@ body {
     font-size: 21px;
 }
 
-.fa-print {
-    align-self: flex-end;
-    position: relative;
-    /* bottom: 10px; */
-    top: 5px;
-    left: 6px;
-    font-size: 13px;
-    font-weight: bolder;
-    color: rgba(0, 0, 0, 0.6)
+.info__tooltip::before, .info__tooltip::after {
+    visibility: hidden;
+    position: absolute;
+    top: -.25rem;
+    height: 15px;
+    width: 50px;
+    left: 50%;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-size: 11px;
+    background-color: #333;
+    transform: translateX(-50%) translateY(-100%);
+    content: attr(data-tooltip)
 }
 
-.print__tooltip {}
+.info__tooltip:hover::before {
+    visibility: visible;
+}
+
+.info__tooltip:hover {
+    cursor: pointer;
+}
 
 .fa-times {
+    cursor: pointer;
     align-self: flex-end;
     position: relative;
     bottom: 10px;
@@ -141,6 +170,39 @@ body {
     font-weight: bolder;
     color: rgba(0, 0, 0, 0.6)
 }
+
+.fa-print {
+    cursor: pointer;
+    align-self: flex-end;
+    position: relative;
+    top: 3px;
+    left: 10px;
+    font-size: 11px;
+    font-weight: bolder;
+    color: rgba(0, 0, 0, 0.6)
+}
+
+/*!WHY does this render print icon invisible???*/
+
+/* .fa-print::before {
+    visibility: hidden;
+    position: absolute;
+    top: -.25rem;
+    height: 15px;
+    width: 50px;
+    left: 50%;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    font-size: 11px;
+    background-color: #333;
+    transform: translateX(-50%) translateY(-100%);
+    content: attr(data-tooltip)
+} */
+
+/* .fa-print:hover::before {
+    visibility: visible;
+} */
 
 /*!summary-slideout--FORM container*/
 
@@ -156,6 +218,14 @@ body {
 }
 
 /*!FORM FIELDS / ELEMENTS*/
+
+.form__input {
+    font-size: 16px;
+    display: flex;
+    position: relative;
+    left: 80px;
+    bottom: 21px;
+}
 
 .update__task {
     font-size: 20px;
@@ -236,6 +306,41 @@ body {
     position: relative;
 }
 
+.notes__button {
+    font-size: 13px;
+    background-color: #d7e7f5;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    opacity: .9;
+    height: 30px;
+    position: relative;
+    top: 15px;
+}
+
+.prenotes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 3px;
+}
+
+.notes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 25px;
+}
+
+.postnotes__hr {
+    opacity: 0.3;
+    position: relative;
+    top: 25px;
+}
+
+.notes__label#notesLabel {
+    display: flex;
+    font-size: 17px;
+}
+
 .label__positioner {}
 
 .button__positioner {}
@@ -306,6 +411,11 @@ body {
     margin-left: 2px;
 }
 
+.tasks__container-number {
+    font-weight: bolder;
+    font-size: 19px;
+}
+
 .tasks__container-title {
     font-size: 12px;
     margin: 2px;
@@ -328,6 +438,11 @@ body {
     color: rgba(0, 0, 0, 0.4)
 }
 
+.completed__container-number {
+    font-weight: bolder;
+    font-size: 19px;
+}
+
 .completed__container-title {
     font-size: 12px;
     margin: 2px;
@@ -346,6 +461,16 @@ body {
     border-radius: 7px;
     margin: 2px;
     background-color: #d7e7f5;
+}
+
+.overdue__container-number {
+    font-weight: bolder;
+    font-size: 19px;
+}
+
+.overdue__container-title {
+    font-size: 12px;
+    margin: 2px;
 }
 
 /* .hide {
@@ -369,7 +494,9 @@ body {
         height: 690px;
         min-width: 200px;
     }
-    /* .summary__slideout {} */
+    .summary__slideout {
+        overflow-x: scroll;
+    }
     .summary__column {
         grid-area: summary;
         height: 150px;
